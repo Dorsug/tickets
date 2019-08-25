@@ -1,0 +1,41 @@
+.table th, .table td {
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.btn-menu:hover {
+  background-color: #bbb;
+  color: black;
+  box-shadow: 2px 0 0 0 #bbb;
+}
+
+.btn-menu {
+  border: inherit;
+  color: black;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.btn-menu {
+  color: black;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0.5em;
+  margin: 1px;
+}
+
+.btn-menu:focus {
+  background-color: #bbb;
+  box-shadow: 2px 0 0 0 #bbb;
+  color: black;
+}
+
+.btn-menu {
+  background-color: #eee;
+}
+
+.btn-menu:active {
+  background-color: #bbb;
+}
+
