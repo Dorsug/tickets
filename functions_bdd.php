@@ -11,14 +11,28 @@ function displayWorkshop ($bdd){
 	$reponse = $bdd->query('SELECT * FROM `atelier`');
 
 	while ($donnees = $reponse->fetch()){
-		echo "<p onclick=\"displaySession( " . $donnees['numero'] . ");\" style=\"background-color : red;\";>";
-			echo "<strong>" . $donnees['nom'] . "</strong><br />"; 
-			echo $donnees['description'] . "<br />"; 
-			echo "Age : " . $donnees['agemini'] . " - " . $donnees['agemaxi'] . "<br />"; 
-			echo $donnees['prix'] . "€"; 
-		echo "</p>";
+		if(!workshopIsEmpty($bdd,$donnees['numero'])){
+			echo "<p onclick=\"displaySession( " . $donnees['numero'] . ");\" style=\"background-color : red;\";>";
+				echo "<strong>" . $donnees['numero'] . " - " . $donnees['nom'] . "</strong><br />"; 
+				echo $donnees['description'] . "<br />"; 
+				echo "Age : " . $donnees['agemini'] . " - " . $donnees['agemaxi'] . "<br />"; 
+				echo $donnees['prix'] . "€"; 
+			echo "</p>";
+		}
 	}
 	$reponse->closeCursor();
+}
+
+function workshopIsEmpty($bdd,$id){
+	$reponse = $bdd->query('SELECT pk_id, fk_atelier, DATE_FORMAT(date, \'%d/%m\') AS dateSession, DATE_FORMAT(heureDebut, \'%Hh%i\') AS heureDebut, DATE_FORMAT(heureFin, \'%Hh%i\') AS heureFin, nbrPlace FROM `seance` WHERE fk_atelier = ' . $id . '&& date>=NOW() && nbrPlace>0');
+	$isEmpty = true;
+	
+	while ($donnees = $reponse->fetch()){
+		$isEmpty= false;
+	}
+	$reponse->closeCursor();
+	
+	return $isEmpty;
 }
 
 function displayShedules ($bdd){
@@ -47,9 +61,23 @@ function displaySessionByID($bdd, $id){
 	$reponse->closeCursor();
 }
 
-function addSessionToCart($bdd, $id, $idWorkshopSelect){
+function decrementAndReload($bdd, $id, $idWorkshopSelect){
 	$bdd->query('UPDATE `seance` SET nbrPlace=nbrPlace-1 WHERE pk_id=' . $id);
+	
 	displaySessionByID($bdd, $idWorkshopSelect);
+}
+
+function addSessionToCart($bdd, $id, $idWorkshopSelect){
+	//Recuperer le nom de l'atelier + toutes les infos de la sessions (cas où on la supprime de sa liste).
+	echo "session 42 <br/>";
+	
+}
+
+function getPriceBySessionID($bdd, $id){
+	$reponse = $bdd->query("SELECT prix FROM atelier WHERE numero = (SELECT fk_atelier FROM seance  WHERE pk_id =" . $id . ")");
+	$donnees = $reponse->fetch();
+	echo $donnees["prix"];
+	
 }
 
 ?>

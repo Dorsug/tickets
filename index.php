@@ -104,13 +104,16 @@
                     <div class="row" style="background-color: #777;border-top-color: black;border-top: 1px;border-top-style: solid;">
                         <div class="col">
                             <div id="workshopList">
-                                <p>Ateliers</p>
+                                <p style="text-decoration:underline;">Ateliers</p>
+								<p id="briefWorkshop" style="margin-left: 12px; font-size: 15px;" ></p>
                             </div>
                             <div id="reservation">
-                                <p>Reservations</p>
+                                <p style="text-decoration:underline;">Reservations</p>
+								<p id="briefReservation" ></p>
                             </div>
-                            <div id="total">
-                                <p>Total :&nbsp;</p>
+                            <div id="totalBlock">
+                                <p>Total : <span id="total"></span> €</p>
+								
                             </div>
                         </div>
                     </div>

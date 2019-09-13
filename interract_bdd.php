@@ -17,10 +17,16 @@ if( isset($_GET['action'])) {
 			displaySessionByID($bdd,$_GET['id']);
 			break;
 			
+		case "decrementAndReload":
+			decrementAndReload($bdd,$_GET['id'],$_GET['idWorkshop']);
+			break;
+		
 		case "addSessionToCart":
 			addSessionToCart($bdd,$_GET['id'],$_GET['idWorkshop']);
 			break;
-		
+		case "addPrice":
+			getPriceBySessionID($bdd,$_GET['id']);
+			break;
 		default:
 	}
 
