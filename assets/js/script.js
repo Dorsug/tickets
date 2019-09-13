@@ -1,11 +1,12 @@
 $(function(){
-    $('button').on('click',function(){       
+    $('button').on('click',function(){      
         switch ($(this).html()) {
             case 'Ateliers':
                 document.getElementById('pane1Title').innerHTML = "Ateliers";
                 document.getElementById('pane2Title').innerHTML = "Horaires";
+				document.getElementById('pane2Div').innerHTML = "";
 				
-				$.post(
+				$.get(
 					'interract_bdd.php', 
 					{action : "displayWorkshop"},
 					function(data){
@@ -20,8 +21,9 @@ $(function(){
             case 'Horaires':
                 document.getElementById('pane1Title').innerHTML = "Horaires";
                 document.getElementById('pane2Title').innerHTML = "Ateliers";
+				document.getElementById('pane2Div').innerHTML = "";
 				
-				$.post(
+				$.get(
 					'interract_bdd.php', 
 					{action : "displayShedules"},
 					function(data){
@@ -52,6 +54,38 @@ $(function(){
         }
     });
   });
+  
+function displaySession(idWorkshop){
+	console.log("Atelier " + idWorkshop);
+	$.get(
+		'interract_bdd.php', 
+		{
+			action : "displaySessionByID",
+			id : idWorkshop
+		},
+		function(data){
+			$("#pane2Div").html(data);
+		},
+		'text'
+	);
+}
+
+function addToCart(idSession, idWorkshop){
+	console.log("Session " + idSession);
+	$.get(
+		'interract_bdd.php', 
+		{
+			action : "addSessionToCart",
+			id : idSession,
+			idWorkshop : idWorkshop
+		},
+		function(data){
+			$("#pane2Div").html(data);
+		},
+		'text'
+	);
+}
+  
 
 function getXMLHttpRequest() {
 	var xhr = null;
