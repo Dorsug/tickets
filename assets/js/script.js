@@ -1,3 +1,8 @@
+//Global Variable
+idWorkshopSelected = 0;
+
+//Functions
+
 $(function(){
     $('button').on('click',function(){      
         switch ($(this).html()) {
@@ -57,6 +62,7 @@ $(function(){
   
 function displaySession(idWorkshop){
 	console.log("Atelier " + idWorkshop);
+	idWorkshopSelected=idWorkshop;
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -80,7 +86,7 @@ function addToCart(idSession, idWorkshop){
 		{
 			action : "decrementAndReload",
 			id : idSession,
-			idWorkshop : idWorkshop
+			idWorkshop : idWorkshopSelected 
 		},
 		function(data){
 			$("#pane2Div").html(data);
@@ -132,7 +138,7 @@ function removeSessionToCart(idSession,idWorkshop,idElt){
 		'interract_bdd.php', 
 		{
 			action : "reloadSessions",
-			idWorkshop : idWorkshop
+			idWorkshop : idWorkshopSelected
 		},
 		function(data){
 			$("#pane2Div").html(data);
