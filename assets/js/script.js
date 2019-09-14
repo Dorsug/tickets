@@ -65,6 +65,9 @@ function displaySession(idWorkshop){
 		},
 		function(data){
 			$("#pane2Div").html(data);
+			if(data == ""){
+				$("#pane2Div").html("Il n'y a plus de sessions disponible pour cet atelier.");
+			}
 		},
 		'text'
 	);
@@ -75,7 +78,7 @@ function addToCart(idSession, idWorkshop){
 	$.get(
 		'interract_bdd.php', 
 		{
-			action : "addSessionToCart",
+			action : "decrementAndReload",
 			id : idSession,
 			idWorkshop : idWorkshop
 		},
@@ -84,8 +87,72 @@ function addToCart(idSession, idWorkshop){
 		},
 		'text'
 	);
+	
+	$.get(
+		'interract_bdd.php', 
+		{
+			action : "addSessionToCart",
+			id : idSession,
+			idWorkshop : idWorkshop
+		},
+		function(data){
+			$("#briefWorkshop").html($("#briefWorkshop").html()+data);
+		},
+		'text'
+	);
+	
+	$.get(
+		'interract_bdd.php', 
+		{
+			action : "addPrice",
+			id : idSession
+		},
+		function(data){
+			$("#total").html(Number($("#total").html())+Number(data));
+		},
+		'text'
+	);
+	
 }
   
+function removeSessionToCart(idSession,idWorkshop,idElt){
+	$.get(
+		'interract_bdd.php', 
+		{
+			action : "removeSessionToCart",
+			id : idSession
+		},
+		function(data){
+			//Supprimer la session du panier
+		},
+		'text'
+	);
+	idElt.parentElement.innerHTML="";
+	$.get(
+		'interract_bdd.php', 
+		{
+			action : "reloadSessions",
+			idWorkshop : idWorkshop
+		},
+		function(data){
+			$("#pane2Div").html(data);
+		},
+		'text'
+	);
+	$.get(
+		'interract_bdd.php', 
+		{
+			action : "addPrice",
+			id : idSession
+		},
+		function(data){
+			$("#total").html(Number($("#total").html())-Number(data));
+		},
+		'text'
+	);
+	
+	
+}  
 
 function getXMLHttpRequest() {
 	var xhr = null;

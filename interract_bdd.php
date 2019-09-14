@@ -24,9 +24,20 @@ if( isset($_GET['action'])) {
 		case "addSessionToCart":
 			addSessionToCart($bdd,$_GET['id'],$_GET['idWorkshop']);
 			break;
+		
 		case "addPrice":
 			getPriceBySessionID($bdd,$_GET['id']);
 			break;
+		
+		case "removeSessionToCart":
+			removeSessionToCart($bdd,$_GET['id']);
+			break;
+			
+		case "reloadSessions":
+			reloadSessions($bdd,$_GET['idWorkshop']);
+			break;
+			
+			
 		default:
 	}
 
