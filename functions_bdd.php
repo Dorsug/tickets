@@ -13,7 +13,7 @@ function displayWorkshop ($bdd){
 
 	while ($donnees = $reponse->fetch()){
 		if(!workshopIsEmpty($bdd,$donnees['numero'])){
-			echo "<p onclick=\"displaySession( " . $donnees['numero'] . ");\" style=\"background-color: #999;border-radius: 5px;\";>";
+			echo "<p onclick=\"displaySession( " . $donnees['numero'] . ");\" style=\"cursor: pointer;background-color: #999;border-radius: 5px;\";>";
 				echo "<strong>" . $donnees['numero'] . " - " . $donnees['nom'] . "</strong><br />"; 
 				echo $donnees['description'] . "<br />"; 
 				echo "Age : " . $donnees['agemini'] . " - " . $donnees['agemaxi'] . "<br />"; 
@@ -42,7 +42,7 @@ function displayShedules ($bdd){
 	$reponse = $bdd->query('SELECT * FROM `seance`');
 
 	while ($donnees = $reponse->fetch()){
-		echo "<p style=\"background-color: #777;border-radius: 5px;\";>";
+		echo "<p style=\"cursor: pointer;background-color: #777;border-radius: 5px;\";>";
 			echo "<strong>" . $donnees['date'] . "</strong><br />"; 
 			echo $donnees['heureDebut'] . " - " . $donnees['heureFin'] . "<br />"; 
 			echo "Atelier " . $donnees['fk_atelier'];
@@ -57,7 +57,7 @@ function displaySessionByID($bdd, $id){
 							WHERE fk_atelier = ' . $id . '&& date>=NOW() && nbrPlace>0');
 
 	while ($donnees = $reponse->fetch()){
-		echo "<p onclick=\"addToCart(" . $donnees['pk_id'] . "," . $donnees['fk_atelier'] . ");\" style=\"background-color: #777;border-radius: 5px;\" >";
+		echo "<p onclick=\"addToCart(" . $donnees['pk_id'] . "," . $donnees['fk_atelier'] . ");\" style=\"cursor: pointer;background-color: #777;border-radius: 5px;\" >";
 			echo "<strong>" . $donnees['dateSession'] . "</strong><br />"; 
 			echo $donnees['heureDebut'] . " - " . $donnees['heureFin'] . "<br />";
 			echo "<i>Places restantes : " . $donnees['nbrPlace'] . "</i>";
@@ -78,7 +78,7 @@ function addSessionToCart($bdd, $id, $idWorkshopSelect){
 							WHERE fk_atelier=numero && seance.pk_id=" . $id);
 	$donnees = $reponse->fetch();
 	
-	echo "<span><span class=\"removeSession\" style=\"cursor: pointer;display: inline-block;\" onclick=\"removeSessionToCart(" . $donnees["id"] . "," . $donnees['fk_atelier'] . ",this);\">✖</span>  <strong>" . $donnees['nom'] . " </strong>- " . date_format(date_create($donnees['date']),'m/d') . " (" . date_format(date_create($donnees['heureDebut']),'H:i') . " -" . date_format(date_create($donnees['heureFin']),'H:i') . ")<br /></span>";
+	echo "<span><span class=\"removeSession\" style=\"cursor: pointer;display: inline-block;\" onclick=\"removeSessionToCart(" . $donnees["id"] . ",this);\">✖</span>  <strong>" . $donnees['nom'] . " </strong>- " . date_format(date_create($donnees['date']),'m/d') . " (" . date_format(date_create($donnees['heureDebut']),'H:i') . " -" . date_format(date_create($donnees['heureFin']),'H:i') . ")<br /></span>";
 	//Recuperer le nom de l'atelier + toutes les infos de la sessions (cas où on la supprime de sa liste).
 	
 }
@@ -88,7 +88,7 @@ function removeSessionToCart($bdd,$id){
 }
 
 function getPriceBySessionID($bdd, $id){
-	$reponse = $bdd->query("SELECT prix 
+	$reponse = $bdd->query("SELECT prix
 							FROM atelier 
 							WHERE numero = (SELECT fk_atelier FROM seance  WHERE pk_id =" . $id . ")");
 	$donnees = $reponse->fetch();

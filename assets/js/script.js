@@ -1,8 +1,10 @@
 //Global Variable
 idWorkshopSelected = 0;
+listOfSession = [];
 
 //Functions
 
+//Ecouteur du click sur les boutons 
 $(function(){
     $('button').on('click',function(){      
         switch ($(this).html()) {
@@ -11,6 +13,7 @@ $(function(){
                 document.getElementById('pane2Title').innerHTML = "Horaires";
 				document.getElementById('pane2Div').innerHTML = "";
 				
+				//Affichage des Ateliers
 				$.get(
 					'interract_bdd.php', 
 					{action : "displayWorkshop"},
@@ -28,6 +31,7 @@ $(function(){
                 document.getElementById('pane2Title').innerHTML = "Ateliers";
 				document.getElementById('pane2Div').innerHTML = "";
 				
+				//Affichages des Horaires
 				$.get(
 					'interract_bdd.php', 
 					{action : "displayShedules"},
@@ -48,6 +52,36 @@ $(function(){
                 
             case 'Effacer':
                 console.log("Bouton \"Effacer\" pressé");
+				console.log(listOfSession.toString());
+				for(i=0; i <listOfSession.length; i++){
+					$.get(
+						'interract_bdd.php', 
+						{
+							action : "removeSessionToCart",
+							id : listOfSession[i]
+						},
+						function(data){
+							//Supprimer la session du panier
+						},
+						'text'
+					);
+				}
+				listOfSession.splice(0,listOfSession.length);
+				//Mise à jour de l'affichage
+				$.get(
+					'interract_bdd.php', 
+					{
+						action : "reloadSessions",
+						idWorkshop : idWorkshopSelected
+					},
+					function(data){
+						$("#pane2Div").html(data);
+					},
+					'text'
+				);
+				
+				document.getElementById("total").innerHTML="0";
+				document.getElementById("briefWorkshop").innerHTML="";
                 break;
                 
             case 'Paiement':
@@ -60,9 +94,11 @@ $(function(){
     });
   });
   
+//Affichage des horaires pour un atelier selectionné
 function displaySession(idWorkshop){
 	console.log("Atelier " + idWorkshop);
 	idWorkshopSelected=idWorkshop;
+	
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -79,8 +115,12 @@ function displaySession(idWorkshop){
 	);
 }
 
+//Ajout d'une session d'un atelier dans le panier
 function addToCart(idSession, idWorkshop){
 	console.log("Session " + idSession);
+	listOfSession.push(idSession);
+	
+	//On diminue le nombre de place de la session de 1 et on met à jour l'affichage
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -94,6 +134,7 @@ function addToCart(idSession, idWorkshop){
 		'text'
 	);
 	
+	//On ajoute la session dans le recap du panier
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -107,6 +148,7 @@ function addToCart(idSession, idWorkshop){
 		'text'
 	);
 	
+	//On met à jour le prix
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -114,14 +156,23 @@ function addToCart(idSession, idWorkshop){
 			id : idSession
 		},
 		function(data){
-			$("#total").html(Number($("#total").html())+Number(data));
+			$("#total").html((Number($("#total").html())+Number(data)).toFixed(2));
 		},
 		'text'
 	);
 	
 }
-  
-function removeSessionToCart(idSession,idWorkshop,idElt){
+ 
+//Suppression d'une session d'un atelier dans le panier
+function removeSessionToCart(idSession,idElt){
+	//Supprimer la session de la liste
+	for(i=0; i <listOfSession.length; i++){
+		if(listOfSession[i]==idSession){
+			listOfSession.splice(i,1);
+			break;
+		}
+	}
+	
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -133,7 +184,9 @@ function removeSessionToCart(idSession,idWorkshop,idElt){
 		},
 		'text'
 	);
-	idElt.parentElement.innerHTML="";
+	idElt.parentElement.innerHTML=""; //Suppression de la session dans l'affichage du panier
+	
+	//Mise à jour de l'affichage
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -145,6 +198,7 @@ function removeSessionToCart(idSession,idWorkshop,idElt){
 		},
 		'text'
 	);
+	//Mise à jour du prix
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -152,31 +206,10 @@ function removeSessionToCart(idSession,idWorkshop,idElt){
 			id : idSession
 		},
 		function(data){
-			$("#total").html(Number($("#total").html())-Number(data));
+			$("#total").html((Number($("#total").html())-Number(data)).toFixed(2));
 		},
 		'text'
 	);
 	
 	
 }  
-
-function getXMLHttpRequest() {
-	var xhr = null;
-	
-	if (window.XMLHttpRequest || window.ActiveXObject) {
-		if (window.ActiveXObject) {
-			try {
-				xhr = new ActiveXObject("Msxml2.XMLHTTP");
-			} catch(e) {
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-		} else {
-			xhr = new XMLHttpRequest(); 
-		}
-	} else {
-		alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
-		return null;
-	}
-	
-	return xhr;
-}
