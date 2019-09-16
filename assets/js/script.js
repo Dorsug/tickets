@@ -165,6 +165,7 @@ function addToCart(idSession, idWorkshop){
  
 //Suppression d'une session d'un atelier dans le panier
 function removeSessionToCart(idSession,idElt){
+	
 	//Supprimer la session de la liste
 	for(i=0; i <listOfSession.length; i++){
 		if(listOfSession[i]==idSession){
@@ -210,6 +211,19 @@ function removeSessionToCart(idSession,idElt){
 		},
 		'text'
 	);
-	
-	
 }  
+
+//Recuperation des valeurs du formulaire de paiement
+function submitForm(){
+	//Recuperation de la valeur "Mode de Paiement"
+    var inputs = document.getElementsByTagName('input'),
+        inputsLength = inputs.length;
+
+    for (var i = 0; i < inputsLength; i++) {
+        if (inputs[i].type === 'radio' && inputs[i].checked) {
+            console.log(inputs[i].value + " selectionné");
+        }
+    }
+	//Recuperation du code postal
+	console.log(document.getElementById("postalCodeForm").value);
+}

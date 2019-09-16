@@ -79,17 +79,19 @@
                                         <!-- Start: Body -->
                                         <div class="bs4_team_content bg-card1 bs4_team_txt">
                                             <h1>Paiement</h1>
-                                            <div>
-                                                Code Postal : <input name="codePostal" type="text" placeholder="31..." autofocus>
-                                            </div>
-                                            <div>
-                                                <label for="modepaiment">Mode de paiement: </label>
-                                                <label><input type="radio" name="modepaiement" value="espece" required/>Espèce</label>
-                                                <label><input type="radio" name="modepaiement" value="cheque" required/>Chèque</label>
-                                            </div>
-                                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa. Integer ut purus ac augue
-                                            commodo commodo. Nunc nec mi eu justo tempor consectetuer.</p>
-                                            <a class="bs4_btn_x_out_shtr" href="#">OK !</a></div>
+											
+												<div>
+													Code Postal : <input id="postalCodeForm" name="codePostal" type="number" placeholder="31..." autofocus>
+												</div>
+												<div>
+													<label for="modepaiment">Mode de paiement: </label>
+													<label><input type="radio" name="modepaiement" value="espece" required checked/>Espèce</label>
+													<label><input type="radio" name="modepaiement" value="cheque" required/>Chèque</label>
+												</div>
+												<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa. Integer ut purus ac augue
+												commodo commodo. Nunc nec mi eu justo tempor consectetuer.</p>
+												<a class="bs4_btn_x_out_shtr" href="#" onclick="submitForm();">OK !</a></div>
+											<form method="get" action="test.php" id="infoForm"></form>
                                         <!-- End: Body -->
                                     </div>
                                     <!-- End: Modal content -->
