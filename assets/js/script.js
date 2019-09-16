@@ -214,16 +214,38 @@ function removeSessionToCart(idSession,idElt){
 }  
 
 //Recuperation des valeurs du formulaire de paiement
-function submitForm(){
+function submitForm(sessionID){
+	console.log(sessionID);
 	//Recuperation de la valeur "Mode de Paiement"
+	var paymentMode
     var inputs = document.getElementsByTagName('input'),
         inputsLength = inputs.length;
 
     for (var i = 0; i < inputsLength; i++) {
         if (inputs[i].type === 'radio' && inputs[i].checked) {
+			paymentMode=inputs[i].value;
             console.log(inputs[i].value + " selectionné");
         }
     }
 	//Recuperation du code postal
 	console.log(document.getElementById("postalCodeForm").value);
+	
+	//Requete AJAX
+	$.get(
+		'generate_pdf.php', 
+		{
+			sessionID : sessionID,												//ID de session
+			paymentMode : paymentMode, 											//Mode de paiement
+			postalCode : document.getElementById("postalCodeForm").value,		//Code Postal
+			totalPrice : Number($("#total").html()),						    //Prix
+			listOfSession : listOfSession										//Liste des ateliers
+			
+		},
+		function(data){
+			window.open('./data/'+sessionID+'.pdf', '_blank');						//Affichage de la facture
+		},
+		'text'
+	);
+	console.log("Etiquette générée");
+	
 }

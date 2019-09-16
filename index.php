@@ -1,3 +1,6 @@
+<?php session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -18,6 +21,7 @@
     <link rel="stylesheet" href="assets/css/Popup-Element-Overlay-1.css">
     <link rel="stylesheet" href="assets/css/Popup-Element-Overlay.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+	<link rel="shortcut icon" type="image/png" href="./img/favicon.png" id="favicon">
 	<?php require("interract_bdd.php"); ?>
 </head>
 
@@ -90,7 +94,7 @@
 												</div>
 												<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa. Integer ut purus ac augue
 												commodo commodo. Nunc nec mi eu justo tempor consectetuer.</p>
-												<a class="bs4_btn_x_out_shtr" href="#" onclick="submitForm();">OK !</a></div>
+												<a class="bs4_btn_x_out_shtr" href="#" onclick="submitForm(<?php echo "'".session_id()."'";?>);">OK !</a></div>
 											<form method="get" action="test.php" id="infoForm"></form>
                                         <!-- End: Body -->
                                     </div>
