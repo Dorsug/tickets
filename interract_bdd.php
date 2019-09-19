@@ -1,7 +1,16 @@
 <?php
+/**
+* Fichiers d'interraction entre script.js (via AJAX) et functions_bdd.php
+* L'action a effectuer arriver par méthode GET.
+* On peut donc appeler le(s) bon(nes) fonctions grace à un simple switch/case
+*
+*/
+
 require("functions_bdd.php");
 
+//Connection à la BdD
 $bdd = connect_bdd();
+
 
 if( isset($_GET['action'])) {
 	switch ($_GET['action']){

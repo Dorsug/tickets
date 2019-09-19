@@ -8,7 +8,9 @@ listOfSession = [];
 $(function(){
     $('button').on('click',function(){      
         switch ($(this).html()) {
+			//click sur le bouton atelier
             case 'Ateliers':
+				//On change les titres des parties de l'interface
                 document.getElementById('pane1Title').innerHTML = "Ateliers";
                 document.getElementById('pane2Title').innerHTML = "Horaires";
 				document.getElementById('pane2Div').innerHTML = "";
@@ -26,7 +28,9 @@ $(function(){
                 console.log("Bouton \"Ateliers\" pressé");
                 break;
                 
+			//Click sur le bouton Horaire	
             case 'Horaires':
+				//On change les titres des parties de l'interface
                 document.getElementById('pane1Title').innerHTML = "Horaires";
                 document.getElementById('pane2Title').innerHTML = "Ateliers";
 				document.getElementById('pane2Div').innerHTML = "";
@@ -44,15 +48,19 @@ $(function(){
                 console.log("Bouton \"Horaires\" pressé");
                 break;
                 
+			//Click sur le bouton reservation	
             case 'Reservations':
+				//On change les titres des parties de l'interface
                 document.getElementById('pane1Title').innerHTML = "Reservations";
                 document.getElementById('pane2Title').innerHTML = "";  
                 console.log("Bouton \"Reservations\" pressé");
                 break;
                 
+			//Click sur le bouton effacer	
             case 'Effacer':
                 console.log("Bouton \"Effacer\" pressé");
-				console.log(listOfSession.toString());
+				
+				//On supprime session par session les sessions du panier
 				for(i=0; i <listOfSession.length; i++){
 					$.get(
 						'interract_bdd.php', 
@@ -61,12 +69,12 @@ $(function(){
 							id : listOfSession[i]
 						},
 						function(data){
-							//Supprimer la session du panier
 						},
 						'text'
 					);
 				}
 				listOfSession.splice(0,listOfSession.length);
+				
 				//Mise à jour de l'affichage
 				$.get(
 					'interract_bdd.php', 
@@ -80,10 +88,12 @@ $(function(){
 					'text'
 				);
 				
+				//On vide l'affichage du panier et du prix
 				document.getElementById("total").innerHTML="0";
 				document.getElementById("briefWorkshop").innerHTML="";
                 break;
                 
+			//Click sur le bouton Paiement - Ne marche pas car Paiement est un lien et non un bouton	
             case 'Paiement':
                 console.log("Bouton \"Paiement\" pressé");
                 break;
@@ -99,6 +109,7 @@ function displaySession(idWorkshop){
 	console.log("Atelier " + idWorkshop);
 	idWorkshopSelected=idWorkshop;
 	
+	//Affichage des sessions de l'atelier 
 	$.get(
 		'interract_bdd.php', 
 		{
@@ -107,7 +118,7 @@ function displaySession(idWorkshop){
 		},
 		function(data){
 			$("#pane2Div").html(data);
-			if(data == ""){
+			if(data == ""){ //Cas où l'atelier n'a plus de sessions disponibles
 				$("#pane2Div").html("Il n'y a plus de sessions disponible pour cet atelier.");
 			}
 		},
