@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, abort
 from flask import render_template_string
 import db
 import utils
+import generate
 from pprint import pprint
 
 app = Flask(__name__, static_folder='assets')
@@ -15,18 +16,18 @@ def index():
 
 @app.route('/ateliers')
 def ateliers():
-    return utils.listerAtelier()
+    return generate.listerAtelier()
 
 
 @app.route('/seances')
 def seances():
     atelierId = request.values.get('atelierId')
-    return utils.listerSeancesPourAtelier(atelierId)
+    return generate.listerSeancesPourAtelier(atelierId)
 
 
 @app.route('/horaires')
 def horaires():
-    return utils.listerHoraires()
+    return generate.listerHoraires()
 
 
 @app.route('/panier', methods=['GET', 'POST', 'DELETE'])
@@ -39,7 +40,7 @@ def panier():
             panierId = request.values.get('panierId')
             if panierId is None:
                 abort(400)
-            return utils.listerPanier(panierId)
+            return generate.listerPanier(panierId)
         else:
             abort(404)
     elif request.method == 'POST':
