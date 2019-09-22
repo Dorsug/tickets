@@ -14,8 +14,8 @@ def get_cursor():
     return cn.cursor()
 
 
-def callproc(cursor, procname):
-    cursor.callproc(procname)
+def callproc(cursor, procname, *args):
+    cursor.callproc(procname, args=args)
     subcursor = list(cursor.stored_results())[0]
 
     columns = tuple([d[0] for d in subcursor.description])

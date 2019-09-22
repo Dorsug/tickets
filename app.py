@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import db
 from pprint import pprint
 
@@ -17,7 +17,7 @@ def ateliers():
     results = db.callproc(c, 'listerAtelier')
     for atelier in results:
         html += f"""
-            <p onclick="displaySession({ atelier['Numero'] });" style="cursor: pointer;background-color: #999;border-radius: 5px;">
+            <p onclick="displaySession({ atelier['ID'] });" style="cursor: pointer;background-color: #999;border-radius: 5px;">
                 <strong>{ atelier['Numero'] } - { atelier['Nom'] }</strong><br />
                 { atelier['Description'] }<br />
                 Age: { atelier['Age mini'] }  - { atelier['Age maxi'] }<br />
@@ -31,7 +31,13 @@ def ateliers():
 def horaires():
     html = ''
     c = db.get_cursor()
-    results = db.callproc(c, 'listerSeances')
+
+    # Test si il y a un id en paramètre de la requete
+    id = request.args.get('id')
+    if not id:
+        results = db.callproc(c, 'listerSeances')
+    else:
+        results = db.callproc(c, 'listerSeancesPourAtelier', id)
     for seance in results:
         html += f"""
             <p style="cursor: pointer;background-color: #777;border-radius: 5px;">

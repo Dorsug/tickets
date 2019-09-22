@@ -107,9 +107,8 @@ function displaySession(idWorkshop){
 	
 	//Affichage des sessions de l'atelier 
 	$.get(
-		'interract_bdd.php', 
+		'horaires', 
 		{
-			action : "displaySessionByID",
 			id : idWorkshop
 		},
 		function(data){
@@ -118,7 +117,6 @@ function displaySession(idWorkshop){
 				$("#pane2Div").html("Il n'y a plus de sessions disponible pour cet atelier.");
 			}
 		},
-		'text'
 	);
 }
 
