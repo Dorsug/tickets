@@ -6,6 +6,7 @@ from flask import g
 def get_db():
     if 'db' not in g:
         g.db = mysql.connector.connect(user="root", password="roottoor", database="gestickets2", auth_plugin='mysql_native_password')
+        g.db.autocommit = True
     return g.db
 
 
@@ -16,13 +17,18 @@ def get_cursor():
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)
-    subcursor = list(cursor.stored_results())[0]
 
-    columns = tuple([d[0] for d in subcursor.description])
-    result = []
-    for row in subcursor:
-        result.append(dict(zip(columns, row)))
-    return result
+    results = []
+    for subcursor in cursor.stored_results():
+        columns = tuple([d[0] for d in subcursor.description])
+        subresult = []
+        for row in subcursor:
+            subresult.append(dict(zip(columns, row)))
+        results.append(subresult)
+    if len(results) == 1:
+        return results[0]
+    else:
+        return results
 
 
 def close_db(e=None):

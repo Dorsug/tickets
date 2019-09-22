@@ -2,6 +2,17 @@
 idWorkshopSelected = 0;
 listOfSession = [];
 
+// Demande un panierId et enregistre le comme cookie
+function getPanierId(){
+    $.ajax({
+        url:'/panier', 
+        data: {'action': 'new'}, 
+        success: function(data){
+            Cookies.set('panierId', data);
+        }
+    });
+}
+
 //Functions
 
 //Ecouteur du click sur les boutons 
@@ -120,51 +131,70 @@ function displaySession(idWorkshop){
 	);
 }
 
+
 //Ajout d'une session d'un atelier dans le panier
-function addToCart(idSession, idWorkshop){
-	console.log("Session " + idSession);
-	listOfSession.push(idSession);
-	
-	//On diminue le nombre de place de la session de 1 et on met à jour l'affichage
-	$.get(
-		'interract_bdd.php', 
-		{
-			action : "decrementAndReload",
-			id : idSession,
-			idWorkshop : idWorkshopSelected 
-		},
-		function(data){
-			$("#pane2Div").html(data);
-		},
-		'text'
-	);
-	
-	//On ajoute la session dans le recap du panier
-	$.get(
-		'interract_bdd.php', 
-		{
-			action : "addSessionToCart",
-			id : idSession,
-			idWorkshop : idWorkshop
-		},
-		function(data){
-			$("#briefWorkshop").html($("#briefWorkshop").html()+data);
-		},
-		'text'
-	);
-	
-	//On met à jour le prix
-	$.get(
-		'interract_bdd.php', 
-		{
-			action : "addPrice",
-			id : idSession
-		},
-		function(data){
-			$("#total").html((Number($("#total").html())+Number(data)).toFixed(2));
-		},
-		'text'
-	);
+function ajouterSeanceAuPanier(seanceId){
+    panierId = Cookies.get('panierId');
+    $.ajax({
+        method: "POST",
+        url: "/panier",
+        data: {
+            'action': 'ajouter',
+            'panierId': panierId,
+            'seanceId': seanceId,
+        },
+        success: function(data){
+            console.log('Seance ajouté au panier');
+            console.log(data);
+        },
+        error: function(req, status, error){
+            console.log(error);
+        }
+    });
+
+    
+    /*
+    //On diminue le nombre de place de la session de 1 et on met à jour l'affichage
+    $.get(
+            'interract_bdd.php', 
+            {
+                    action : "decrementAndReload",
+                    id : idSession,
+                    idWorkshop : idWorkshopSelected 
+            },
+            function(data){
+                    $("#pane2Div").html(data);
+            },
+            'text'
+    );
+    
+    //On ajoute la session dans le recap du panier
+    $.get(
+            'interract_bdd.php', 
+            {
+                    action : "addSessionToCart",
+                    id : idSession,
+                    idWorkshop : idWorkshop
+            },
+            function(data){
+                    $("#briefWorkshop").html($("#briefWorkshop").html()+data);
+            },
+            'text'
+    );
+    
+    //On met à jour le prix
+    $.get(
+            'interract_bdd.php', 
+            {
+                    action : "addPrice",
+                    id : idSession
+            },
+            function(data){
+                    $("#total").html((Number($("#total").html())+Number(data)).toFixed(2));
+            },
+            'text'
+    );
+    */
 	
 }
  
