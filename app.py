@@ -3,6 +3,7 @@ import db
 from pprint import pprint
 
 app = Flask(__name__, static_folder='assets')
+app.teardown_appcontext(db.close_db)
 
 
 @app.route('/')
@@ -47,7 +48,3 @@ def horaires():
             </p>
         """
     return html
-
-
-app.teardown_appcontext(db.close_db)
-app.run(debug=True)
