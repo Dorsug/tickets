@@ -1,8 +1,68 @@
-//Global Variable
-idWorkshopSelected = 0;
-listOfSession = [];
+function listerAteliers() {
+    document.getElementById('pane1Title').innerHTML = "Ateliers";
+    document.getElementById('pane2Title').innerHTML = "Horaires";
+    document.getElementById('pane2Div').innerHTML = "";
+                
+    $.ajax({
+        url: '/ateliers', 
+        success: function(data){
+            $("#pane1Div").html(data);
+        }
+    });
+}
 
-// Demande un panierId et enregistre le comme cookie
+function listerHoraires() {
+    document.getElementById('pane1Title').innerHTML = "Horaires";
+    document.getElementById('pane2Title').innerHTML = "Ateliers";
+    document.getElementById('pane2Div').innerHTML = ""; // Reset de la seconde pane
+
+    $.ajax({
+        url: '/horaires', 
+        success: function(data){
+            $("#pane1Div").html(data);
+        },
+    });
+}
+
+function listerReservations() {
+    document.getElementById('pane1Title').innerHTML = "Reservations";
+    document.getElementById('pane2Title').innerHTML = "";  
+    // TODO
+}
+
+function listerSeances(atelierId){
+    $.ajax({
+        url: '/seances', 
+        data: { 'atelierId': atelierId },
+        success: function(data){
+            $("#pane2Div").html(data);
+            if(data == ""){ //Cas où l'atelier n'a plus de sessions disponibles
+                $("#pane2Div").html("Il n'y a plus de sessions disponible pour cet atelier.");
+            }
+        }
+    });
+}
+
+function ajouterAuPanier(seanceId){
+    panierId = Cookies.get('panierId');
+    $.ajax({
+        method: "POST",
+        url: "/panier",
+        data: {
+            'action': 'ajouter',
+            'panierId': panierId,
+            'seanceId': seanceId,
+        },
+        success: function(data){
+            console.log('Seance ajouté au panier');
+            console.log(data);
+        },
+        error: function(req, status, error){
+            console.log(error);
+        }
+    });
+}
+
 function getPanierId(){
     $.ajax({
         url:'/panier', 
@@ -13,57 +73,7 @@ function getPanierId(){
     });
 }
 
-//Functions
-
-//Ecouteur du click sur les boutons 
-$(function(){
-    $('button').on('click',function(){      
-        switch ($(this).html()) {
-			//click sur le bouton atelier
-            case 'Ateliers':
-				//On change les titres des parties de l'interface
-                document.getElementById('pane1Title').innerHTML = "Ateliers";
-                document.getElementById('pane2Title').innerHTML = "Horaires";
-				document.getElementById('pane2Div').innerHTML = "";
-				
-				//Affichage des Ateliers
-				$.get(
-					'ateliers', 
-					function(data){
-						$("#pane1Div").html(data);
-					},
-				 );
-				
-                console.log("Bouton \"Ateliers\" pressé");
-                break;
-                
-			//Click sur le bouton Horaire	
-            case 'Horaires':
-				//On change les titres des parties de l'interface
-                document.getElementById('pane1Title').innerHTML = "Horaires";
-                document.getElementById('pane2Title').innerHTML = "Ateliers";
-				document.getElementById('pane2Div').innerHTML = "";
-				
-				//Affichages des Horaires
-				$.get(
-					'horaires', 
-					function(data){
-						$("#pane1Div").html(data);
-					},
-				 );
-				
-                console.log("Bouton \"Horaires\" pressé");
-                break;
-                
-			//Click sur le bouton reservation	
-            case 'Reservations':
-				//On change les titres des parties de l'interface
-                document.getElementById('pane1Title').innerHTML = "Reservations";
-                document.getElementById('pane2Title').innerHTML = "";  
-                console.log("Bouton \"Reservations\" pressé");
-                break;
-                
-			//Click sur le bouton effacer	
+/*
             case 'Effacer':
                 console.log("Bouton \"Effacer\" pressé");
 				
@@ -110,94 +120,8 @@ $(function(){
         }
     });
   });
-  
-//Affichage des horaires pour un atelier selectionné
-function displaySession(idWorkshop){
-	console.log("Atelier " + idWorkshop);
-	idWorkshopSelected=idWorkshop;
-	
-	//Affichage des sessions de l'atelier 
-	$.get(
-		'horaires', 
-		{
-			id : idWorkshop
-		},
-		function(data){
-			$("#pane2Div").html(data);
-			if(data == ""){ //Cas où l'atelier n'a plus de sessions disponibles
-				$("#pane2Div").html("Il n'y a plus de sessions disponible pour cet atelier.");
-			}
-		},
-	);
-}
+*/
 
-
-//Ajout d'une session d'un atelier dans le panier
-function ajouterSeanceAuPanier(seanceId){
-    panierId = Cookies.get('panierId');
-    $.ajax({
-        method: "POST",
-        url: "/panier",
-        data: {
-            'action': 'ajouter',
-            'panierId': panierId,
-            'seanceId': seanceId,
-        },
-        success: function(data){
-            console.log('Seance ajouté au panier');
-            console.log(data);
-        },
-        error: function(req, status, error){
-            console.log(error);
-        }
-    });
-
-    
-    /*
-    //On diminue le nombre de place de la session de 1 et on met à jour l'affichage
-    $.get(
-            'interract_bdd.php', 
-            {
-                    action : "decrementAndReload",
-                    id : idSession,
-                    idWorkshop : idWorkshopSelected 
-            },
-            function(data){
-                    $("#pane2Div").html(data);
-            },
-            'text'
-    );
-    
-    //On ajoute la session dans le recap du panier
-    $.get(
-            'interract_bdd.php', 
-            {
-                    action : "addSessionToCart",
-                    id : idSession,
-                    idWorkshop : idWorkshop
-            },
-            function(data){
-                    $("#briefWorkshop").html($("#briefWorkshop").html()+data);
-            },
-            'text'
-    );
-    
-    //On met à jour le prix
-    $.get(
-            'interract_bdd.php', 
-            {
-                    action : "addPrice",
-                    id : idSession
-            },
-            function(data){
-                    $("#total").html((Number($("#total").html())+Number(data)).toFixed(2));
-            },
-            'text'
-    );
-    */
-	
-}
- 
 //Suppression d'une session d'un atelier dans le panier
 function removeSessionToCart(idSession,idElt){
 	

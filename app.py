@@ -26,7 +26,7 @@ def seances():
 
 @app.route('/horaires')
 def horaires():
-    return utils.listerSeances()
+    return utils.listerHoraires()
 
 
 @app.route('/panier', methods=['GET', 'POST'])
