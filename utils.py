@@ -61,9 +61,9 @@ def listerPanier(panierId):
     panier = db.callproc(c, 'afficherContenuPanier', panierId)
     template = """
         {% for seance in panier %}
-        <p style="cursor: pointer;background-color: #777;border-radius: 5px;">
-            <strong>{{ seance['Numero atelier'] }} - {{ seance['Nom atelier'] }</strong><br />
-            {{ seance['heureDebut'] }} - {{ seance['heurefin'] }<br />
+        <p style="cursor: pointer;background-color: #444;border-radius: 5px;">
+            <strong>{{ seance['Numero atelier'] }} - {{ seance['Nom atelier'] }}</strong><br />
+            {{ seance['heureDebut'] }} - {{ seance['heurefin'] }}<br />
             {{ seance['prix'] }}
         </p>
         {% endfor %}
