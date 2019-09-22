@@ -64,7 +64,8 @@ def listerPanier(panierId):
         <p style="cursor: pointer;background-color: #444;border-radius: 5px;">
             <strong>{{ seance['Numero atelier'] }} - {{ seance['Nom atelier'] }}</strong><br />
             {{ seance['heureDebut'] }} - {{ seance['heurefin'] }}<br />
-            {{ seance['prix'] }}
+            {{ seance['prix'] }}<br />
+            <button onclick="enleverDuPanier({{ seance['Id reservation'] }});">X</button>
         </p>
         {% endfor %}
     """
@@ -75,5 +76,11 @@ def ajouterSeanceAuPanier(panierId, seanceId):
     c = db.get_cursor()
     result = db.callproc(c, 'ajouterSeanceAuPanier', panierId, seanceId, None, '@success')
     success = result[1][0]['out_result']
-    print(success)
-    return ''
+    return success
+
+
+def enleverDuPanier(panierId, seanceId):
+    c = db.get_cursor()
+    result = db.callproc(c, 'enleverReservationDuPanier', panierId, seanceId, '@success')
+    success = result[0]['out_result']
+    return success

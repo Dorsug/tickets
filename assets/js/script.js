@@ -75,6 +75,24 @@ function ajouterAuPanier(seanceId){
     });
 }
 
+function enleverDuPanier(seanceId){
+    panierId = Cookies.get('panierId');
+    $.ajax({
+        method: "DELETE",
+        url: "/panier",
+        data: {
+            'panierId': panierId,
+            'seanceId': seanceId,
+        },
+        success: function(data){
+            majInterfacePanier(panierId);
+        },
+        error: function(req, status, error){
+            console.log(error);
+        }
+    });
+}
+
 function getPanierId(){
     $.ajax({
         url:'/panier', 

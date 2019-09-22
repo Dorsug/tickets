@@ -29,7 +29,7 @@ def horaires():
     return utils.listerHoraires()
 
 
-@app.route('/panier', methods=['GET', 'POST'])
+@app.route('/panier', methods=['GET', 'POST', 'DELETE'])
 def panier():
     if request.method == 'GET':
         action = request.values.get('action')
@@ -49,8 +49,16 @@ def panier():
             seanceId = request.values.get('seanceId')
             if panierId is None or seanceId is None:
                 abort(400)
-            return utils.ajouterSeanceAuPanier(panierId, seanceId)
+            utils.ajouterSeanceAuPanier(panierId, seanceId)
+            return ''
         else:
             abort(404)
+    elif request.method == 'DELETE':
+        panierId = request.values.get('panierId')
+        seanceId = request.values.get('seanceId')
+        if panierId is None or seanceId is None:
+            abort(400)
+        utils.enleverDuPanier(panierId, seanceId)
+        return ''
     else:
         abort(404)
