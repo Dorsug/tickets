@@ -17,12 +17,10 @@ $(function(){
 				
 				//Affichage des Ateliers
 				$.get(
-					'interract_bdd.php', 
-					{action : "displayWorkshop"},
+					'ateliers', 
 					function(data){
 						$("#pane1Div").html(data);
 					},
-					'text'
 				 );
 				
                 console.log("Bouton \"Ateliers\" pressé");
@@ -37,12 +35,10 @@ $(function(){
 				
 				//Affichages des Horaires
 				$.get(
-					'interract_bdd.php', 
-					{action : "displayShedules"},
+					'horaires', 
 					function(data){
 						$("#pane1Div").html(data);
 					},
-					'text'
 				 );
 				
                 console.log("Bouton \"Horaires\" pressé");
