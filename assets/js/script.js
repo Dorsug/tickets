@@ -44,12 +44,11 @@ function listerSeances(atelierId){
     });
 }
 
-function majInterfacePanier(panierId) {
+function majInterfacePanier() {
     $.ajax({
         url: "/panier",
         data: {
             'action': 'lister',
-            'panierId': panierId
         },
         success: function(data){
             document.querySelector('#pane4 .content').innerHTML = data;
@@ -58,17 +57,18 @@ function majInterfacePanier(panierId) {
 }
 
 function ajouterAuPanier(seanceId){
-    panierId = Cookies.get('panierId');
     $.ajax({
         method: "POST",
         url: "/panier",
         data: {
             'action': 'ajouter',
-            'panierId': panierId,
             'seanceId': seanceId,
         },
         success: function(data){
-            majInterfacePanier(panierId);
+            if(Cookies.get('panierId') != data){
+                Cookies.set('panierId', data)
+            };
+            majInterfacePanier();
         },
         error: function(req, status, error){
             console.log(error);
@@ -77,29 +77,17 @@ function ajouterAuPanier(seanceId){
 }
 
 function enleverDuPanier(seanceId){
-    panierId = Cookies.get('panierId');
     $.ajax({
         method: "DELETE",
         url: "/panier",
         data: {
-            'panierId': panierId,
             'seanceId': seanceId,
         },
         success: function(data){
-            majInterfacePanier(panierId);
+            majInterfacePanier();
         },
         error: function(req, status, error){
             console.log(error);
-        }
-    });
-}
-
-function getPanierId(){
-    $.ajax({
-        url:'/panier', 
-        data: {'action': 'new'}, 
-        success: function(data){
-            Cookies.set('panierId', data);
         }
     });
 }

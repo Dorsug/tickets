@@ -37,7 +37,7 @@ def panier():
         if action == 'new':
             return utils.nouveauPanier()
         if action == 'lister':
-            panierId = request.values.get('panierId')
+            panierId = request.cookies.get('panierId')
             if panierId is None:
                 abort(400)
             return generate.listerPanier(panierId)
@@ -46,16 +46,18 @@ def panier():
     elif request.method == 'POST':
         action = request.values.get('action')
         if action == 'ajouter':
-            panierId = request.values.get('panierId')
             seanceId = request.values.get('seanceId')
-            if panierId is None or seanceId is None:
+            if seanceId is None:
                 abort(400)
+            panierId = request.cookies.get('panierId')
+            if panierId is None:
+                panierId = utils.nouveauPanier()
             utils.ajouterSeanceAuPanier(panierId, seanceId)
-            return ''
+            return panierId
         else:
             abort(404)
     elif request.method == 'DELETE':
-        panierId = request.values.get('panierId')
+        panierId = request.cookies.get('panierId')
         seanceId = request.values.get('seanceId')
         if panierId is None or seanceId is None:
             abort(400)
@@ -76,4 +78,18 @@ def paiement():
         abort(400)
     utils.marquePanierPaye(panierId)
 
-    return redirect('/', code=302)
+    # Supprime id du panier validé ét redirige vers la page principale
+    return """<!DOCTYPE html>
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <title>GesTickets2</title>
+            </head>
+            <body>
+            </body>
+            <script src="assets/js/js.cookie.js"></script>
+            <script>
+                Cookies.remove('panierId');
+                window.location.replace('/');
+            </script>
+        </html>"""
