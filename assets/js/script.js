@@ -1,32 +1,33 @@
 function listerAteliers() {
-    document.getElementById('pane1Title').innerHTML = "Ateliers";
-    document.getElementById('pane2Title').innerHTML = "Horaires";
-    document.getElementById('pane2Div').innerHTML = "";
+    document.querySelector('#pane2 h1').innerHTML = "Ateliers";
+    document.querySelector('#pane3 h1').innerHTML = "Horaires";
+    document.querySelector('#pane3 .content').innerHTML = "";
                 
     $.ajax({
         url: '/ateliers', 
         success: function(data){
-            $("#pane1Div").html(data);
+            $("#pane2 .content").html(data);
         }
     });
 }
 
 function listerHoraires() {
-    document.getElementById('pane1Title').innerHTML = "Horaires";
-    document.getElementById('pane2Title').innerHTML = "Ateliers";
-    document.getElementById('pane2Div').innerHTML = ""; // Reset de la seconde pane
+    document.querySelector('#pane2 h1').innerHTML = "Horaires";
+    document.querySelector('#pane3 h1').innerHTML = "Ateliers"; 
+    document.querySelector('#pane3 .content').innerHTML = "";
 
     $.ajax({
         url: '/horaires', 
         success: function(data){
-            $("#pane1Div").html(data);
+            $("#pane2 .content").html(data);
         },
     });
 }
 
 function listerReservations() {
-    document.getElementById('pane1Title').innerHTML = "Reservations";
-    document.getElementById('pane2Title').innerHTML = "";  
+    document.querySelector('#pane2 h1').innerHTML = "Reservations";
+    document.querySelector('#pane3 h1').innerHTML = ""; 
+    document.querySelector('#pane3 .content').innerHTML = "";
     // TODO
 }
 
@@ -35,9 +36,9 @@ function listerSeances(atelierId){
         url: '/seances', 
         data: { 'atelierId': atelierId },
         success: function(data){
-            $("#pane2Div").html(data);
+            $("#pane3 .content").html(data);
             if(data == ""){ //Cas où l'atelier n'a plus de sessions disponibles
-                $("#pane2Div").html("Il n'y a plus de sessions disponible pour cet atelier.");
+                $("#pane3 .content").html("Il n'y a plus de sessions disponible pour cet atelier.");
             }
         }
     });
@@ -51,7 +52,7 @@ function majInterfacePanier(panierId) {
             'panierId': panierId
         },
         success: function(data){
-            document.querySelector('#panier .ateliers .list').innerHTML = data;
+            document.querySelector('#pane4 .content').innerHTML = data;
         }
     });
 }

@@ -7,7 +7,7 @@ def listerAtelier():
     ateliers = db.callproc(c, 'listerAtelier')
     template = """
         {% for atelier in ateliers %}
-        <p onclick="listerSeances({{ atelier['ID'] }});" style="cursor: pointer;background-color: #999;border-radius: 5px;">
+        <p onclick="listerSeances({{ atelier['ID'] }});" class="bulle">
             <strong>{{ atelier['Numero'] }} - {{ atelier['Nom'] }}</strong><br />
             {{ atelier['Description'] }}<br />
             Age: {{ atelier['Age mini'] }}  - {{ atelier['Age maxi'] }}<br />
@@ -23,7 +23,7 @@ def listerHoraires():
     seances = db.callproc(c, 'listerSeances')
     template = """
         {% for seance in seances %}
-        <p style="cursor: pointer;background-color: #777;border-radius: 5px;">
+        <p class="bulle">
             <strong>{{ seance['Date'] }}</strong><br />
             {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
             Atelier {{ seance['Numero atelier'] }}
@@ -38,8 +38,7 @@ def listerSeancesPourAtelier(atelierId):
     seances = db.callproc(c, 'listerSeancesPourAtelier', atelierId)
     template = """
         {% for seance in seances %}
-        <p style="cursor: pointer;background-color: #777;border-radius: 5px;"
-        onclick="ajouterAuPanier({{ seance['ID'] }});">
+        <p class="bulle" onclick="ajouterAuPanier({{ seance['ID'] }});">
             <strong>{{ seance['Date'] }}</strong><br />
             {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
             Places restantes: {{ seance['Places Dispo'] }}
@@ -54,7 +53,7 @@ def listerPanier(panierId):
     panier = db.callproc(c, 'afficherContenuPanier', panierId)
     template = """
         {% for seance in panier %}
-        <p style="cursor: pointer;background-color: #444;border-radius: 5px;">
+        <p class="bulle">
             <strong>{{ seance['Numero atelier'] }} - {{ seance['Nom atelier'] }}</strong><br />
             {{ seance['heureDebut'] }} - {{ seance['heurefin'] }}<br />
             {{ seance['prix'] }}<br />
