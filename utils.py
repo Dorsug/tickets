@@ -19,3 +19,8 @@ def enleverDuPanier(panierId, seanceId):
     result = db.callproc(c, 'enleverReservationDuPanier', panierId, seanceId, '@success')
     success = result[0]['out_result']
     return success
+
+
+def marquePanierPaye(panierId):
+    c = db.get_cursor()
+    db.callproc(c, 'marquerPanierPaye', panierId, '@sucess')

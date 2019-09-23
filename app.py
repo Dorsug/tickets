@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, redirect
 from flask import render_template_string
 import db
 import utils
@@ -63,3 +63,17 @@ def panier():
         return ''
     else:
         abort(404)
+
+
+@app.route('/paiement', methods=['POST'])
+def paiement():
+    # TODO Voir ou stocker modePaiement et codePostal
+    # print(request.form)
+
+    try:
+        panierId = request.cookies['panierId']
+    except KeyError: # Il n'y a pas de panier
+        abort(400)
+    utils.marquePanierPaye(panierId)
+
+    return redirect('/', code=302)

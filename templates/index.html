@@ -34,10 +34,27 @@
             <h1>Panier</h1>
             <div class="menu">
                 <button class="bulle" >Effacer</button>
-                <button class="bulle" >Paiement</button>
+                <button class="bulle" onclick="document.getElementById('paiement').style.display = 'block'">Paiement</button>
             </div>
             <div class="content">
             </div>
         </div>
+    </div>
+    <div id="paiement">
+        <h1>Paiement</h1>
+        <form method="post" action="/paiement">
+            <div>
+                Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31..." autofocus>
+            </div>
+            <div>
+                <label for="modePaiment">Mode de paiement: </label>
+                <label><input type="radio" name="modePaiement" value="espece" required checked/>Espèce</label>
+                <label><input type="radio" name="modePaiement" value="cheque" required/>Chèque</label>
+            </div>
+            <div>
+                <input type="submit" value="Ok">
+            </div>
+        </form>
+        <button onclick="document.getElementById('paiement').style.display = 'none'">Fermer</button>
     </div>
 </body>

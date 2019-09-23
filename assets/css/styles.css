@@ -72,3 +72,32 @@ h1 {
 #pane4 .bulle {
     background: #444;
 }
+
+/* Interface de paiement */
+#paiement {
+    display: none;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55%;
+    height: 40%;
+    border: 3px solid black;
+}
+
+#paiement form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+form div {
+    margin: 1em;
+}
+
+#paiement button {
+    position: absolute;
+    top: 0;
+}
