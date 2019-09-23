@@ -73,5 +73,7 @@ def paiement():
         abort(400)
     utils.marquePanierPaye(panierId)
 
+    utils.impressionEtiquettes(panierId)
+
     # Supprime id du panier validé ét redirige vers la page principale
     return render_template('paiement.html')
