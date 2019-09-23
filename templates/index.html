@@ -1,60 +1,59 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>GesTickets2</title>
+        <link rel="stylesheet" href="assets/css/styles.css">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>GesTickets2</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-
-    <!-- Scripts -->
-    <script src="assets/js/jquery.min.js" async></script>
-    <script src="assets/js/js.cookie.js" async></script>
-    <script src="assets/js/script.js" defer></script>
-</head>
-
-<body>
-    <div id="main">
-        <div id="pane1" class="pane menu">
-            <button class="bulle" onclick="listerAteliers();">Ateliers</button>
-            <button class="bulle" onclick="listerHoraires();">Horaires</button>
-            <button class="bulle" >Réservations</button>
-        </div>
-        <div id="pane2" class="pane">
-            <h1>Ateliers</h1>
-            <div class="content">
+        <!-- Scripts -->
+        <script src="assets/js/js.cookie.js" async></script>
+        <script src="assets/js/jquery.min.js" defer></script>
+        <script src="assets/js/script.js" defer></script>
+    </head>
+    <body>
+        <div id="main">
+            <div id="pane1" class="pane menu">
+                <button class="bulle" onclick="listerAteliers();">Ateliers</button>
+                <button class="bulle" onclick="listerHoraires();">Horaires</button>
+                <button class="bulle" >Réservations</button>
+            </div>
+            <div id="pane2" class="pane">
+                <h1>Ateliers</h1>
+                <div class="content">
+                </div>
+            </div>
+            <div id="pane3" class="pane">
+                <h1>Horaires</h1>
+                <div class="content">
+                </div>
+            </div>
+            <div id="pane4" class="pane">
+                <h1>Panier</h1>
+                <div class="menu">
+                    <button class="bulle" >Effacer</button>
+                    <button class="bulle" onclick="document.getElementById('paiement').style.display = 'block'">Paiement</button>
+                </div>
+                <div class="content">
+                </div>
             </div>
         </div>
-        <div id="pane3" class="pane">
-            <h1>Horaires</h1>
-            <div class="content">
-            </div>
+        <div id="paiement">
+            <h1>Paiement</h1>
+            <form method="post" action="/paiement">
+                <div>
+                    Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…" autofocus>
+                </div>
+                <div>
+                    <label for="modePaiment">Mode de paiement: </label>
+                    <label><input type="radio" name="modePaiement" value="espece" required checked/>Espèce</label>
+                    <label><input type="radio" name="modePaiement" value="cheque" required/>Chèque</label>
+                </div>
+                <div>
+                    <input type="submit" value="Ok">
+                </div>
+            </form>
+            <button onclick="document.getElementById('paiement').style.display = 'none'">Fermer</button>
         </div>
-        <div id="pane4" class="pane">
-            <h1>Panier</h1>
-            <div class="menu">
-                <button class="bulle" >Effacer</button>
-                <button class="bulle" onclick="document.getElementById('paiement').style.display = 'block'">Paiement</button>
-            </div>
-            <div class="content">
-            </div>
-        </div>
-    </div>
-    <div id="paiement">
-        <h1>Paiement</h1>
-        <form method="post" action="/paiement">
-            <div>
-                Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31..." autofocus>
-            </div>
-            <div>
-                <label for="modePaiment">Mode de paiement: </label>
-                <label><input type="radio" name="modePaiement" value="espece" required checked/>Espèce</label>
-                <label><input type="radio" name="modePaiement" value="cheque" required/>Chèque</label>
-            </div>
-            <div>
-                <input type="submit" value="Ok">
-            </div>
-        </form>
-        <button onclick="document.getElementById('paiement').style.display = 'none'">Fermer</button>
-    </div>
-</body>
+    </body>
+</html>

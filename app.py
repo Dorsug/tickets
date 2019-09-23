@@ -3,7 +3,6 @@ from flask import render_template_string
 import db
 import utils
 import generate
-from pprint import pprint
 
 app = Flask(__name__, static_folder='assets')
 app.teardown_appcontext(db.close_db)
@@ -44,18 +43,14 @@ def panier():
         else:
             abort(404)
     elif request.method == 'POST':
-        action = request.values.get('action')
-        if action == 'ajouter':
-            seanceId = request.values.get('seanceId')
-            if seanceId is None:
-                abort(400)
-            panierId = request.cookies.get('panierId')
-            if panierId is None:
-                panierId = utils.nouveauPanier()
-            utils.ajouterSeanceAuPanier(panierId, seanceId)
-            return panierId
-        else:
-            abort(404)
+        seanceId = request.values.get('seanceId')
+        if seanceId is None:
+            abort(400)
+        panierId = request.cookies.get('panierId')
+        if panierId is None:
+            panierId = utils.nouveauPanier()
+        utils.ajouterSeanceAuPanier(panierId, seanceId)
+        return panierId
     elif request.method == 'DELETE':
         panierId = request.cookies.get('panierId')
         seanceId = request.values.get('seanceId')
@@ -79,17 +74,4 @@ def paiement():
     utils.marquePanierPaye(panierId)
 
     # Supprime id du panier validé ét redirige vers la page principale
-    return """<!DOCTYPE html>
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <title>GesTickets2</title>
-            </head>
-            <body>
-            </body>
-            <script src="assets/js/js.cookie.js"></script>
-            <script>
-                Cookies.remove('panierId');
-                window.location.replace('/');
-            </script>
-        </html>"""
+    return render_template('paiement.html')

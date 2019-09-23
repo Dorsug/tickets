@@ -61,7 +61,6 @@ function ajouterAuPanier(seanceId){
         method: "POST",
         url: "/panier",
         data: {
-            'action': 'ajouter',
             'seanceId': seanceId,
         },
         success: function(data){
