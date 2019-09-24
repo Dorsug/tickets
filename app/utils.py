@@ -28,6 +28,13 @@ def enleverDuPanier(panierId, seanceId):
     return success
 
 
+def viderPanier(panierId):
+    c = db.get_cursor()
+    result = db.callproc(c, 'viderPanier', panierId, '@success')
+    success = result[0]['out_result']
+    return success
+
+
 def marquePanierPaye(panierId):
     c = db.get_cursor()
     db.callproc(c, 'marquerPanierPaye', panierId, '@sucess')

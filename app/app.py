@@ -55,9 +55,12 @@ def panier():
     elif request.method == 'DELETE':
         panierId = request.cookies.get('panierId')
         seanceId = request.values.get('seanceId')
-        if panierId is None or seanceId is None:
+        if panierId is None:
             abort(400)
-        utils.enleverDuPanier(panierId, seanceId)
+        if seanceId is None: # Vider tout le panier
+            pass
+        else:
+            utils.enleverDuPanier(panierId, seanceId)
         return ''
     else:
         abort(404)

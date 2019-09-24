@@ -90,3 +90,17 @@ function enleverDuPanier(seanceId){
         }
     });
 }
+
+function viderPanier() {
+    $.ajax({
+        method: "DELETE",
+        url: "/panier",
+        data: {},
+        success: function(data){
+            majInterfacePanier();
+        },
+        error: function(req, status, error){
+            console.log(error);
+        }
+    });
+}
