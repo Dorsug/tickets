@@ -53,6 +53,7 @@ def generationEtiquettes(numero, nom, date, debut, fin):
         img.save('labels/' + hash + '.png')
     except FileNotFoundError: # Si le repertoire 'labels' n'existe pas
         mkdir('labels')
+        img.save('labels/' + hash + '.png')
     return hash
 
 
