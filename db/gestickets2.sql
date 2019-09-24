@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : dbhost
--- Généré le :  mar. 24 sep. 2019 à 10:08
+-- Généré le :  mar. 24 sep. 2019 à 17:04
 -- Version du serveur :  8.0.17
 -- Version de PHP :  7.2.22
 
@@ -659,7 +659,7 @@ BEGIN
 	SELECT out_result;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ModifierAssociation` (IN `in_idassociation` INT(11), OUT `out_result` INT, IN `in_nom` VARCHAR(255), IN `in_numero` INT(10), IN `in_mail` INT(255), IN `in_description` TEXT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ModifierAssociation` (IN `in_idassociation` INT(11), OUT `out_result` INT, IN `in_nom` VARCHAR(255), IN `in_numero` INT(10), IN `in_mail` VARCHAR(255), IN `in_description` TEXT)  NO SQL
     COMMENT 'Retourne 1 si effectué 0 sinon'
 BEGIN
 	SELECT COUNT(Association.pk_id) INTO @idAsso FROM Association
