@@ -1,5 +1,5 @@
 from flask import render_template_string
-import db
+from . import db
 
 
 def listerAtelier():

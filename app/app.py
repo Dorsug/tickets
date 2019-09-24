@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, abort, redirect
 from flask import render_template_string
-import db
-import utils
-import generate
+from . import db
+from . import utils
+from . import generate
 
-app = Flask(__name__, static_folder='assets')
+
+app = Flask('gestickets2', static_folder='assets')
 app.teardown_appcontext(db.close_db)
 
 

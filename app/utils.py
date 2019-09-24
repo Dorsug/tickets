@@ -1,4 +1,4 @@
-import db
+from . import db
 from hashlib import sha1
 from os import mkdir
 from PIL import Image, ImageDraw, ImageFont
