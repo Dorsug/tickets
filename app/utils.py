@@ -3,6 +3,10 @@ from hashlib import sha1
 from os import mkdir
 from PIL import Image, ImageDraw, ImageFont
 
+from brother_ql.conversion import convert
+from brother_ql.backends.helpers import send
+from brother_ql.raster import BrotherQLRaster
+
 
 def nouveauPanier():
     c = db.get_cursor()
@@ -34,7 +38,7 @@ def _clean_timedelta(td):
     return ':'.join(str(td).split(':')[:2])
 
 
-def generationEtiquettes(numero, nom, date, debut, fin):
+def _generationEtiquettes(numero, nom, date, debut, fin):
     hash = sha1((f'{numero},{nom},{date},{debut},{fin}').encode('utf-8')).hexdigest()
     horaire = f"{_clean_timedelta(debut)} - {_clean_timedelta(fin)}"
 
@@ -49,22 +53,42 @@ def generationEtiquettes(numero, nom, date, debut, fin):
     draw.text((10, 170), horaire, fill=0, font=font_small)
     draw.text((10, 230), str(date), fill=0, font=font_small)
 
+    filename = 'labels/' + hash + '.png'
+
     try:
-        img.save('labels/' + hash + '.png')
+        img.save(filename)
     except FileNotFoundError: # Si le repertoire 'labels' n'existe pas
         mkdir('labels')
-        img.save('labels/' + hash + '.png')
-    return hash
+        img.save(filename)
+    return filename
+
+
+def _sendToPrinter(images):
+    printer = 'file:///dev/usb/lp0'
+    backend = 'linux_kernel'
+    qlr = BrotherQLRaster('QL-800')
+
+    instructions = convert(qlr=qlr, images=images, label='62red', red=True)
+    send(
+        instructions=instructions,
+        printer_identifier=printer,
+        backend_identifier=backend,
+        blocking=False
+    )
 
 
 def impressionEtiquettes(panierId):
     c = db.get_cursor()
     panier = db.callproc(c, 'afficherContenuPanier', panierId)
+    images = []
     for seance in panier:
-        hash = generationEtiquettes(
-            numero=seance['Numero atelier'],
-            nom=seance['Nom atelier'],
-            date=seance['date'],
-            debut=seance['heureDebut'],
-            fin=seance['heurefin']
+        images.apppend(
+            _generationEtiquettes(
+                numero=seance['Numero atelier'],
+                nom=seance['Nom atelier'],
+                date=seance['date'],
+                debut=seance['heureDebut'],
+                fin=seance['heurefin']
+            )
         )
+    _sendToPrinter(images)
