@@ -89,7 +89,7 @@ def impressionEtiquettes(panierId):
     panier = db.callproc(c, 'afficherContenuPanier', panierId)
     images = []
     for seance in panier:
-        images.apppend(
+        images.append(
             _generationEtiquettes(
                 numero=seance['Numero atelier'],
                 nom=seance['Nom atelier'],
