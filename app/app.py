@@ -58,7 +58,7 @@ def panier():
         if panierId is None:
             abort(400)
         if seanceId is None: # Vider tout le panier
-            pass
+            utils.viderPanier(panierId)
         else:
             utils.enleverDuPanier(panierId, seanceId)
         return ''
