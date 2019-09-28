@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 4.9.0.1
--- https://www.phpmyadmin.net/
---
--- Hôte : dbhost
--- Généré le :  mar. 24 sep. 2019 à 17:04
--- Version du serveur :  8.0.17
--- Version de PHP :  7.2.22
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -126,7 +117,7 @@ BEGIN
     SELECT out_result;
 END$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `AjoutMoyenPaiement` (IN `in_MoyenPaiement` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `AjoutMoyenPaiement` (IN `in_MoyenPaiement` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Permet d''ajouter un moyen de paiement'
 BEGIN
 	SET out_done = 0;
@@ -252,7 +243,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAtelier` ()  SELECT
     Atelier.prix AS "Prix"
 FROM Atelier$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `ListerAteliersPourHoraire` (IN `in_HeureDebut` TIME, IN `in_HeureFin` TIME)  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `ListerAteliersPourHoraire` (IN `in_HeureDebut` TIME, IN `in_HeureFin` TIME)  NO SQL
     COMMENT 'Retourne la liste des atelier pour les créneaux horaires'
 BEGIN
 	IF in_HeureDebut <> '' THEN
@@ -281,7 +272,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerClients` ()  SELECT
     Client.Mail AS "Mail"
 FROM Client$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `ListerMoyensPaiement` ()  SELECT * FROM MoyenPaiement$$
+CREATE DEFINER=`root`@`%` PROCEDURE `ListerMoyensPaiement` ()  SELECT * FROM MoyenPaiement$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerReservations` ()  SELECT
 	Reservation.pk_id AS "ID",
@@ -559,7 +550,7 @@ BEGIN
 	END IF;
 END$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `ListerSeancesPourAtelier` (IN `in_idAtelier` INT(11))  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `ListerSeancesPourAtelier` (IN `in_idAtelier` INT(11))  NO SQL
     COMMENT 'Retourne la liste des séances pour un atelier'
 BEGIN
 	IF in_idAtelier <> '' THEN
@@ -598,7 +589,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourDate` (IN `in_date
 FROM Seance, Atelier
 WHERE Seance.fk_atelier = Atelier.pk_id AND Seance.date = in_date$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `ListerSeancesPourHoraire` (IN `in_HeureDebut` TIME, IN `in_HeureFin` TIME)  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `ListerSeancesPourHoraire` (IN `in_HeureDebut` TIME, IN `in_HeureFin` TIME)  NO SQL
     COMMENT 'Retourne la liste des Séances pour les créneaux horaires'
 BEGIN
 	IF in_HeureDebut <> '' THEN
@@ -728,7 +719,7 @@ BEGIN
 	SELECT out_id;
 END$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `ModifierMoyenPaiement` (IN `id_MoyenPaiement` INT(11), IN `in_MoyenModifie` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `ModifierMoyenPaiement` (IN `id_MoyenPaiement` INT(11), IN `in_MoyenModifie` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Permet de modifier le moyen de paiement'
 BEGIN
 	SET out_done = 0;
@@ -775,7 +766,7 @@ BEGIN
 	SELECT out_id;
 END$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `PayerPanier` (IN `in_idPanier` INT(11), IN `in_idMoyPaie` INT(11), IN `in_CodPost` VARCHAR(5), OUT `out_done` BOOLEAN)  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `PayerPanier` (IN `in_idPanier` INT(11), IN `in_idMoyPaie` INT(11), IN `in_CodPost` VARCHAR(5), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Paie le panier en indiquant moyen de paiement et code postal'
 BEGIN
 	SET out_done = 0;
@@ -848,7 +839,7 @@ BEGIN
    SELECT out_result;
 END$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `SupprimerMoyenPaiement` (IN `id_MoyenPaiement` INT(11), OUT `out_done` BOOLEAN)  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `SupprimerMoyenPaiement` (IN `id_MoyenPaiement` INT(11), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Supprime un moyen de paiement'
 BEGIN
 	SET out_done = 0;
@@ -898,7 +889,7 @@ BEGIN
    SELECT out_result;
 END$$
 
-CREATE DEFINER=`sylvain`@`%` PROCEDURE `ViderPanier` (IN `in_idPaner` INT(11), OUT `out_result` INT(11))  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `ViderPanier` (IN `in_idPaner` INT(11), OUT `out_result` INT(11))  NO SQL
     COMMENT 'Enlève toute les séances du panier'
 BEGIN
 	SET out_result = 0;
@@ -941,7 +932,7 @@ CREATE TABLE `Atelier` (
   `pk_id` int(11) NOT NULL COMMENT 'Clé primaire atelier',
   `fk_association` int(11) NOT NULL COMMENT 'Clé secondaire de l''association ',
   `numero` int(11) NOT NULL COMMENT 'Numéro d’atelier',
-  `nom` varchar(16) NOT NULL COMMENT 'Nom de l’atelier',
+  `nom` varchar(100) NOT NULL COMMENT 'Nom de l’atelier',
   `description` text NOT NULL COMMENT 'Description de l’atelier',
   `agemini` int(11) NOT NULL COMMENT 'Age minimum pour participer à l’atelier',
   `agemaxi` int(11) NOT NULL COMMENT 'Age maximum pour participer à l’atelier',
