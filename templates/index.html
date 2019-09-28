@@ -25,22 +25,35 @@
         </div>
 
         <div id="main">
-            <div id="pane1" class="pane menu">
-                <button class="bulle" onclick="listerAteliers();">Ateliers</button>
-                <button class="bulle" onclick="listerHoraires();">Horaires</button>
-                <button class="bulle" >Réservations</button>
+            <div id="pane1" class="pane">
+                <h1>Filtres</h1>
+                <div class="content">
+                    <h2>Ateliers</h2>
+
+                    <div class="ateliers">
+                    {% for atelier in ateliers %}
+                        <label>
+                            <input type="checkbox" name="atelier" value="{{ atelier.ID }}" autocomplete="off">
+                            {{ atelier.Nom }}
+                        </label><br />
+                    {% endfor %}
+                    </div>
+
+                    <h2>Ages</h2>
+                    {% for age in ages %}
+                        <label>
+                            <input type="checkbox" name="age" value="{{ loop.index }}" autocomplete="off">
+                            {{ age }}
+                        </label><br />
+                    {% endfor %}
+                </div>
             </div>
             <div id="pane2" class="pane">
-                <h1>Ateliers</h1>
+                <h1>Séances</h1>
                 <div class="content">
                 </div>
             </div>
             <div id="pane3" class="pane">
-                <h1>Horaires</h1>
-                <div class="content">
-                </div>
-            </div>
-            <div id="pane4" class="pane">
                 <h1>Panier</h1>
                 <div class="menu">
                     <button class="bulle" onclick="viderPanier()">Effacer</button>

@@ -104,3 +104,13 @@ function viderPanier() {
         }
     });
 }
+
+function getChecked() {
+    data = {'atelier': [], 'age': []};
+    for (checkbox of document.querySelectorAll('input[type="checkbox"]')) {
+        if (checkbox.checked == true) {
+            data[checkbox.name].push(checkbox.value);
+        }
+    }
+    return data
+}

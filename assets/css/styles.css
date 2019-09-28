@@ -23,7 +23,7 @@ h1 {
 
 #main {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     height: 100%;
 }
 
@@ -43,10 +43,6 @@ h1 {
 
 #pane3 {
     grid-column 3;
-}
-
-#pane4 {
-    grid-column 4;
 }
 
 .menu .bulle {

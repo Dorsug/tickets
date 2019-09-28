@@ -11,7 +11,18 @@ app.teardown_appcontext(db.close_db)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    c = db.get_cursor()
+    ateliers = db.callproc(c, 'listerAtelier')
+    ages = ['Tout Public',
+            '0 - 4',
+            '4 - 6',
+            '6 - 8',
+            '8 - 10',
+            '10 - 12',
+            '12 - 14',
+            '14 - 18'
+            ]
+    return render_template('index.html', ateliers=ateliers, ages=ages)
 
 
 @app.route('/ateliers')
