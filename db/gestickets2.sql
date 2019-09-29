@@ -27,8 +27,8 @@ CREATE PROCEDURE listerSeancePourFiltres (
 )
 BEGIN
     SET in_debutApartirde = IFNULL(in_debutApartirde, '00:00');
-    SET in_agemini = IFNULL(in_agemini, 99);
-    SET in_agemaxi = IFNULL(in_agemaxi, 0);
+    SET in_agemini = IFNULL(in_agemini, 0);
+    SET in_agemaxi = IFNULL(in_agemaxi, 99);
 
     SELECT
         Atelier.nom,
