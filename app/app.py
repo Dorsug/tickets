@@ -8,21 +8,46 @@ from . import generate
 app = Flask('gestickets2', static_folder='assets')
 app.teardown_appcontext(db.close_db)
 
+ages = [
+        {'intv': [0, 99], 'interface': 'Tout Public'},
+        {'intv': [0, 4], 'interface': '0 - 4'},
+        {'intv': [4, 6], 'interface': '4 - 6'},
+        {'intv': [6, 8], 'interface': '6 - 8'},
+        {'intv': [8, 10], 'interface': '8 - 10'},
+        {'intv': [10, 12], 'interface': '10 - 12'},
+        {'intv': [12, 14], 'interface':'12 - 14'},
+        {'intv': [14, 18], 'interface': '14 - 18'}
+        ]
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    c = db.get_cursor()
-    ateliers = db.callproc(c, 'listerAtelier')
-    ages = ['Tout Public',
-            '0 - 4',
-            '4 - 6',
-            '6 - 8',
-            '8 - 10',
-            '10 - 12',
-            '12 - 14',
-            '14 - 18'
-            ]
-    return render_template('index.html', ateliers=ateliers, ages=ages)
+    if request.method == 'GET':
+        c = db.get_cursor()
+        ateliers = db.callproc(c, 'listerAtelier')
+        return render_template(
+            'index.html',
+            ateliers=ateliers,
+            ages=[x['interface'] for x in ages]
+        )
+    if request.method == 'POST':
+        data = request.get_json()
+
+        ages_ns = [int(x) for x in data['age']]
+        ages_in = []
+        for age_n in ages_ns:
+            ages_in.extend(ages[age_n - 1]['intv'])
+        if ages_in != []:
+            age_maxi = max(ages_in)
+            age_mini = min(ages_in)
+        else:
+            age_maxi = None
+            age_mini = None
+
+        atelier = ','.join(data['atelier'])
+
+        c = db.get_cursor()
+        ateliers = db.callproc(c, 'listerSeancePourFiltres', atelier, None, age_mini, age_maxi)
+        return render_template('ateliers.html', ateliers=ateliers)
 
 
 @app.route('/ateliers')

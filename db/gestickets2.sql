@@ -17,6 +17,36 @@ DELIMITER $$
 --
 -- Procédures
 --
+
+
+CREATE PROCEDURE listerSeancePourFiltres (
+    IN in_idAtelier TEXT,
+    IN in_debutApartirde TIME,
+    IN in_agemini INT,
+    IN in_agemaxi INT
+)
+BEGIN
+    SET in_debutApartirde = IFNULL(in_debutApartirde, '00:00');
+    SET in_agemini = IFNULL(in_agemini, 99);
+    SET in_agemaxi = IFNULL(in_agemaxi, 0);
+
+    SELECT
+        Atelier.nom,
+        Atelier.numero,
+        Atelier.agemini,
+        Atelier.agemaxi,
+        Seance.heureDebut,
+        Seance.heureFin
+    FROM Seance
+    INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
+    WHERE FIND_IN_SET(Seance.fk_atelier, in_idAtelier) > 0
+    AND Seance.heureDebut >= in_debutApartirde
+    AND Atelier.agemini <= in_agemaxi
+    AND Atelier.agemaxi >= in_agemini
+    ORDER BY Atelier.numero, Seance.heureDebut;
+END$$
+
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AfficherAssociation` (IN `in_idAssociation` INT(11))  SELECT * FROM Association
 WHERE in_idAssociation = Association.pk_id$$
 

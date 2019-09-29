@@ -114,3 +114,18 @@ function getChecked() {
     }
     return data
 }
+
+function getSeances() {
+    $.ajax({
+        method: 'POST',
+        url: '/',
+        data: JSON.stringify(getChecked()),
+        contentType: 'application/json; charset=utf-8',
+        success: function(data){
+            document.querySelector('#pane2 .content').innerHTML = data;
+        },
+        error: function(req, status, error){
+            console.log(req, status, error);
+        }
+    });
+}

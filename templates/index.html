@@ -10,8 +10,6 @@
 
         <!-- Scripts -->
         <script src="assets/js/js.cookie.js" async></script>
-        <script src="assets/js/jquery.min.js" defer></script>
-        <script src="assets/js/script.js" defer></script>
 
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png" id="favicon">
@@ -81,4 +79,11 @@
             <button onclick="document.getElementById('paiement').style.display = 'none'">Fermer</button>
         </div>
     </body>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script>
+        for (box of document.querySelectorAll('input[type="checkbox"]')) {
+            box.onclick = getSeances;
+        }
+    </script>
 </html>

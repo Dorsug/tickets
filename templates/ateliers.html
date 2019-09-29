@@ -1,0 +1,7 @@
+{% for atelier in ateliers %}
+<p class="bulle">
+    {{ atelier.numero }}. {{ atelier.nom }}<br />
+    {{ atelier.heureDebut }}-{{ atelier.heureFin }}<br />
+    {{ atelier.agemini }}-{{ atelier.agemaxi }} ans
+</p>
+{% endfor %}
