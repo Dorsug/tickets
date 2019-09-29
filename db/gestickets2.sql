@@ -947,9 +947,9 @@ DELIMITER ;
 CREATE TABLE `Association` (
   `pk_id` int(11) NOT NULL COMMENT 'Clé primaire association',
   `Nom` varchar(255) NOT NULL COMMENT 'Nom de l''association',
-  `Telephone` varchar(10) NOT NULL COMMENT 'Numéro de téléphone',
-  `Mail` varchar(255) NOT NULL COMMENT 'Adresse mail de l''association',
-  `Description` text NOT NULL COMMENT 'Informations complémentaire lié à l''association'
+  `Telephone` varchar(10) COMMENT 'Numéro de téléphone',
+  `Mail` varchar(255) COMMENT 'Adresse mail de l''association',
+  `Description` text COMMENT 'Informations complémentaire lié à l''association'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table listant les associations';
 
 -- --------------------------------------------------------
