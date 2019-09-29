@@ -112,7 +112,8 @@ function getChecked() {
             data[checkbox.name].push(checkbox.value);
         }
     }
-    data['heure'] = document.querySelector('#pane1 input[type="radio"]:checked').value
+    data['heure'] = document.querySelector('#pane1 input[type="radio"][name="heure"]:checked').value
+    data['date'] = document.querySelector('#pane1 input[type="radio"][name="date"]:checked').value
     return data
 }
 

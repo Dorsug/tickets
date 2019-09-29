@@ -23,7 +23,8 @@ CREATE PROCEDURE listerSeancePourFiltres (
     IN in_idAtelier TEXT,
     IN in_debutApartirde TIME,
     IN in_agemini INT,
-    IN in_agemaxi INT
+    IN in_agemaxi INT,
+    IN in_date DATE
 )
 BEGIN
     SET in_debutApartirde = IFNULL(in_debutApartirde, '00:00');
@@ -44,6 +45,7 @@ BEGIN
     AND Seance.heureDebut >= in_debutApartirde
     AND Atelier.agemini <= in_agemaxi
     AND Atelier.agemaxi >= in_agemini
+    AND Seance.date = in_date
     ORDER BY Atelier.numero, Seance.heureDebut;
 END$$
 

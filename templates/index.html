@@ -51,6 +51,13 @@
                             {{ heure }}
                         </label><br />
                     {% endfor %}
+                    <h2>Date</h2>
+                    {% for date in dates %}
+                        <label>
+                            <input type="radio" name="date" value="{{ date.value }}" autocomplete="off"{% if loop.index == 1 %} checked{% endif%}>
+                            {{ date.interface }}
+                        <label><br />
+                    {% endfor %}
                 </div>
             </div>
             <div id="pane2" class="pane">
