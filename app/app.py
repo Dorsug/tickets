@@ -41,6 +41,10 @@ def index():
     if request.method == 'POST':
         data = request.get_json()
 
+        atelier = ','.join(data['atelier'])
+        if atelier == '':
+            return ''
+
         ages_ns = [int(x) for x in data['age']]
         ages_in = []
         for age_n in ages_ns:
@@ -51,8 +55,6 @@ def index():
         else:
             age_maxi = None
             age_mini = None
-
-        atelier = ','.join(data['atelier'])
 
         c = db.get_cursor()
         ateliers = db.callproc(c, 'listerSeancePourFiltres', atelier, data['heure'], age_mini, age_maxi, data['date'])
