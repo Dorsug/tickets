@@ -51,7 +51,7 @@ function majInterfacePanier() {
             'action': 'lister',
         },
         success: function(data){
-            document.querySelector('#pane4 .content').innerHTML = data;
+            document.querySelector('#pane3 .content').innerHTML = data;
         }
     });
 }

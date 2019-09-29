@@ -36,7 +36,8 @@ BEGIN
         Atelier.agemini,
         Atelier.agemaxi,
         Seance.heureDebut,
-        Seance.heureFin
+        Seance.heureFin,
+        Seance.pk_id AS id
     FROM Seance
     INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
     WHERE FIND_IN_SET(Seance.fk_atelier, in_idAtelier) > 0
