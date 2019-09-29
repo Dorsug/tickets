@@ -44,6 +44,13 @@
                             {{ age }}
                         </label><br />
                     {% endfor %}
+                    <h2>Début à partir de</h2>
+                    {% for heure in heures %}
+                        <label>
+                            <input type="radio" name="heure" value="{{ heure }}" autocomplete="off"{% if loop.index == 1 %} checked{% endif %}>
+                            {{ heure }}
+                        </label><br />
+                    {% endfor %}
                 </div>
             </div>
             <div id="pane2" class="pane">
@@ -82,7 +89,7 @@
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/script.js"></script>
     <script>
-        for (box of document.querySelectorAll('input[type="checkbox"]')) {
+        for (box of document.querySelectorAll('#pane1 input')) {
             box.onclick = getSeances;
         }
     </script>

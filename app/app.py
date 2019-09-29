@@ -19,6 +19,8 @@ ages = [
         {'intv': [14, 18], 'interface': '14 - 18'}
         ]
 
+heures = [str(x) + ':00' for x in range(8, 19)]
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
@@ -27,7 +29,8 @@ def index():
         return render_template(
             'index.html',
             ateliers=ateliers,
-            ages=[x['interface'] for x in ages]
+            ages=[x['interface'] for x in ages],
+            heures=heures
         )
     if request.method == 'POST':
         data = request.get_json()
@@ -46,7 +49,7 @@ def index():
         atelier = ','.join(data['atelier'])
 
         c = db.get_cursor()
-        ateliers = db.callproc(c, 'listerSeancePourFiltres', atelier, None, age_mini, age_maxi)
+        ateliers = db.callproc(c, 'listerSeancePourFiltres', atelier, data['heure'], age_mini, age_maxi)
         return render_template('ateliers.html', ateliers=ateliers)
 
 
