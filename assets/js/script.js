@@ -1,19 +1,20 @@
 function listerAteliers() {
-    // Change la disposition des colonnes 2 et 3
-    document.getElementById('pane3').style.display = 'block';
-    document.getElementById('pane2').style['grid-column'] = '2 / span 1';
-    // Change les classe 'selected' dans la colonne 1
-    try {
-        document.querySelector('#pane1 .horaires').classList.remove('selected');
-    } catch (e) {}
-    try {
-        document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
-    } catch (e) {}
-
     document.querySelector('#pane1 .ateliers').classList.add('selected');
     $.ajax({
         url: '/ateliers', 
         success: function(data){
+            // Modifications esthétiques
+                // Change la disposition des colonnes 2 et 3
+                document.getElementById('pane3').style.display = 'block';
+                document.getElementById('pane2').style['grid-column'] = '2 / span 1';
+                // Change les classe 'selected' dans la colonne 1
+                try {
+                    document.querySelector('#pane1 .horaires').classList.remove('selected');
+                } catch (e) {}
+                try {
+                    document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
+                } catch (e) {}
+            // Remplissage des données
             document.querySelector('#pane2 .content').innerHTML = data;
         }
     });
@@ -40,41 +41,40 @@ function listerReservations() {
 }
 
 function listerSeances(element, atelierId){
-    try {
-        document.querySelector('#pane2 .selected').classList.remove('selected')
-    } catch (e) {}
-
     $.ajax({
         url: '/seances', 
         data: { 'atelierId': atelierId },
         success: function(data){
+            // Modifications esthétiques
+            try {
+                document.querySelector('#pane2 .selected').classList.remove('selected')
+            } catch (e) {}
             element.classList.add('selected');
-            $("#pane3 .content").html(data);
-            if(data == ""){ //Cas où l'atelier n'a plus de sessions disponibles
-                $("#pane3 .content").html("Il n'y a plus de sessions disponible pour cet atelier.");
-            }
+            // Remplissage des données
+            document.querySelector("#pane3 .content").innerHTML = data;
         }
     });
 }
 
 function listerSeancesPourHoraire(element, horaire) {
-    // Change la disposition des colonnes 2 et 3
-    document.getElementById('pane3').style.display = 'none';
-    document.getElementById('pane2').style['grid-column'] = '2 / span 2';
-    // Change les classe 'selected' dans la colonne 1
-    try {
-        document.querySelector('#pane1 .ateliers').classList.remove('selected');
-    } catch (e) {}
-    try {
-        document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
-    } catch (e) {}
-    document.querySelector('#pane1 .horaires').classList.add('selected');
-    element.classList.add('selected');
-
     $.ajax({
         url: '/seances',
         data: { 'horaire': horaire },
         success: function(data) {
+            // Modifications esthétiques
+                // Change la disposition des colonnes 2 et 3
+                document.getElementById('pane3').style.display = 'none';
+                document.getElementById('pane2').style['grid-column'] = '2 / span 2';
+                // Change les classe 'selected' dans la colonne 1
+                try {
+                    document.querySelector('#pane1 .ateliers').classList.remove('selected');
+                } catch (e) {}
+                try {
+                    document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
+                } catch (e) {}
+                document.querySelector('#pane1 .horaires').classList.add('selected');
+                element.classList.add('selected');
+            // Remplissage des données
             document.querySelector('#pane2 .content').innerHTML = data;
         }
     });
