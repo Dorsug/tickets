@@ -19,7 +19,7 @@ ages = [
         {'intv': [14, 18], 'interface': '14 - 18'}
         ]
 
-heures = [str(x) + ':00' for x in range(8, 19)]
+heures = ['10h30', '11h30', '14h00', '15h00', '16h00', '17h00', '18h00']
 
 dates = [
         {'value': '2019-10-19', 'interface': 'Samedi'},
@@ -38,27 +38,6 @@ def index():
             heures=heures,
             dates=dates
         )
-    if request.method == 'POST':
-        data = request.get_json()
-
-        atelier = ','.join(data['atelier'])
-        if atelier == '':
-            return ''
-
-        ages_ns = [int(x) for x in data['age']]
-        ages_in = []
-        for age_n in ages_ns:
-            ages_in.extend(ages[age_n - 1]['intv'])
-        if ages_in != []:
-            age_maxi = max(ages_in)
-            age_mini = min(ages_in)
-        else:
-            age_maxi = None
-            age_mini = None
-
-        c = db.get_cursor()
-        ateliers = db.callproc(c, 'listerSeancePourFiltres', atelier, data['heure'], age_mini, age_maxi, data['date'])
-        return render_template('ateliers.html', ateliers=ateliers)
 
 
 @app.route('/ateliers')

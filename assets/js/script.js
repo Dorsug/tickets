@@ -31,11 +31,16 @@ function listerReservations() {
     // TODO
 }
 
-function listerSeances(atelierId){
+function listerSeances(element, atelierId){
+    try {
+        document.querySelector('#pane2 .selected').classList.remove('selected')
+    } catch (e) {}
+
     $.ajax({
         url: '/seances', 
         data: { 'atelierId': atelierId },
         success: function(data){
+            element.classList.add('selected');
             $("#pane3 .content").html(data);
             if(data == ""){ //Cas où l'atelier n'a plus de sessions disponibles
                 $("#pane3 .content").html("Il n'y a plus de sessions disponible pour cet atelier.");
@@ -51,7 +56,7 @@ function majInterfacePanier() {
             'action': 'lister',
         },
         success: function(data){
-            document.querySelector('#pane3 .content').innerHTML = data;
+            document.querySelector('#pane4 .content').innerHTML = data;
         }
     });
 }

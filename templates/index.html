@@ -16,56 +16,37 @@
     </head>
 
     <body>
-        <div>
-            <nav style="padding-bottom: 1rem;">
-                <a class="navbar-brand" href="#" style="color: black;text-decoration: none;width: 100%;padding-right: 15px;padding-left: 2.1rem;margin-left: auto;font-family: -apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,Arial,&quot;Noto Sans&quot;,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;,&quot;Segoe UI Symbol&quot;,&quot;Noto Color Emoji&quot;;font-size: 1.1rem;line-height: 1.5;font-weight: bold;">Scientilivre</a>
-            </nav>
-        </div>
-
         <div id="main">
             <div id="pane1" class="pane">
                 <h1>Filtres</h1>
-                <div class="content">
-                    <h2>Ateliers</h2>
-
-                    <div class="ateliers">
-                    {% for atelier in ateliers %}
-                        <label>
-                            <input type="checkbox" name="atelier" value="{{ atelier.ID }}" autocomplete="off">
-                            {{ atelier.Nom }}
-                        </label><br />
-                    {% endfor %}
-                    </div>
-
-                    <h2>Ages</h2>
-                    {% for age in ages %}
-                        <label>
-                            <input type="checkbox" name="age" value="{{ loop.index }}" autocomplete="off">
-                            {{ age }}
-                        </label><br />
-                    {% endfor %}
-                    <h2>Début à partir de</h2>
+                <div class="bulle selected">
+                    Ateliers
+                </div>
+                <div class="bulle">
+                    Horaires
                     {% for heure in heures %}
-                        <label>
-                            <input type="radio" name="heure" value="{{ heure }}" autocomplete="off"{% if loop.index == 1 %} checked{% endif %}>
+                        <div class="bulle" style="border:1px solid #eee">
                             {{ heure }}
-                        </label><br />
-                    {% endfor %}
-                    <h2>Date</h2>
-                    {% for date in dates %}
-                        <label>
-                            <input type="radio" name="date" value="{{ date.value }}" autocomplete="off"{% if loop.index == 1 %} checked{% endif%}>
-                            {{ date.interface }}
-                        <label><br />
+                        </div>
                     {% endfor %}
                 </div>
             </div>
-            <div id="pane2" class="pane">
-                <h1>Séances</h1>
+            <div id="pane2" class="pane" style="grid-column: 2">
+                <h2>Ateliers</h2>
                 <div class="content">
+                    {% for atelier in ateliers %}
+                    <div class="bulle" onclick="listerSeances(this, {{ atelier.ID }})">
+                            {{ atelier.Nom }}
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
             <div id="pane3" class="pane">
+                <h2>Séances</h2>
+                <div class="content">
+                </div>
+            </div>
+            <div id="pane4" class="pane">
                 <h1>Panier</h1>
                 <div class="menu">
                     <button class="bulle" onclick="viderPanier()">Effacer</button>
