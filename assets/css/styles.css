@@ -59,6 +59,7 @@ h1 {
     display: block;
     border-radius: 5px;
     margin: 0.5em;
+    margin-right: 1em;
     padding: 0.5em;
     cursor: pointer;
     border: 2px solid;
@@ -91,6 +92,20 @@ h1 {
 #pane2 .selected,
 #pane3 .selected {
     border-color: black;
+}
+
+#pane1 .bulle.horaires {
+    background: #999;
+}
+
+#pane1 .horaire {
+    border-color: #999;
+    width: 80%;
+}
+
+#pane1 .horaire.selected {
+    border-color: black;
+    width: 100%;
 }
 
 /* Colors */

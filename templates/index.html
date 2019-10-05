@@ -26,8 +26,7 @@
                     Horaires
                     {% for heure in heures %}
                         <div 
-                            class="bulle" 
-                            style="border:1px solid #eee"
+                            class="bulle horaire"
                             onclick="listerSeancesPourHoraire(this, '{{ heure }}')"
                         >
                             {{ heure }}
@@ -36,12 +35,12 @@
                 </div>
             </div>
             <div id="pane2" class="pane" style="grid-column: 2">
-                <h2>Ateliers</h2>
+                <h1>Ateliers</h1>
                 <div class="content">
                 </div>
             </div>
             <div id="pane3" class="pane">
-                <h2>Séances</h2>
+                <h1>Séances</h1>
                 <div class="content">
                 </div>
             </div>
