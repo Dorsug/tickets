@@ -1,12 +1,20 @@
 function listerAteliers() {
-    document.querySelector('#pane2 h1').innerHTML = "Ateliers";
-    document.querySelector('#pane3 h1').innerHTML = "Horaires";
-    document.querySelector('#pane3 .content').innerHTML = "";
-                
+    // Change la disposition des colonnes 2 et 3
+    document.getElementById('pane3').style.display = 'block';
+    document.getElementById('pane2').style['grid-column'] = '2 / span 1';
+    // Change les classe 'selected' dans la colonne 1
+    try {
+        document.querySelector('#pane1 .horaires').classList.remove('selected');
+    } catch (e) {}
+    try {
+        document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
+    } catch (e) {}
+
+    document.querySelector('#pane1 .ateliers').classList.add('selected');
     $.ajax({
         url: '/ateliers', 
         success: function(data){
-            $("#pane2 .content").html(data);
+            document.querySelector('#pane2 .content').innerHTML = data;
         }
     });
 }
@@ -45,6 +53,29 @@ function listerSeances(element, atelierId){
             if(data == ""){ //Cas où l'atelier n'a plus de sessions disponibles
                 $("#pane3 .content").html("Il n'y a plus de sessions disponible pour cet atelier.");
             }
+        }
+    });
+}
+
+function listerSeancesPourHoraire(element, horaire) {
+    // Change la disposition des colonnes 2 et 3
+    document.getElementById('pane3').style.display = 'none';
+    document.getElementById('pane2').style['grid-column'] = '2 / span 2';
+    // Change les classe 'selected' dans la colonne 1
+    try {
+        document.querySelector('#pane1 .ateliers').classList.remove('selected');
+    } catch (e) {}
+    try {
+        document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
+    } catch (e) {}
+    document.querySelector('#pane1 .horaires').classList.add('selected');
+    element.classList.add('selected');
+
+    $.ajax({
+        url: '/seances',
+        data: { 'horaire': horaire },
+        success: function(data) {
+            document.querySelector('#pane2 .content').innerHTML = data;
         }
     });
 }

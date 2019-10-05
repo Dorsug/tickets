@@ -7,9 +7,8 @@ def listerAtelier():
     ateliers = db.callproc(c, 'listerAtelier')
     template = """
         {% for atelier in ateliers %}
-        <p onclick="listerSeances({{ atelier['ID'] }});" class="bulle">
+        <p onclick="listerSeances(this, {{ atelier['ID'] }});" class="bulle">
             <strong>{{ atelier['Numero'] }} - {{ atelier['Nom'] }}</strong><br />
-            {{ atelier['Description'] }}<br />
             Age: {{ atelier['Age mini'] }}  - {{ atelier['Age maxi'] }}<br />
             {{ atelier['Prix'] }}€
         </p>
@@ -39,6 +38,22 @@ def listerSeancesPourAtelier(atelierId):
     template = """
         {% for seance in seances %}
         <p class="bulle" onclick="ajouterAuPanier({{ seance['ID'] }});">
+            <strong>{{ seance['Date'] }}</strong><br />
+            {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
+            Places restantes: {{ seance['Places Dispo'] }}
+        </p>
+        {% endfor %}
+    """
+    return render_template_string(template, seances=seances)
+
+
+def listerSeancesPourHoraire(horaire):
+    c = db.get_cursor()
+    seances = db.callproc(c, 'listerSeancesPourHoraire', horaire)
+    template = """
+        {% for seance in seances %}
+        <p class="bulle" onclick="ajouterAuPanier({{ seance['Id'] }});">
+            <strong>{{ seance['AtelierNom'] }}</strong><br />
             <strong>{{ seance['Date'] }}</strong><br />
             {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
             Places restantes: {{ seance['Places Dispo'] }}

@@ -622,30 +622,29 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourDate` (IN `in_date
 FROM Seance, Atelier
 WHERE Seance.fk_atelier = Atelier.pk_id AND Seance.date = in_date$$
 
-CREATE DEFINER=`root`@`%` PROCEDURE `ListerSeancesPourHoraire` (IN `in_HeureDebut` TIME, IN `in_HeureFin` TIME)  NO SQL
-    COMMENT 'Retourne la liste des Séances pour les créneaux horaires'
+
+CREATE PROCEDURE ListerSeancesPourHoraire (IN in_Horaire TIME)  NO SQL
+    COMMENT 'Retourne la liste des Séances pour le créneau horaire'
 BEGIN
-	IF in_HeureDebut <> '' THEN
-    	IF in_HeureFin <> '' THEN
-        	SELECT 
-				Seance.pk_id AS "ID Seance", 
-				Seance.date AS "Date", 
-				Seance.heureDebut AS "Heure debut", 
-				Seance.heureFin AS "Heure fin", 
-				Atelier.numero AS "Numero atelier", 
-				Atelier.nom AS "Nom de l'atelier", 
-				Atelier.description AS "Description de l'atelier", 
-				Atelier.agemini AS "Age mini", 
-				Atelier.agemaxi AS "Age maxi", 
-				Atelier.nombreplace AS "Nombre de places", 
-				Atelier.prix AS "Prix"
-			FROM Seance, Atelier
-			WHERE Seance.fk_atelier = Atelier.pk_id
-			AND Seance.heureDebut >= in_HeureDebut
-			AND Seance.heureFin <= in_HeureFin;
-        END IF;
+    IF in_Horaire <> '' THEN
+        SELECT
+            Seance.pk_id AS "Id"
+            Seance.date AS "Date",
+            Seance.heureDebut AS "HeureDebut",
+            Seance.heureFin AS "HeureFin",
+            Atelier.numero AS "AtelierNumero",
+            Atelier.nom AS "AtelierNom",
+            Atelier.description AS "AtelierDescription",
+            Atelier.agemini AS "AgeMini",
+            Atelier.agemaxi AS "AgeMaxi",
+            Atelier.nombreplace AS "NombrePlaces",
+            Atelier.prix AS "Prix"
+        FROM Seance, Atelier
+        WHERE Seance.fk_atelier = Atelier.pk_id
+        AND Seance.heureDebut = in_Horaire;
     END IF;
 END$$
+
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `MarquerPanierNONPaye` (IN `in_idPanier` INT(11), OUT `out_result` INT(11))  NO SQL
     COMMENT 'Permet de définir qu''un panier n''a pas été payé'

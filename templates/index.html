@@ -19,13 +19,17 @@
         <div id="main">
             <div id="pane1" class="pane">
                 <h1>Filtres</h1>
-                <div class="bulle selected">
+                <div class="bulle ateliers" onclick="listerAteliers()">
                     Ateliers
                 </div>
-                <div class="bulle">
+                <div class="bulle horaires">
                     Horaires
                     {% for heure in heures %}
-                        <div class="bulle" style="border:1px solid #eee">
+                        <div 
+                            class="bulle" 
+                            style="border:1px solid #eee"
+                            onclick="listerSeancesPourHoraire(this, '{{ heure }}')"
+                        >
                             {{ heure }}
                         </div>
                     {% endfor %}
@@ -34,11 +38,6 @@
             <div id="pane2" class="pane" style="grid-column: 2">
                 <h2>Ateliers</h2>
                 <div class="content">
-                    {% for atelier in ateliers %}
-                    <div class="bulle" onclick="listerSeances(this, {{ atelier.ID }})">
-                            {{ atelier.Nom }}
-                        </div>
-                    {% endfor %}
                 </div>
             </div>
             <div id="pane3" class="pane">

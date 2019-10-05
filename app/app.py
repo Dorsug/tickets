@@ -19,7 +19,7 @@ ages = [
         {'intv': [14, 18], 'interface': '14 - 18'}
         ]
 
-heures = ['10h30', '11h30', '14h00', '15h00', '16h00', '17h00', '18h00']
+heures = ['10:30', '11:30', '14:00', '15:00', '16:00', '17:00', '18:00']
 
 dates = [
         {'value': '2019-10-19', 'interface': 'Samedi'},
@@ -29,11 +29,8 @@ dates = [
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
-        c = db.get_cursor()
-        ateliers = db.callproc(c, 'listerAtelier')
         return render_template(
             'index.html',
-            ateliers=ateliers,
             ages=[x['interface'] for x in ages],
             heures=heures,
             dates=dates
@@ -48,7 +45,11 @@ def ateliers():
 @app.route('/seances')
 def seances():
     atelierId = request.values.get('atelierId')
-    return generate.listerSeancesPourAtelier(atelierId)
+    horaire = request.values.get('horaire')
+    if atelierId:
+        return generate.listerSeancesPourAtelier(atelierId)
+    elif horaire:
+        return generate.listerSeancesPourHoraire(horaire)
 
 
 @app.route('/horaires')
