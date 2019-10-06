@@ -644,7 +644,7 @@ WHERE Seance.fk_atelier = Atelier.pk_id AND Seance.date = in_date$$
 
 
 DROP PROCEDURE IF EXISTS ListerSeancesPourHoraire$$
-CREATE PROCEDURE ListerSeancesPourHoraire (IN in_Horaire TIME)  NO SQL
+CREATE PROCEDURE ListerSeancesPourHoraire (IN in_Horaire TIME, IN in_date DATE)
     COMMENT 'Retourne la liste des Séances pour le créneau horaire'
 BEGIN
     IF in_Horaire <> '' THEN
@@ -662,7 +662,8 @@ BEGIN
             Atelier.prix AS "Prix"
         FROM Seance, Atelier
         WHERE Seance.fk_atelier = Atelier.pk_id
-        AND Seance.heureDebut = in_Horaire;
+        AND Seance.heureDebut = in_Horaire
+        AND Seance.date = in_date;
     END IF;
 END$$
 

@@ -63,9 +63,9 @@ def listerSeancesPourAtelier(atelierId):
     return render_template_string(template, seances=seances)
 
 
-def listerSeancesPourHoraire(horaire):
+def listerSeancesPourHoraire(horaire, date):
     c = db.get_cursor()
-    seances = db.callproc(c, 'listerSeancesPourHoraire', horaire)
+    seances = db.callproc(c, 'listerSeancesPourHoraire', horaire, date)
     template = """
         {% for seance in seances %}
         <p class="bulle" onclick="ajouterAuPanier({{ seance['Id'] }});">

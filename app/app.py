@@ -21,10 +21,7 @@ ages = [
 
 heures = ['10:30', '11:30', '14:00', '15:00', '16:00', '17:00', '18:00']
 
-dates = [
-        {'value': '2019-10-19', 'interface': 'Samedi'},
-        {'value': '2019-10-20', 'interface': 'Dimanche'}
-        ]
+dates = {'Samedi': '2019-10-19', 'Dimanche': '2019-10-20'}
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -46,10 +43,11 @@ def ateliers():
 def seances():
     atelierId = request.values.get('atelierId')
     horaire = request.values.get('horaire')
+    date = request.cookies.get('date')
     if atelierId:
         return generate.listerSeancesPourAtelier(atelierId)
     elif horaire:
-        return generate.listerSeancesPourHoraire(horaire)
+        return generate.listerSeancesPourHoraire(horaire, dates[date])
 
 
 @app.route('/horaires')
