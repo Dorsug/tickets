@@ -73,8 +73,8 @@ def listerSeancesPourHoraire(horaire, date):
         <p class="bulle" onclick="ajouterAuPanier({{ seance['Id'] }});">
             <strong>{{ seance['AtelierNom'] }}</strong><br />
             <strong>{{ seance['Date'] }}</strong><br />
-            {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
-            Places restantes: {{ seance['Places Dispo'] }}
+            {{ seance.heureDebut | time_split }} - {{ seance.heureFin | time_split }}<br />
+            Places restantes: {{ seance.placesDispo }}
         </p>
         {% endfor %}
     """

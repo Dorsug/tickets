@@ -652,14 +652,18 @@ BEGIN
         SELECT
             Seance.pk_id AS "Id",
             Seance.date AS "Date",
-            Seance.heureDebut AS "HeureDebut",
-            Seance.heureFin AS "HeureFin",
+            Seance.heureDebut AS "heureDebut",
+            Seance.heureFin AS "heureFin",
             Atelier.numero AS "AtelierNumero",
             Atelier.nom AS "AtelierNom",
             Atelier.description AS "AtelierDescription",
             Atelier.agemini AS "AgeMini",
             Atelier.agemaxi AS "AgeMaxi",
             Atelier.nombreplace AS "NombrePlaces",
+            Atelier.nombreplace - (
+                SELECT COUNT(Panier.fk_seance) FROM Panier
+                WHERE Seance.pk_id = Panier.fk_seance
+            ) AS placesDispo,
             Atelier.prix AS "Prix"
         FROM Seance, Atelier
         WHERE Seance.fk_atelier = Atelier.pk_id
