@@ -36,6 +36,7 @@ def listerReservations():
     c = db.get_cursor()
     reservations = db.callproc(c, 'listerPreReservations')
     template = """
+        <input type="text" id="resaSearchBar" onkeyup="resaSearch()" placeholder="Recherche">
         {% for reservation in reservations %}
         <p class="bulle">
             {{ reservation.nom }} {{ reservation.prenom }}<br />

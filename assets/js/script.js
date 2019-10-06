@@ -183,3 +183,16 @@ function getSeances() {
         }
     });
 }
+
+function resaSearch() {
+    var filter = document.getElementById('resaSearchBar').value.toUpperCase();
+    elements = document.querySelectorAll('#pane2 .bulle');
+    for (i = 0; i < elements.length; i++) {
+        txtValue = elements[i].textContent || elements[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            elements[i].style.display = "";
+        } else {
+            elements[i].style.display = "none";
+        }
+    }
+}
