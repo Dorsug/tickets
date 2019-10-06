@@ -1182,7 +1182,7 @@ ALTER TABLE `Seance`
 -- Contraintes pour la table `CompteurPanier`
 --
 ALTER TABLE `CompteurPanier`
-  ADD CONSTRAINT `LstMoyPaiement` FOREIGN KEY (`fk_moyPaiement`) REFERENCES `MoyenPaiement` (`pk_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `LstMoyPaiement` FOREIGN KEY (`fk_moyPaiement`) REFERENCES `MoyenPaiement` (`pk_id`);
 
 --
 -- Contraintes pour la table `Panier`
