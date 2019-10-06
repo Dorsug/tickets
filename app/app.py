@@ -5,8 +5,14 @@ from . import utils
 from . import generate
 
 
+def time_split(timedelta):
+    return ':'.join(str(timedelta).split(':')[0:2])
+
+
 app = Flask('gestickets2', static_folder='assets')
 app.teardown_appcontext(db.close_db)
+app.jinja_env.filters['time_split'] = time_split
+
 
 ages = [
         {'intv': [0, 99], 'interface': 'Tout Public'},

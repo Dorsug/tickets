@@ -57,8 +57,7 @@ def listerSeancesPourAtelier(atelierId, date):
             class="bulle{% if seance.placesRestantes <= 0 %} empty{% endif %}"
             onclick="ajouterAuPanier({{ seance['ID'] }});"
         >
-            <strong>{{ seance['Date'] }}</strong><br />
-            {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
+            <strong>{{ seance['Heure debut'] | time_split }} - {{ seance['Heure fin'] | time_split }}</strong><br />
             Places restantes: {{ seance['placesRestantes'] }}
         </p>
         {% endfor %}
@@ -89,7 +88,7 @@ def listerPanier(panierId):
         {% for seance in panier %}
         <p class="bulle">
             <strong>{{ seance['Numero atelier'] }} - {{ seance['Nom atelier'] }}</strong><br />
-            {{ seance['heureDebut'] }} - {{ seance['heurefin'] }}<br />
+            {{ seance['heureDebut'] | time_split }} - {{ seance['heurefin'] | time_split }}<br />
             {{ seance['prix'] }}<br />
             <button onclick="enleverDuPanier({{ seance['seanceId'] }});">X</button>
         </p>
