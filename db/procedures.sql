@@ -4,21 +4,9 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de données :  `gestickets2`
---
-
 DELIMITER $$
---
--- Procédures
---
 
-
+DROP PROCEDURE IF EXISTS listerSeancePourFiltres$$
 CREATE PROCEDURE listerSeancePourFiltres (
     IN in_idAtelier TEXT,
     IN in_debutApartirde TIME,
@@ -50,9 +38,12 @@ BEGIN
 END$$
 
 
+DROP PROCEDURE IF EXISTS AfficherAssociation$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AfficherAssociation` (IN `in_idAssociation` INT(11))  SELECT * FROM Association
 WHERE in_idAssociation = Association.pk_id$$
 
+
+DROP PROCEDURE IF EXISTS AfficherAtelier$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AfficherAtelier` (IN `in_idAtelier` INT(11), OUT `out_nom` VARCHAR(16), OUT `out_description` TEXT, OUT `out_agemini` INT(11), OUT `out_agemaxi` INT(11), OUT `out_prix` INT(11), OUT `out_nombreplaces` INT(11), OUT `out_numero` INT(11))  NO SQL
     COMMENT 'Retourne les informations lié à l''atelier trouvé'
 BEGIN
@@ -69,6 +60,7 @@ BEGIN
 END$$
 
 
+DROP PROCEDURE IF EXISTS AfficherContenuPanier$$
 CREATE PROCEDURE AfficherContenuPanier (IN in_idPanier INT(11))
     COMMENT 'Retourne la liste des éléments contenus dans le panier'
 SELECT
@@ -78,16 +70,18 @@ SELECT
     Seance.date,
     Seance.heureDebut,
     Seance.heurefin,
+    Seance.pk_id AS 'seanceId',
     Client.pk_id as 'ID client',
     CompteurPanier.Paye as 'Est payé'
 FROM Atelier
 INNER JOIN Seance ON Atelier.pk_id = Seance.fk_atelier
-INNER JOIN Panier ON Panier.pk_id = in_idPanier
+INNER JOIN Panier ON Panier.fk_seance = Seance.pk_id
 INNER JOIN CompteurPanier ON CompteurPanier.idPanier = Panier.pk_id
 LEFT JOIN Client ON CompteurPanier.fk_client = Client.pk_id
 WHERE Panier.pk_id = in_idPanier$$
 
 
+DROP PROCEDURE IF EXISTS AfficherSeance$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AfficherSeance` (IN `in_idSeance` INT(11), OUT `out_date` DATE, OUT `out_heuredebut` TIME, OUT `out_heurefin` TIME, OUT `out_numAtelier` INT(11), OUT `out_nomAtelier` VARCHAR(16), OUT `out_descAtelier` TEXT, OUT `out_ageminAtelier` INT(11), OUT `out_agemaxAtelier` INT(11), OUT `out_nbplace` INT(11))  NO SQL
     COMMENT 'Retourne les informations liées à la séance trouvée sinon rien'
 BEGIN
@@ -102,6 +96,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS AjouterClient$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AjouterClient` (IN `in_nom` VARCHAR(16), IN `in_prenom` VARCHAR(16), IN `in_mail` VARCHAR(255), OUT `out_id` INT)  NO SQL
     COMMENT 'Ajoute un nouveau client'
 BEGIN
@@ -123,21 +119,20 @@ BEGIN
 END$$
 
 
-CREATE PROCEDURE AjouterSeanceAuPanier (IN in_idPanier INT(11), IN in_idSeance INT(11), IN in_idPersonne INT(11), OUT `out_result` INT(11))
+DROP PROCEDURE IF EXISTS AjouterSeanceAuPanier$$
+CREATE PROCEDURE AjouterSeanceAuPanier (IN in_idPanier INT(11), IN in_idSeance INT(11), OUT `out_result` INT(11))
     COMMENT 'Retourne 1 si effectué 0 sinon'
 BEGIN
     SET out_result = 0;
     IF in_idPanier <> '' THEN
-        IF in_idPersonne = '' THEN
-            SET in_idPersonne = NULL;
-        END IF;
-        INSERT INTO Panier (`pk_id`, `fk_reservation`, `fk_personne`) VALUES (in_idPanier, @idReservation, in_idPersonne);
+        INSERT INTO Panier (`pk_id`, `fk_seance`) VALUES (in_idPanier, in_idSeance);
         SET out_result = 1;
     END IF;
     SELECT out_result;
 END$$
 
 
+DROP PROCEDURE IF EXISTS AjoutMoyenPaiement$$
 CREATE DEFINER=`root`@`%` PROCEDURE `AjoutMoyenPaiement` (IN `in_MoyenPaiement` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Permet d''ajouter un moyen de paiement'
 BEGIN
@@ -152,6 +147,8 @@ BEGIN
     SELECT out_done;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ChercherClient$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ChercherClient` (IN `in_mail` VARCHAR(255))  SELECT 
     Client.pk_id AS "ID",
     Client.Nom AS "Nom",
@@ -160,6 +157,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ChercherClient` (IN `in_mail` VARCH
 FROM Client
 WHERE Client.Mail = in_mail$$
 
+
+DROP PROCEDURE IF EXISTS CoutDuPanier$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CoutDuPanier` (IN `in_idPanier` INT(11))  SELECT SUM(Atelier.prix)
 FROM Atelier
 INNER JOIN Seance ON Atelier.pk_id = Seance.fk_atelier
@@ -168,6 +167,8 @@ INNER JOIN Panier ON Reservation.pk_id = Panier.fk_reservation
 LEFT JOIN Client ON Panier.fk_personne = Client.pk_id
 WHERE Panier.pk_id = in_idPanier$$
 
+
+DROP PROCEDURE IF EXISTS CreerAssociation$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreerAssociation` (OUT `out_id` INT, IN `in_nom` VARCHAR(255), IN `in_numero` VARCHAR(10), IN `in_mail` VARCHAR(255), IN `in_description` TEXT)  NO SQL
     COMMENT 'Retourne l''ID de l''association créée'
 BEGIN
@@ -185,6 +186,8 @@ BEGIN
 	SELECT out_id;
 END$$
 
+
+DROP PROCEDURE IF EXISTS CreerAtelier$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreerAtelier` (IN `in_numero` INT(11) UNSIGNED, IN `in_nom` VARCHAR(16), IN `in_agemini` INT(11) UNSIGNED, IN `in_agemaxi` INT(11) UNSIGNED, IN `in_descripion` TEXT, IN `in_prix` DOUBLE(6,2), IN `in_nbplace` INT(11), OUT `out_id` INT)  NO SQL
     COMMENT 'Retourne l''ID de l''atelier créé'
 BEGIN
@@ -213,6 +216,8 @@ BEGIN
 	SELECT out_id;
 END$$
 
+
+DROP PROCEDURE IF EXISTS CreerSeance$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `CreerSeance` (IN `in_idatelier` INT(11), IN `in_date` DATE, IN `in_heuredebut` TIME, IN `in_heurefin` TIME, OUT `out_result` INT(11))  NO SQL
     COMMENT 'Retourne l''ID de la séance créée'
 BEGIN
@@ -228,24 +233,17 @@ BEGIN
 	SELECT out_result;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EnleverReservationDuPanier` (IN `in_idPanier` INT(11), IN `in_idReservation` INT(11), OUT `out_result` INT(11))  NO SQL
-    COMMENT 'Supprime la réservation associée au panier'
-BEGIN
-	SET out_result = 0;
-	SELECT COUNT(Reservation.pk_id) INTO @nbId FROM Panier, Reservation WHERE Panier.fk_reservation = Reservation.pk_id AND Panier.pk_id = in_idPanier AND Panier.fk_reservation = in_idReservation;
-    
-    IF @nbId = 1 THEN
-    	SELECT COUNT(Reservation.pk_id) INTO @nbId FROM Reservation WHERE Reservation.pk_id = in_idReservation;
-        IF @nbId = 1 THEN
-        	DELETE FROM Panier WHERE Panier.pk_id = in_idPanier AND Panier.fk_reservation = in_idReservation;
-            DELETE FROM Reservation WHERE Reservation.pk_id = in_idReservation;
-    		SET out_result = 1;
-        END IF;
-	END IF;
 
+DROP PROCEDURE IF EXISTS EnleverDuPanier$$
+CREATE PROCEDURE EnleverDuPanier (IN in_idPanier INT(11), IN in_idSeance INT(11), OUT out_result INT(11))
+BEGIN
+    DELETE FROM Panier WHERE Panier.pk_id = in_idPanier AND Panier.fk_seance = in_idSeance LIMIT 1;
+    SET out_result = 1;
     SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerAssociation$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAssociation` ()  SELECT
     Association.pk_id AS "ID",
     Association.Nom AS "Nom",
@@ -253,6 +251,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAssociation` ()  SELECT
     Association.Mail AS "Mail"
 FROM Association$$
 
+
+DROP PROCEDURE IF EXISTS ListerAtelier$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAtelier` ()  SELECT 
     Atelier.pk_id AS "ID",
     Atelier.numero AS "Numero",
@@ -264,6 +264,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAtelier` ()  SELECT
     Atelier.prix AS "Prix"
 FROM Atelier$$
 
+
+DROP PROCEDURE IF EXISTS ListerAteliersPourHoraire$$
 CREATE DEFINER=`root`@`%` PROCEDURE `ListerAteliersPourHoraire` (IN `in_HeureDebut` TIME, IN `in_HeureFin` TIME)  NO SQL
     COMMENT 'Retourne la liste des atelier pour les créneaux horaires'
 BEGIN
@@ -286,6 +288,8 @@ BEGIN
     END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerClients$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerClients` ()  SELECT 
     Client.pk_id AS "ID",
     Client.Nom AS "Nom",
@@ -293,9 +297,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerClients` ()  SELECT
     Client.Mail AS "Mail"
 FROM Client$$
 
+
+DROP PROCEDURE IF EXISTS ListerMoyensPaiement$$
 CREATE DEFINER=`root`@`%` PROCEDURE `ListerMoyensPaiement` ()  SELECT * FROM MoyenPaiement$$
 
 
+DROP PROCEDURE IF EXISTS listerPreReservations$$
 CREATE PROCEDURE listerPreReservations ()
 BEGIN
     SELECT
@@ -310,6 +317,7 @@ BEGIN
 END$$
 
 
+DROP PROCEDURE IF EXISTS ListerSeances$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeances` ()  SELECT 
 	Seance.pk_id AS "ID", 
     Seance.date AS "Date", 
@@ -325,6 +333,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeances` ()  SELECT
 FROM Seance, Atelier 
 WHERE Seance.fk_atelier = Atelier.pk_id$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesDispo$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesDispo` ()  NO SQL
     COMMENT 'Retourne la liste des reservations disponible'
 SELECT *
@@ -347,6 +357,8 @@ INNER JOIN Reservation ON Seance.pk_id = Reservation.fk_seance
 GROUP BY Reservation.fk_seance) AS RESERVSEANCE
 WHERE RESERVSEANCE.Nb_Places > RESERVSEANCE.Nb_Reserv$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesDispoPourAgeDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesDispoPourAgeDate` (IN `in_date` DATE, IN `in_age` INT(11))  NO SQL
     COMMENT 'La liste des séances disponible pour un age à la date spécifiée'
 BEGIN
@@ -378,6 +390,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesDispoPourAgeMaxiDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesDispoPourAgeMaxiDate` (IN `in_date` DATE, IN `in_agemaxi` INT(11))  NO SQL
     COMMENT 'Liste les séances disponible pour un age maxi à la date donnée'
 BEGIN
@@ -408,6 +422,8 @@ BEGIN
     END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesDispoPourAgeMiniDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesDispoPourAgeMiniDate` (IN `in_date` DATE, IN `in_agemini` INT(11))  NO SQL
     COMMENT 'Liste les séances disponible pour un age mini à la date donnée'
 BEGIN
@@ -438,6 +454,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesDispoPourAgeMiniMaxiDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesDispoPourAgeMiniMaxiDate` (IN `in_date` DATE, IN `in_agemini` INT(11), IN `in_agemaxi` INT(11))  NO SQL
     COMMENT 'Liste les séances disponible pour un age borné à la date donnée'
 BEGIN
@@ -471,6 +489,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesPourAgeDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourAgeDate` (IN `in_date` DATE, IN `in_age` INT(11))  NO SQL
     COMMENT 'Retourne la liste des séances pour un age à la date définie'
 BEGIN
@@ -497,6 +517,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesPourAgeMaxiDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourAgeMaxiDate` (IN `in_date` DATE, IN `in_agemaxi` INT(11))  NO SQL
     COMMENT 'Retourne la liste des séances pour un age maxi à la date définie'
 BEGIN
@@ -522,6 +544,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesPourAgeMiniDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourAgeMiniDate` (IN `in_date` DATE, IN `in_agemini` INT)  NO SQL
     COMMENT 'Retourne la liste des séances pour un age mini à la date définie'
 BEGIN
@@ -547,6 +571,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesPourAgeMinMaxDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourAgeMinMaxDate` (IN `in_date` DATE, IN `in_agemini` INT(11), IN `in_agemaxi` INT(11))  NO SQL
     COMMENT 'Retourne les séances pour un age borné à la date définie'
 BEGIN
@@ -573,6 +599,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesPourAtelier$$
 CREATE DEFINER=`root`@`%` PROCEDURE `ListerSeancesPourAtelier` (IN `in_idAtelier` INT(11))  NO SQL
     COMMENT 'Retourne la liste des séances pour un atelier'
 BEGIN
@@ -597,6 +625,8 @@ BEGIN
 	END IF;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ListerSeancesPourDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourDate` (IN `in_date` DATE)  SELECT 
 	Seance.pk_id AS "ID", 
     Seance.date AS "Date", 
@@ -613,6 +643,7 @@ FROM Seance, Atelier
 WHERE Seance.fk_atelier = Atelier.pk_id AND Seance.date = in_date$$
 
 
+DROP PROCEDURE IF EXISTS ListerSeancesPourHoraire$$
 CREATE PROCEDURE ListerSeancesPourHoraire (IN in_Horaire TIME)  NO SQL
     COMMENT 'Retourne la liste des Séances pour le créneau horaire'
 BEGIN
@@ -636,6 +667,7 @@ BEGIN
 END$$
 
 
+DROP PROCEDURE IF EXISTS MarquerPanierNONPaye$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `MarquerPanierNONPaye` (IN `in_idPanier` INT(11), OUT `out_result` INT(11))  NO SQL
     COMMENT 'Permet de définir qu''un panier n''a pas été payé'
 BEGIN
@@ -656,6 +688,8 @@ BEGIN
 	SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS MarquerPanierPaye$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `MarquerPanierPaye` (IN `in_idPanier` INT(11), OUT `out_result` INT(11))  NO SQL
     COMMENT 'Permet de définir qu''un panier a été payé'
 BEGIN
@@ -672,6 +706,8 @@ BEGIN
 	SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ModifierAssociation$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ModifierAssociation` (IN `in_idassociation` INT(11), OUT `out_result` INT, IN `in_nom` VARCHAR(255), IN `in_numero` INT(10), IN `in_mail` VARCHAR(255), IN `in_description` TEXT)  NO SQL
     COMMENT 'Retourne 1 si effectué 0 sinon'
 BEGIN
@@ -692,6 +728,8 @@ BEGIN
    SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ModifierAtelier$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ModifierAtelier` (IN `in_idatelier` INT(11), IN `in_numero` INT(11), IN `in_nom` VARCHAR(16), IN `in_description` TEXT, IN `in_agemini` INT(11), IN `in_agemaxi` INT(11), IN `in_nbplace` INT(11), IN `in_prix` DECIMAL(6,2), OUT `out_result` INT)  NO SQL
     COMMENT 'Retourne 1 si effectué 0 sinon'
 BEGIN
@@ -720,6 +758,8 @@ BEGIN
    SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ModifierClient$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ModifierClient` (IN `in_nom` VARCHAR(16), IN `in_prenom` VARCHAR(16), IN `in_mail` VARCHAR(255), IN `in_idclient` INT, OUT `out_id` INT)  NO SQL
     COMMENT 'Retourne 1 si effectué 0 sinon'
 BEGIN
@@ -741,6 +781,8 @@ BEGIN
 	SELECT out_id;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ModifierMoyenPaiement$$
 CREATE DEFINER=`root`@`%` PROCEDURE `ModifierMoyenPaiement` (IN `id_MoyenPaiement` INT(11), IN `in_MoyenModifie` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Permet de modifier le moyen de paiement'
 BEGIN
@@ -758,6 +800,8 @@ BEGIN
     SELECT out_done;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ModifierSeance$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ModifierSeance` (IN `in_idseance` INT(11), OUT `out_result` INT(11), IN `in_date` DATE, IN `in_heuredebut` TIME, IN `in_heurefin` TIME, IN `in_idatelier` INT(11))  NO SQL
     COMMENT 'Retourne 1 si effectué avec succès, 0 sinon'
 BEGIN
@@ -779,6 +823,8 @@ BEGIN
 	SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS ObtenirIDpanier$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenirIDpanier` (OUT `out_id` INT(11))  NO SQL
     COMMENT 'Crée une entrée et retourne le dernier ID de la table'
 BEGIN
@@ -788,6 +834,8 @@ BEGIN
 	SELECT out_id;
 END$$
 
+
+DROP PROCEDURE IF EXISTS PayerPanier$$
 CREATE DEFINER=`root`@`%` PROCEDURE `PayerPanier` (IN `in_idPanier` INT(11), IN `in_idMoyPaie` INT(11), IN `in_CodPost` VARCHAR(5), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Paie le panier en indiquant moyen de paiement et code postal'
 BEGIN
@@ -813,6 +861,8 @@ BEGIN
 	SELECT out_done;
 END$$
 
+
+DROP PROCEDURE IF EXISTS SupprimerAssociation$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SupprimerAssociation` (IN `in_idAssociation` INT(11), OUT `out_result` INT)  NO SQL
     COMMENT 'Retourne 1 si effectué, 0 sinon'
 BEGIN
@@ -829,6 +879,8 @@ BEGIN
    SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS SupprimerAtelier$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SupprimerAtelier` (IN `in_idAtelier` INT, OUT `out_result` INT)  NO SQL
     COMMENT 'Retourne 1 si effectué, 0 sinon'
 BEGIN
@@ -845,6 +897,8 @@ BEGIN
    SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS SupprimerClient$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SupprimerClient` (IN `in_idClient` INT(11), OUT `out_result` INT(11))  NO SQL
     COMMENT 'Retourne 1 si effectué, 0 sinon'
 BEGIN
@@ -861,6 +915,8 @@ BEGIN
    SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS SupprimerMoyenPaiement$$
 CREATE DEFINER=`root`@`%` PROCEDURE `SupprimerMoyenPaiement` (IN `id_MoyenPaiement` INT(11), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Supprime un moyen de paiement'
 BEGIN
@@ -879,6 +935,8 @@ BEGIN
     SELECT out_done;
 END$$
 
+
+DROP PROCEDURE IF EXISTS SupprimerReservation$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SupprimerReservation` (IN `in_idreservation` INT(11), OUT `out_result` INT(11))  NO SQL
     COMMENT 'Retourne 1 si effectué, 0 sinon'
 BEGIN
@@ -895,6 +953,8 @@ BEGIN
    SELECT out_result;
 END$$
 
+
+DROP PROCEDURE IF EXISTS SupprimerSeance$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SupprimerSeance` (IN `in_idseance` INT(11), OUT `out_result` INT(11))  NO SQL
     COMMENT 'Retourne 1 si effectué, 0 sinon'
 BEGIN
@@ -911,27 +971,16 @@ BEGIN
    SELECT out_result;
 END$$
 
-CREATE DEFINER=`root`@`%` PROCEDURE `ViderPanier` (IN `in_idPaner` INT(11), OUT `out_result` INT(11))  NO SQL
-    COMMENT 'Enlève toute les séances du panier'
+
+DROP PROCEDURE IF EXISTS ViderPanier$$
+CREATE PROCEDURE ViderPanier (IN in_idPanier INT(11), OUT out_result INT(11))
 BEGIN
-	SET out_result = 0;
-	SELECT COUNT(Reservation.pk_id) INTO @nbReserv FROM Panier, Reservation WHERE Panier.fk_reservation = Reservation.pk_id AND Panier.pk_id = 1;
-    
-    WHILE @nbReserv > 0 DO
-    SELECT Panier.fk_reservation INTO @idReserv FROM Panier WHERE Panier.pk_id = 1 LIMIT 1;
-    DELETE FROM Panier WHERE Panier.pk_id = in_idPaner AND Panier.fk_reservation = @idReserv;
-    DELETE FROM Reservation WHERE Reservation.pk_id = @idReserv;
-    
-    SELECT COUNT(Reservation.pk_id) INTO @nbReserv FROM Panier, Reservation WHERE Panier.fk_reservation = Reservation.pk_id AND Panier.pk_id = in_idPaner;
-    END WHILE;
-	SET out_result = 1;
+    DELETE FROM Panier WHERE Panier.pk_id = in_idPanier;
+    SET out_result = 1;
     SELECT out_result;
 END$$
+
 
 DELIMITER ;
 
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

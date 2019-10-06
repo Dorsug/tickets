@@ -16,14 +16,14 @@ def nouveauPanier():
 
 def ajouterSeanceAuPanier(panierId, seanceId):
     c = db.get_cursor()
-    result = db.callproc(c, 'ajouterSeanceAuPanier', panierId, seanceId, None, '@success')
-    success = result[1][0]['out_result']
+    result = db.callproc(c, 'ajouterSeanceAuPanier', panierId, seanceId, '@success')
+    success = result[0]['out_result']
     return success
 
 
 def enleverDuPanier(panierId, seanceId):
     c = db.get_cursor()
-    result = db.callproc(c, 'enleverReservationDuPanier', panierId, seanceId, '@success')
+    result = db.callproc(c, 'enleverDuPanier', panierId, seanceId, '@success')
     success = result[0]['out_result']
     return success
 

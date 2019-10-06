@@ -38,7 +38,8 @@ def listerReservations():
     template = """
         <input type="text" id="resaSearchBar" onkeyup="resaSearch()" placeholder="Recherche">
         {% for reservation in reservations %}
-        <p class="bulle">
+        <p class="bulle"
+            onclick="Cookies.set('panierId', {{ reservation.panier }})); majInterfacePanier()">
             {{ reservation.nom }} {{ reservation.prenom }}<br />
             {{ reservation.mail }}
         </p>
@@ -87,7 +88,7 @@ def listerPanier(panierId):
             <strong>{{ seance['Numero atelier'] }} - {{ seance['Nom atelier'] }}</strong><br />
             {{ seance['heureDebut'] }} - {{ seance['heurefin'] }}<br />
             {{ seance['prix'] }}<br />
-            <button onclick="enleverDuPanier({{ seance['Id reservation'] }});">X</button>
+            <button onclick="enleverDuPanier({{ seance['seanceId'] }});">X</button>
         </p>
         {% endfor %}
     """
