@@ -295,18 +295,20 @@ FROM Client$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `ListerMoyensPaiement` ()  SELECT * FROM MoyenPaiement$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerReservations` ()  SELECT
-	Reservation.pk_id AS "ID",
-	Reservation.date AS "Date réservation",
-    Reservation.heure AS "Heure réservation",
-    Atelier.nom AS "Nom de l'atelier",
-	Seance.date AS "Date de la séance", 
-	Seance.heureDebut AS "Heure début", 
-    Seance.heureFin AS "Heure fin", 
-	Atelier.prix AS "Prix"
-FROM Reservation, Seance, Atelier 
-WHERE Reservation.fk_seance = Seance.pk_id
-AND Seance.fk_atelier = Atelier.pk_id$$
+
+CREATE PROCEDURE listerPreReservations ()
+BEGIN
+    SELECT
+        Client.Nom AS 'nom',
+        Client.Prenom AS 'prenom',
+        Client.Mail AS 'mail',
+        MIN(Panier.pk_id) AS 'panier'
+    FROM Panier
+    JOIN CompteurPanier ON Panier.pk_id = CompteurPanier.idPanier
+    JOIN Client ON CompteurPanier.fk_client = Client.pk_id
+    GROUP BY Client.pk_id;
+END$$
+
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeances` ()  SELECT 
 	Seance.pk_id AS "ID", 

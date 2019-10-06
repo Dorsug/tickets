@@ -57,6 +57,11 @@ def horaires():
     return generate.listerHoraires()
 
 
+@app.route('/reservations')
+def reservations():
+    return generate.listerReservations()
+
+
 @app.route('/panier', methods=['GET', 'POST', 'DELETE'])
 def panier():
     if request.method == 'GET':

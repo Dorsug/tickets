@@ -32,6 +32,20 @@ def listerHoraires():
     return render_template_string(template, seances=seances)
 
 
+def listerReservations():
+    c = db.get_cursor()
+    reservations = db.callproc(c, 'listerPreReservations')
+    template = """
+        {% for reservation in reservations %}
+        <p class="bulle">
+            {{ reservation.nom }} {{ reservation.prenom }}<br />
+            {{ reservation.mail }}
+        </p>
+        {% endfor %}
+    """
+    return render_template_string(template, reservations=reservations)
+
+
 def listerSeancesPourAtelier(atelierId):
     c = db.get_cursor()
     seances = db.callproc(c, 'listerSeancesPourAtelier', atelierId)
