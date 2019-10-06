@@ -1,3 +1,19 @@
+inputDate = document.querySelector('#pane1 .dates')
+// Set the default
+date = Cookies.get('date');
+if (typeof date == 'undefined') {
+    Cookies.set('date', 'Samedi');
+}
+// Check the correct box
+inputDate.querySelector('input[value="' + date + '"]').checked = true;
+// Define callback to change when clicked
+for (box of inputDate.querySelectorAll('input')) {
+    box.onclick = function () { 
+        Cookies.set('date', this.value);
+    };
+}
+
+
 function listerAteliers() {
     $.ajax({
         url: '/ateliers', 

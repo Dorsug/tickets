@@ -38,6 +38,11 @@
                 >
                     Réservations
                 </div>
+                <div class="bulle dates">
+                    Date
+                    <label><input type="radio" name="date" value="Samedi">Samedi</label>
+                    <label><input type="radio" name="date" value="Dimanche">Dimanche</label>
+                </div>
             </div>
             <div id="pane2" class="pane" style="grid-column: 2">
                 <h1>Ateliers</h1>
@@ -79,9 +84,4 @@
     </body>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/script.js"></script>
-    <script>
-        for (box of document.querySelectorAll('#pane1 input')) {
-            box.onclick = getSeances;
-        }
-    </script>
 </html>
