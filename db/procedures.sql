@@ -599,32 +599,32 @@ BEGIN
 	END IF;
 END$$
 
-
 DROP PROCEDURE IF EXISTS ListerSeancesPourAtelier$$
 CREATE DEFINER=`root`@`%` PROCEDURE `ListerSeancesPourAtelier` (IN `in_idAtelier` INT(11))  NO SQL
     COMMENT 'Retourne la liste des séances pour un atelier'
 BEGIN
-	IF in_idAtelier <> '' THEN
-		SELECT 
-			Seance.pk_id AS "ID", 
-		    Seance.date AS "Date", 
-		    Seance.heureDebut AS "Heure debut", 
-		    Seance.heureFin AS "Heure fin",
-		    Atelier.numero AS "Numero atelier", 
-		    Atelier.nom AS "Nom de l'atelier", 
-		    Atelier.description AS "Description de l'atelier", 
-		    Atelier.agemini AS "Age mini", 
-		    Atelier.agemaxi AS "Age maxi",
-            Atelier.nombreplace-COUNT(Panier.fk_seance) AS "Places Dispo",
-			Atelier.prix AS "Prix"    
-		FROM Seance
-		INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
-		INNER JOIN Panier ON Seance.pk_id = Panier.fk_seance
-		WHERE Seance.fk_atelier = in_idAtelier
-		GROUP BY Panier.fk_seance;
-	END IF;
+    IF in_idAtelier <> '' THEN
+            SELECT
+                Seance.pk_id AS "ID",
+                Seance.date AS "Date",
+                Seance.heureDebut AS "Heure debut",
+                Seance.heureFin AS "Heure fin",
+                Atelier.numero AS "Numero atelier",
+                Atelier.nom AS "Nom de l'atelier",
+                Atelier.description AS "Description de l'atelier",
+                Atelier.agemini AS "Age mini",
+                Atelier.agemaxi AS "Age maxi",
+                Atelier.nombreplace - (
+                    SELECT COUNT(Panier.fk_seance) FROM Panier
+                    WHERE Seance.pk_id = Panier.fk_seance
+                ) AS placesRestantes,
+                Atelier.nombrePlace,
+                Atelier.prix AS "Prix"
+            FROM Seance
+            INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
+            WHERE Seance.fk_atelier = in_idAtelier;
+    END IF;
 END$$
-
 
 DROP PROCEDURE IF EXISTS ListerSeancesPourDate$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeancesPourDate` (IN `in_date` DATE)  SELECT 
