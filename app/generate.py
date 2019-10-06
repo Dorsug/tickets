@@ -48,15 +48,15 @@ def listerReservations():
     return render_template_string(template, reservations=reservations)
 
 
-def listerSeancesPourAtelier(atelierId):
+def listerSeancesPourAtelier(atelierId, date):
     c = db.get_cursor()
-    seances = db.callproc(c, 'listerSeancesPourAtelier', atelierId)
+    seances = db.callproc(c, 'listerSeancesPourAtelier', atelierId, date)
     template = """
         {% for seance in seances %}
         <p class="bulle" onclick="ajouterAuPanier({{ seance['ID'] }});">
             <strong>{{ seance['Date'] }}</strong><br />
             {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
-            Places restantes: {{ seance['Places Dispo'] }}
+            Places restantes: {{ seance['placesRestantes'] }}
         </p>
         {% endfor %}
     """

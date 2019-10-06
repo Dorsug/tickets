@@ -45,7 +45,7 @@ def seances():
     horaire = request.values.get('horaire')
     date = request.cookies.get('date')
     if atelierId:
-        return generate.listerSeancesPourAtelier(atelierId)
+        return generate.listerSeancesPourAtelier(atelierId, dates[date])
     elif horaire:
         return generate.listerSeancesPourHoraire(horaire, dates[date])
 

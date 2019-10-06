@@ -600,7 +600,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS ListerSeancesPourAtelier$$
-CREATE DEFINER=`root`@`%` PROCEDURE `ListerSeancesPourAtelier` (IN `in_idAtelier` INT(11))  NO SQL
+CREATE DEFINER=`root`@`%` PROCEDURE `ListerSeancesPourAtelier` (IN `in_idAtelier` INT(11), IN in_date DATE)  NO SQL
     COMMENT 'Retourne la liste des séances pour un atelier'
 BEGIN
     IF in_idAtelier <> '' THEN
@@ -622,7 +622,8 @@ BEGIN
                 Atelier.prix AS "Prix"
             FROM Seance
             INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
-            WHERE Seance.fk_atelier = in_idAtelier;
+            WHERE Seance.fk_atelier = in_idAtelier
+            AND Seance.date = in_date;
     END IF;
 END$$
 
