@@ -53,7 +53,10 @@ def listerSeancesPourAtelier(atelierId, date):
     seances = db.callproc(c, 'listerSeancesPourAtelier', atelierId, date)
     template = """
         {% for seance in seances %}
-        <p class="bulle" onclick="ajouterAuPanier({{ seance['ID'] }});">
+        <p 
+            class="bulle{% if seance.placesRestantes <= 0 %} empty{% endif %}"
+            onclick="ajouterAuPanier({{ seance['ID'] }});"
+        >
             <strong>{{ seance['Date'] }}</strong><br />
             {{ seance['Heure debut'] }} - {{ seance['Heure fin'] }}<br />
             Places restantes: {{ seance['placesRestantes'] }}
