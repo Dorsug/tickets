@@ -68,16 +68,25 @@ BEGIN
 	END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AfficherContenuPanier` (IN `in_idPanier` INT(11))  NO SQL
+
+CREATE PROCEDURE AfficherContenuPanier (IN in_idPanier INT(11))
     COMMENT 'Retourne la liste des éléments contenus dans le panier'
-SELECT Atelier.numero as 'Numero atelier', Atelier.nom as 'Nom atelier', Seance.date, Seance.heureDebut, Seance.heurefin, Atelier.prix, Reservation.pk_id as 'Id reservation', Client.pk_id as 'ID client', CompteurPanier.Paye as 'Est payé'
+SELECT
+    Atelier.numero as 'Numero atelier',
+    Atelier.nom as 'Nom atelier',
+    Atelier.prix,
+    Seance.date,
+    Seance.heureDebut,
+    Seance.heurefin,
+    Client.pk_id as 'ID client',
+    CompteurPanier.Paye as 'Est payé'
 FROM Atelier
 INNER JOIN Seance ON Atelier.pk_id = Seance.fk_atelier
-INNER JOIN Reservation ON Reservation.fk_seance = Seance.pk_id
-INNER JOIN Panier ON Reservation.pk_id = Panier.fk_reservation
+INNER JOIN Panier ON Panier.pk_id = in_idPanier
 INNER JOIN CompteurPanier ON CompteurPanier.idPanier = Panier.pk_id
-LEFT JOIN Client ON Panier.fk_personne = Client.pk_id
+LEFT JOIN Client ON CompteurPanier.fk_client = Client.pk_id
 WHERE Panier.pk_id = in_idPanier$$
+
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `AfficherSeance` (IN `in_idSeance` INT(11), OUT `out_date` DATE, OUT `out_heuredebut` TIME, OUT `out_heurefin` TIME, OUT `out_numAtelier` INT(11), OUT `out_nomAtelier` VARCHAR(16), OUT `out_descAtelier` TEXT, OUT `out_ageminAtelier` INT(11), OUT `out_agemaxAtelier` INT(11), OUT `out_nbplace` INT(11))  NO SQL
     COMMENT 'Retourne les informations liées à la séance trouvée sinon rien'
@@ -113,42 +122,21 @@ BEGIN
 	SELECT out_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AjouterReservation` (IN `in_idseance` INT(11), OUT `out_result` INT(11))  NO SQL
-    COMMENT 'Retourne l’ID de la reservation, 0 si échoué'
-BEGIN
-	SELECT COUNT(Seance.pk_id) INTO @nbID FROM Seance WHERE Seance.pk_id = in_idseance;
 
-    SET out_result = 0;
-    IF @nbID = 1 THEN
-    	IF in_idseance <> '' THEN
-        	SELECT CURRENT_DATE INTO @date;
-            SELECT CURRENT_TIME INTO @heure;
-
-        	INSERT INTO Reservation (Reservation.pk_id, Reservation.fk_seance, Reservation.date, Reservation.heure) VALUES (NULL, in_idseance, @date, @heure);
-    		SET out_result = LAST_INSERT_ID();
-    	END IF;
-    END IF;
-	SELECT out_result;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `AjouterSeanceAuPanier` (IN `in_idPanier` INT(11), IN `in_idSeance` INT(11), IN `in_idPersonne` INT(11), OUT `out_result` INT(11))  NO SQL
+CREATE PROCEDURE AjouterSeanceAuPanier (IN in_idPanier INT(11), IN in_idSeance INT(11), IN in_idPersonne INT(11), OUT `out_result` INT(11))
     COMMENT 'Retourne 1 si effectué 0 sinon'
 BEGIN
-	SET out_result = 0;
-    CALL AjouterReservation (in_idSeance, @idReservation);
-
-    IF @idReservation <> 0 THEN
-		IF in_idPanier <> '' THEN
-        	IF in_idPersonne = '' THEN
-            	SET in_idPersonne = NULL;
-            END IF;
-            
-        	INSERT INTO `Panier` (`pk_id`, `fk_reservation`, `fk_personne`) VALUES (in_idPanier, @idReservation, in_idPersonne);
-    		SET out_result = 1;
+    SET out_result = 0;
+    IF in_idPanier <> '' THEN
+        IF in_idPersonne = '' THEN
+            SET in_idPersonne = NULL;
         END IF;
+        INSERT INTO Panier (`pk_id`, `fk_reservation`, `fk_personne`) VALUES (in_idPanier, @idReservation, in_idPersonne);
+        SET out_result = 1;
     END IF;
     SELECT out_result;
 END$$
+
 
 CREATE DEFINER=`root`@`%` PROCEDURE `AjoutMoyenPaiement` (IN `in_MoyenPaiement` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Permet d''ajouter un moyen de paiement'
@@ -597,13 +585,13 @@ BEGIN
 		    Atelier.description AS "Description de l'atelier", 
 		    Atelier.agemini AS "Age mini", 
 		    Atelier.agemaxi AS "Age maxi",
-            Atelier.nombreplace-COUNT(Reservation.fk_seance) AS "Places Dispo",
+            Atelier.nombreplace-COUNT(Panier.fk_seance) AS "Places Dispo",
 			Atelier.prix AS "Prix"    
 		FROM Seance
 		INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
-		INNER JOIN Reservation ON Seance.pk_id = Reservation.fk_seance
+		INNER JOIN Panier ON Seance.pk_id = Panier.fk_seance
 		WHERE Seance.fk_atelier = in_idAtelier
-		GROUP BY Reservation.fk_seance;
+		GROUP BY Panier.fk_seance;
 	END IF;
 END$$
 
@@ -628,7 +616,7 @@ CREATE PROCEDURE ListerSeancesPourHoraire (IN in_Horaire TIME)  NO SQL
 BEGIN
     IF in_Horaire <> '' THEN
         SELECT
-            Seance.pk_id AS "Id"
+            Seance.pk_id AS "Id",
             Seance.date AS "Date",
             Seance.heureDebut AS "HeureDebut",
             Seance.heureFin AS "HeureFin",
@@ -940,267 +928,6 @@ END$$
 
 DELIMITER ;
 
--- --------------------------------------------------------
-
---
--- Structure de la table `Association`
---
-
-CREATE TABLE `Association` (
-  `pk_id` int(11) NOT NULL COMMENT 'Clé primaire association',
-  `Nom` varchar(255) NOT NULL COMMENT 'Nom de l''association',
-  `Telephone` varchar(10) COMMENT 'Numéro de téléphone',
-  `Mail` varchar(255) COMMENT 'Adresse mail de l''association',
-  `Description` text COMMENT 'Informations complémentaire lié à l''association'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Table listant les associations';
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Atelier`
---
-
-CREATE TABLE `Atelier` (
-  `pk_id` int(11) NOT NULL COMMENT 'Clé primaire atelier',
-  `fk_association` int(11) NOT NULL COMMENT 'Clé secondaire de l''association ',
-  `numero` int(11) NOT NULL COMMENT 'Numéro d’atelier',
-  `nom` varchar(100) NOT NULL COMMENT 'Nom de l’atelier',
-  `description` text NOT NULL COMMENT 'Description de l’atelier',
-  `agemini` int(11) NOT NULL COMMENT 'Age minimum pour participer à l’atelier',
-  `agemaxi` int(11) NOT NULL COMMENT 'Age maximum pour participer à l’atelier',
-  `nombreplace` int(11) NOT NULL COMMENT 'Nombre de participants prévu',
-  `prix` decimal(6,2) NOT NULL COMMENT 'Coût de l''aterlier'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Liste les ateliers disponible';
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Client`
---
-
-CREATE TABLE `Client` (
-  `pk_id` int(11) NOT NULL COMMENT 'Clé primaire',
-  `Nom` varchar(16) NOT NULL COMMENT 'Nom de la personne',
-  `Prenom` varchar(16) NOT NULL COMMENT 'Prénom de la personne',
-  `Mail` varchar(255) NOT NULL COMMENT 'Adresse mailo de la personne'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Identifier les clients ayant réservé une séance à l''avance';
-
--- --------------------------------------------------------
-
---
--- Structure de la table `CompteurPanier`
---
-
-CREATE TABLE `CompteurPanier` (
-  `idPanier` int(11) NOT NULL COMMENT 'Permet de déterminer un ID pour le panier',
-  `Paye` tinyint(1) NOT NULL COMMENT 'Spécifie si le panier à été payé ou non',
-  `fk_moyPaiement` int(11) DEFAULT NULL COMMENT 'Clé étrangère du moyen de paiement',
-  `CodePostal` char(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '00000' COMMENT 'Code postail de la personne ayant payé'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `MoyenPaiement`
---
-
-CREATE TABLE `MoyenPaiement` (
-  `pk_id` int(11) NOT NULL COMMENT 'Clé primaire moyen paiement',
-  `Mode` varchar(10) NOT NULL COMMENT 'Mode du moyen de paiement'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Liste des moyen de paiement';
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Panier`
---
-
-CREATE TABLE `Panier` (
-  `pk_id` int(11) NOT NULL COMMENT 'Identifiant du panier',
-  `fk_reservation` int(11) NOT NULL COMMENT 'Identifie la réservation concernée',
-  `fk_personne` int(11) DEFAULT NULL COMMENT 'Identifiant de la personne ayant réservée'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Etablit la relation entre les réservations et les personnes';
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Reservation`
---
-
-CREATE TABLE `Reservation` (
-  `pk_id` int(11) NOT NULL COMMENT 'Clé primaire reservation',
-  `fk_seance` int(11) NOT NULL COMMENT 'ID de Séance résevée',
-  `date` date NOT NULL COMMENT 'Date de réservation',
-  `heure` time NOT NULL COMMENT 'Heure de réservatiuon'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Regroupe l''ensemble des reservations des séances';
-
---
--- Déclencheurs `Reservation`
---
-DELIMITER $$
-CREATE TRIGGER `VerifReservation` AFTER INSERT ON `Reservation` FOR EACH ROW BEGIN
-	SELECT 
-    Atelier.nombreplace - COUNT(Reservation.fk_seance) AS "Dispo" INTO @dispo
-	FROM Seance
-	INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
-	INNER JOIN Reservation ON Seance.pk_id = Reservation.fk_seance AND Seance.pk_id = NEW.fk_seance
-	GROUP BY Reservation.fk_seance;
-    
-    IF @dispo < 0 THEN
-    	DELETE FROM Reservation WHERE Reservation.pk_id = NEW.pk_id;
-    END IF;
-END
-$$
-DELIMITER ;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `Seance`
---
-
-CREATE TABLE `Seance` (
-  `pk_id` int(11) NOT NULL COMMENT 'Clé primaire',
-  `date` date NOT NULL COMMENT 'Date de la séance',
-  `heureDebut` time NOT NULL COMMENT 'Heure de début de la séance',
-  `heureFin` time NOT NULL COMMENT 'Heure de fin de la séance',
-  `fk_atelier` int(11) NOT NULL COMMENT 'Atelier concerné'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Séance dispensées par les ateliers';
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `Association`
---
-ALTER TABLE `Association`
-  ADD PRIMARY KEY (`pk_id`);
-
---
--- Index pour la table `Atelier`
---
-ALTER TABLE `Atelier`
-  ADD PRIMARY KEY (`pk_id`),
-  ADD KEY `fk_association` (`fk_association`);
-
---
--- Index pour la table `Client`
---
-ALTER TABLE `Client`
-  ADD UNIQUE KEY `pk_id` (`pk_id`);
-
---
--- Index pour la table `CompteurPanier`
---
-ALTER TABLE `CompteurPanier`
-  ADD UNIQUE KEY `idPaier` (`idPanier`),
-  ADD KEY `fk_moyPaiement` (`fk_moyPaiement`);
-
---
--- Index pour la table `MoyenPaiement`
---
-ALTER TABLE `MoyenPaiement`
-  ADD PRIMARY KEY (`pk_id`),
-  ADD UNIQUE KEY `Mode` (`Mode`);
-
---
--- Index pour la table `Panier`
---
-ALTER TABLE `Panier`
-  ADD KEY `fk_personne` (`fk_personne`),
-  ADD KEY `pk_id` (`pk_id`),
-  ADD KEY `fk_reservation` (`fk_reservation`);
-
---
--- Index pour la table `Reservation`
---
-ALTER TABLE `Reservation`
-  ADD PRIMARY KEY (`pk_id`),
-  ADD KEY `fk_seance` (`fk_seance`),
-  ADD KEY `fk_seance_2` (`fk_seance`);
-
---
--- Index pour la table `Seance`
---
-ALTER TABLE `Seance`
-  ADD PRIMARY KEY (`pk_id`),
-  ADD KEY `fk_atelier` (`fk_atelier`);
-
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `Association`
---
-ALTER TABLE `Association`
-  MODIFY `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire association';
-
---
--- AUTO_INCREMENT pour la table `Atelier`
---
-ALTER TABLE `Atelier`
-  MODIFY `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire atelier';
-
---
--- AUTO_INCREMENT pour la table `Client`
---
-ALTER TABLE `Client`
-  MODIFY `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire';
-
---
--- AUTO_INCREMENT pour la table `CompteurPanier`
---
-ALTER TABLE `CompteurPanier`
-  MODIFY `idPanier` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Permet de déterminer un ID pour le panier';
-
---
--- AUTO_INCREMENT pour la table `MoyenPaiement`
---
-ALTER TABLE `MoyenPaiement`
-  MODIFY `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire moyen paiement';
-
---
--- AUTO_INCREMENT pour la table `Reservation`
---
-ALTER TABLE `Reservation`
-  MODIFY `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire reservation';
-
---
--- AUTO_INCREMENT pour la table `Seance`
---
-ALTER TABLE `Seance`
-  MODIFY `pk_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clé primaire';
-
---
--- Contraintes pour les tables déchargées
---
-
---
--- Contraintes pour la table `CompteurPanier`
---
-ALTER TABLE `CompteurPanier`
-  ADD CONSTRAINT `LstMoyPaiement` FOREIGN KEY (`fk_moyPaiement`) REFERENCES `MoyenPaiement` (`pk_id`);
-
---
--- Contraintes pour la table `Panier`
---
-ALTER TABLE `Panier`
-  ADD CONSTRAINT `Panier_ibfk_1` FOREIGN KEY (`fk_personne`) REFERENCES `Client` (`pk_id`),
-  ADD CONSTRAINT `Panier_ibfk_2` FOREIGN KEY (`fk_reservation`) REFERENCES `Reservation` (`pk_id`);
-
---
--- Contraintes pour la table `Reservation`
---
-ALTER TABLE `Reservation`
-  ADD CONSTRAINT `Reservation_ibfk_1` FOREIGN KEY (`fk_seance`) REFERENCES `Seance` (`pk_id`);
-
---
--- Contraintes pour la table `Seance`
---
-ALTER TABLE `Seance`
-  ADD CONSTRAINT `Seance_ibfk_1` FOREIGN KEY (`fk_atelier`) REFERENCES `Atelier` (`pk_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
