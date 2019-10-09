@@ -12,6 +12,11 @@ def time_split(timedelta):
 app = Flask('gestickets2', static_folder='assets')
 app.teardown_appcontext(db.close_db)
 app.jinja_env.filters['time_split'] = time_split
+app.config.from_pyfile('config.default')
+try:
+    app.config.from_pyfile('config.local')
+except FileNotFoundError:
+    pass
 
 
 ages = [
@@ -25,9 +30,6 @@ ages = [
         {'intv': [14, 18], 'interface': '14 - 18'}
         ]
 
-heures = ['10:30', '11:30', '14:00', '15:00', '16:00', '17:00', '18:00']
-
-dates = {'Samedi': '2019-10-19', 'Dimanche': '2019-10-20'}
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -35,8 +37,8 @@ def index():
         return render_template(
             'index.html',
             ages=[x['interface'] for x in ages],
-            heures=heures,
-            dates=dates
+            heures=app.config['HORAIRES'],
+            dates=app.config['DATES']
         )
 
 
@@ -51,9 +53,9 @@ def seances():
     horaire = request.values.get('horaire')
     date = request.cookies.get('date')
     if atelierId:
-        return generate.listerSeancesPourAtelier(atelierId, dates[date])
+        return generate.listerSeancesPourAtelier(atelierId, app.config['DATES'][date])
     elif horaire:
-        return generate.listerSeancesPourHoraire(horaire, dates[date])
+        return generate.listerSeancesPourHoraire(horaire, app.config['DATES'][date])
 
 
 @app.route('/horaires')

@@ -1,18 +1,19 @@
 import mysql.connector
-from flask import g
+from flask import g, current_app
 from os import environ
-
-mysql_config = {
-    'user': environ.get('TICKETS_MYSQL_USER', 'root'),
-    'password': environ.get('TICKETS_MYSQL_PASSWORD', 'roottoor'),
-    'host': environ.get('TICKETS_MYSQL_HOST', '127.0.0.1')
-}
 
 
 # Setup so connection to db is done only once
 def get_db():
     if 'db' not in g:
-        g.db = mysql.connector.connect(database="gestickets2", auth_plugin='mysql_native_password', **mysql_config)
+        config = current_app.config
+        g.db = mysql.connector.connect(
+            host=config['MYSQL_HOST'],
+            database=config['MYSQL_DB'],
+            user=config['MYSQL_USER'],
+            password=config['MYSQL_PASSWORD'],
+            auth_plugin='mysql_native_password'
+        )
         g.db.autocommit = True
     return g.db
 

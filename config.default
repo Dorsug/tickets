@@ -1,0 +1,19 @@
+# MySQL
+MYSQL_DB = 'gestickets2'
+MYSQL_USER = 'root'
+MYSQL_HOST = '127.0.0.1'
+
+# Interface
+DATES = {
+    'Samedi': '2019-10-19',
+    'Dimanche': '2019-10-20'
+}
+HORAIRES = [
+    '10:30',
+    '11:30',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
+    '18:00'
+]
