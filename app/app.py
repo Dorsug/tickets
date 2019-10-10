@@ -113,9 +113,15 @@ def paiement():
         panierId = request.cookies['panierId']
     except KeyError: # Il n'y a pas de panier
         abort(400)
+
+    try:
+        imprimante = request.cookies['imprimante']
+    except KeyError:
+        imprimante = '1' # Défaut de l'interface
+
     utils.marquePanierPaye(panierId)
 
-    utils.impressionEtiquettes(panierId)
+    utils.impressionEtiquettes(panierId, imprimante)
 
     # Supprime id du panier validé ét redirige vers la page principale
     return render_template('paiement.html')

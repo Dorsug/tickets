@@ -7,6 +7,8 @@ from brother_ql.conversion import convert
 from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
 
+from flask import current_app
+
 
 def nouveauPanier():
     c = db.get_cursor()
@@ -70,21 +72,20 @@ def _generationEtiquettes(numero, nom, date, debut, fin):
     return filename
 
 
-def _sendToPrinter(images):
-    printer = 'file:///dev/usb/lp0'
+def _sendToPrinter(images, imprimante_id):
     backend = 'linux_kernel'
     qlr = BrotherQLRaster('QL-800')
 
     instructions = convert(qlr=qlr, images=images, label='62red', red=True)
     send(
         instructions=instructions,
-        printer_identifier=printer,
+        printer_identifier=imprimante_id,
         backend_identifier=backend,
         blocking=False
     )
 
 
-def impressionEtiquettes(panierId):
+def impressionEtiquettes(panierId, imprimante):
     c = db.get_cursor()
     panier = db.callproc(c, 'afficherContenuPanier', panierId)
     images = []
@@ -98,4 +99,5 @@ def impressionEtiquettes(panierId):
                 fin=seance['heurefin']
             )
         )
-    _sendToPrinter(images)
+    imprimante_id = current_app.config['IMPRIMANTES'][int(imprimante) - 1]
+    _sendToPrinter(images, imprimante_id)
