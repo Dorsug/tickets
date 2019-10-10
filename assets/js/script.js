@@ -3,6 +3,7 @@ inputDate = document.querySelector('#pane1 .dates')
 date = Cookies.get('date');
 if (typeof date == 'undefined') {
     Cookies.set('date', 'Samedi');
+    date = 'Samedi';
 }
 // Check the correct box
 inputDate.querySelector('input[value="' + date + '"]').checked = true;
