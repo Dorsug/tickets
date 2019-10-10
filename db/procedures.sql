@@ -72,12 +72,14 @@ SELECT
     Seance.heurefin,
     Seance.pk_id AS 'seanceId',
     Client.pk_id as 'ID client',
-    CompteurPanier.Paye as 'Est payé'
+    CompteurPanier.Paye as 'Est payé',
+    Structure.Nom as 'structure'
 FROM Atelier
 INNER JOIN Seance ON Atelier.pk_id = Seance.fk_atelier
 INNER JOIN Panier ON Panier.fk_seance = Seance.pk_id
 INNER JOIN CompteurPanier ON CompteurPanier.idPanier = Panier.pk_id
 LEFT JOIN Client ON CompteurPanier.fk_client = Client.pk_id
+INNER JOIN Structure ON Atelier.fk_structure = Structure.pk_id
 WHERE Panier.pk_id = in_idPanier$$
 
 

@@ -47,20 +47,27 @@ def _clean_timedelta(td):
     return ':'.join(str(td).split(':')[:2])
 
 
-def _generationEtiquettes(numero, nom, date, debut, fin):
+def _generationEtiquettes(numero, nom, date, debut, fin, structure):
     hash = sha1((f'{numero},{nom},{date},{debut},{fin}').encode('utf-8')).hexdigest()
+
     horaire = f"{_clean_timedelta(debut)} - {_clean_timedelta(fin)}"
+    # Reverse dictionnary search
+    date = next(key for key, value in current_app.config['DATES'].items() if value == str(date))
 
     # Création de de l'image
     img = Image.new(mode='L', size=(696, 291), color=255)
-    font_normal = ImageFont.truetype("fonts/OpenSans-Regular.ttf", 60)
+    font_normal = ImageFont.truetype("fonts/OpenSans-Regular.ttf", 48)
     font_small = ImageFont.truetype("fonts/OpenSans-Regular.ttf", 40)
     draw = ImageDraw.Draw(img)
 
+    if len(nom) > 24:
+        nom = nom[:24] + '\n' + nom[24:]
+
     # Ajout du texte
-    draw.text((10, 10), f"{numero}. {nom}", fill=0, font=font_normal)
-    draw.text((10, 170), horaire, fill=0, font=font_small)
-    draw.text((10, 230), str(date), fill=0, font=font_small)
+    draw.multiline_text((10, 10), f"N°{numero}. {nom}", fill=0, font=font_normal)
+    draw.text((10, 170), f"{structure}", fill=0, font=font_small)
+    draw.text((10, 230), horaire, fill=0, font=font_small)
+    draw.text((500, 230), str(date), fill=0, font=font_small)
 
     filename = 'labels/' + hash + '.png'
 
@@ -96,8 +103,9 @@ def impressionEtiquettes(panierId, imprimante):
                 nom=seance['Nom atelier'],
                 date=seance['date'],
                 debut=seance['heureDebut'],
-                fin=seance['heurefin']
+                fin=seance['heurefin'],
+                structure=seance['structure']
             )
         )
     imprimante_id = current_app.config['IMPRIMANTES'][int(imprimante) - 1]
-    _sendToPrinter(images, imprimante_id)
+    #_sendToPrinter(images, imprimante_id)
