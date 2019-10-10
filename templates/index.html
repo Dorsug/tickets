@@ -40,6 +40,13 @@
                     <label><input type="radio" name="date" value="Samedi">Samedi</label>
                     <label><input type="radio" name="date" value="Dimanche">Dimanche</label>
                 </div>
+                <div class="bulle printer">
+                    Imprimante:
+                    <select name="printer" onchange="setPrinter(this.value);">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
             </div>
             <div id="pane2" class="pane" style="grid-column: 2">
                 <h1>Ateliers</h1>

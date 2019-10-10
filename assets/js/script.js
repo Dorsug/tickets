@@ -213,3 +213,7 @@ function resaSearch() {
         }
     }
 }
+
+function setPrinter(printer) {
+    Cookies.set('imprimante', printer);
+}
