@@ -38,7 +38,8 @@ def index():
             'index.html',
             ages=[x['interface'] for x in ages],
             heures=app.config['HORAIRES'],
-            dates=app.config['DATES']
+            dates=app.config['DATES'],
+            printers=app.config['IMPRIMANTES']
         )
 
 

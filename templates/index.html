@@ -43,8 +43,9 @@
                 <div class="bulle printer">
                     Imprimante:
                     <select name="printer" onchange="setPrinter(this.value);">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
+                        {% for printer in printers %}
+                            <option value="{{ loop.index }}">{{ loop.index }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>

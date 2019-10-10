@@ -17,3 +17,8 @@ HORAIRES = [
     '17:00',
     '18:00'
 ]
+
+# Backend
+IMPRIMANTES = [
+    'file:///dev/usb/lp0'
+]
