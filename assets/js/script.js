@@ -37,16 +37,7 @@ function listerAteliers() {
     });
 }
 
-function listerHoraires() {
-    document.querySelector('#pane2 h1').innerHTML = "Horaires";
-    document.querySelector('#pane3 h1').innerHTML = "Ateliers"; 
-    document.querySelector('#pane3 .content').innerHTML = "";
 
-    $.ajax({
-        url: '/horaires', 
-        success: function(data){
-            $("#pane2 .content").html(data);
-        },
     });
 }
 
@@ -174,17 +165,6 @@ function viderPanier() {
     });
 }
 
-function getChecked() {
-    data = {'atelier': [], 'age': []};
-    for (checkbox of document.querySelectorAll('input[type="checkbox"]')) {
-        if (checkbox.checked == true) {
-            data[checkbox.name].push(checkbox.value);
-        }
-    }
-    data['heure'] = document.querySelector('#pane1 input[type="radio"][name="heure"]:checked').value
-    data['date'] = document.querySelector('#pane1 input[type="radio"][name="date"]:checked').value
-    return data
-}
 
 function getSeances() {
     $.ajax({
