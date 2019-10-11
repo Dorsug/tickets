@@ -8,6 +8,12 @@
     </body>
     <script src="assets/js/js.cookie.js"></script>
     <script>
+        panier = Cookies.get('panierId')
+
+        paniers = JSON.parse(localStorage.getItem('paniers')) || new Array;
+        paniers.unshift(panier)
+        localStorage.setItem('paniers', JSON.stringify(paniers))
+
         Cookies.remove('panierId');
         window.location.replace('/');
     </script>
