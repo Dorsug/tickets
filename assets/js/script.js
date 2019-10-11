@@ -15,169 +15,155 @@ for (box of inputDate.querySelectorAll('input')) {
 }
 
 
-function listerAteliers() {
-    $.ajax({
-        url: '/ateliers', 
-        success: function(data){
-            // Modifications esthétiques
-                // Change la disposition des colonnes 2 et 3
-                document.getElementById('pane3').style.display = '';
-                document.getElementById('pane2').style['grid-column'] = '2 / span 1';
-                // Change les classe 'selected' dans la colonne 1
-                try {
-                    document.querySelector('#pane1 .selected').classList.remove('selected');
-                } catch (e) {}
-                try {
-                    document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
-                } catch (e) {}
-                document.querySelector('#pane1 .ateliers').classList.add('selected');
-            // Remplissage des données
-            document.querySelector('#pane2 .content').innerHTML = data;
-        }
-    });
+function _getData(res) {
+    if(res.ok) {
+        return res.text()
+    } else {
+        throw new Error(res.status);
+    }
 }
 
 
+function listerAteliers() {
+    fetch('/ateliers')
+    .then((res) => _getData(res))
+    .then(function(data){
+        // Modifications esthétiques
+            // Change la disposition des colonnes 2 et 3
+            document.getElementById('pane3').style.display = '';
+            document.getElementById('pane2').style['grid-column'] = '2 / span 1';
+            // Change les classe 'selected' dans la colonne 1
+            try {
+                document.querySelector('#pane1 .selected').classList.remove('selected');
+            } catch (e) {}
+            try {
+                document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
+            } catch (e) {}
+            document.querySelector('#pane1 .ateliers').classList.add('selected');
+        // Remplissage des données
+        document.querySelector('#pane2 .content').innerHTML = data;
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
 function listerReservations() {
-    $.ajax({
-        url: '/reservations',
-        data: {},
-        success: function(data) {
-            // Modifications esthétiques
-                // Change la disposition des colonnes 2 et 3
-                document.getElementById('pane3').style.display = 'none';
-                document.getElementById('pane2').style['grid-column'] = '2 / span 2';
-                // Change les classe 'selected' dans la colonne 1
-                try {
-                    document.querySelector('#pane1 .selected').classList.remove('selected');
-                } catch (e) {}
-                try {
-                    document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
-                } catch (e) {}
-                document.querySelector('#pane1 .reservations').classList.add('selected');
-            // Remplissage des données
-            document.querySelector('#pane2 .content').innerHTML = data;
-        }
+    fetch('/reservations')
+    .then((res) => _getData(res))
+    .then(function(data) {
+        // Modifications esthétiques
+            // Change la disposition des colonnes 2 et 3
+            document.getElementById('pane3').style.display = 'none';
+            document.getElementById('pane2').style['grid-column'] = '2 / span 2';
+            // Change les classe 'selected' dans la colonne 1
+            try {
+                document.querySelector('#pane1 .selected').classList.remove('selected');
+            } catch (e) {}
+            try {
+                document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
+            } catch (e) {}
+            document.querySelector('#pane1 .reservations').classList.add('selected');
+        // Remplissage des données
+        document.querySelector('#pane2 .content').innerHTML = data;
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
 function listerSeances(element, atelierId){
-    $.ajax({
-        url: '/seances', 
-        data: { 'atelierId': atelierId },
-        success: function(data){
-            // Modifications esthétiques
-            try {
-                document.querySelector('#pane2 .selected').classList.remove('selected')
-            } catch (e) {}
-            element.classList.add('selected');
-            // Remplissage des données
-            document.querySelector("#pane3 .content").innerHTML = data;
-        }
+    fetch('/seances?atelierId=' + encodeURIComponent(atelierId))
+    .then((res) => _getData(res))
+    .then(function(data){
+        // Modifications esthétiques
+        try {
+            document.querySelector('#pane2 .selected').classList.remove('selected')
+        } catch (e) {}
+        element.classList.add('selected');
+        // Remplissage des données
+        document.querySelector("#pane3 .content").innerHTML = data;
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
 function listerSeancesPourHoraire(element, horaire) {
-    $.ajax({
-        url: '/seances',
-        data: { 'horaire': horaire },
-        success: function(data) {
-            // Modifications esthétiques
-                // Change la disposition des colonnes 2 et 3
-                document.getElementById('pane3').style.display = 'none';
-                document.getElementById('pane2').style['grid-column'] = '2 / span 2';
-                // Change les classe 'selected' dans la colonne 1
-                try {
-                    document.querySelector('#pane1 .selected').classList.remove('selected');
-                } catch (e) {}
-                try {
-                    document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
-                } catch (e) {}
-                document.querySelector('#pane1 .horaires').classList.add('selected');
-                element.classList.add('selected');
-            // Remplissage des données
-            document.querySelector('#pane2 .content').innerHTML = data;
-        }
+    fetch('/seances?horaire=' + encodeURIComponent(horaire))
+    .then((res) => _getData(res))
+    .then(function(data) {
+        // Modifications esthétiques
+            // Change la disposition des colonnes 2 et 3
+            document.getElementById('pane3').style.display = 'none';
+            document.getElementById('pane2').style['grid-column'] = '2 / span 2';
+            // Change les classe 'selected' dans la colonne 1
+            try {
+                document.querySelector('#pane1 .selected').classList.remove('selected');
+            } catch (e) {}
+            try {
+                document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
+            } catch (e) {}
+            document.querySelector('#pane1 .horaires').classList.add('selected');
+            element.classList.add('selected');
+        // Remplissage des données
+        document.querySelector('#pane2 .content').innerHTML = data;
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
 function majInterfacePanier() {
-    $.ajax({
-        url: "/panier",
-        data: {
-            'action': 'lister',
-        },
-        success: function(data){
-            document.querySelector('#pane4 .content').innerHTML = data;
-        }
+    fetch('/panier?action=lister')
+    .then((res) => _getData(res))
+    .then(function(data) {
+        document.querySelector('#pane4 .content').innerHTML = data;
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
 function ajouterAuPanier(seanceId){
-    $.ajax({
-        method: "POST",
-        url: "/panier",
-        data: {
-            'seanceId': seanceId,
-        },
-        success: function(data){
-            if(Cookies.get('panierId') != data){
-                Cookies.set('panierId', data)
-            };
-            majInterfacePanier();
-        },
-        error: function(req, status, error){
-            console.log(error);
-        }
+    fetch('/panier', {
+        method: 'POST',
+        body: new URLSearchParams({'seanceId': seanceId}),
+    })
+    .then((res) => _getData(res))
+    .then(function(data) {
+        if(Cookies.get('panierId') != data){
+            Cookies.set('panierId', data)
+        };
+        majInterfacePanier();
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
 function enleverDuPanier(seanceId){
-    $.ajax({
+    fetch('/panier', {
         method: "DELETE",
-        url: "/panier",
-        data: {
-            'seanceId': seanceId,
-        },
-        success: function(data){
-            majInterfacePanier();
-        },
-        error: function(req, status, error){
-            console.log(error);
-        }
+        body: new URLSearchParams({'seanceId': seanceId}),
+    })
+    .then((res) => _getData(res))
+    .then(function(data){
+        majInterfacePanier();
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
 function viderPanier() {
-    $.ajax({
-        method: "DELETE",
-        url: "/panier",
-        data: {},
-        success: function(data){
-            majInterfacePanier();
-        },
-        error: function(req, status, error){
-            console.log(error);
-        }
-    });
-}
-
-
-function getSeances() {
-    $.ajax({
-        method: 'POST',
-        url: '/',
-        data: JSON.stringify(getChecked()),
-        contentType: 'application/json; charset=utf-8',
-        success: function(data){
-            document.querySelector('#pane2 .content').innerHTML = data;
-        },
-        error: function(req, status, error){
-            console.log(req, status, error);
-        }
+    fetch('/panier', {method: "DELETE"})
+    .then((res) => _getData(res))
+    .then(function(data){
+        majInterfacePanier();
+    })
+    .catch(function(err) {
+        console.log(err);
     });
 }
 
