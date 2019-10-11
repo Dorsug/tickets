@@ -20,5 +20,8 @@ HORAIRES = [
 
 # Backend
 IMPRIMANTES = [
-    'file:///dev/usb/lp0'
+    'file:///dev/usb/lp0',
+    'file:///dev/usb/lp1',
+    'file:///dev/usb/lp2',
+    'file:///dev/usb/lp3'
 ]
