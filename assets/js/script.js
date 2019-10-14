@@ -183,3 +183,13 @@ function resaSearch() {
 function setPrinter(printer) {
     Cookies.set('imprimante', printer);
 }
+
+function setNouveauPanier() {
+    Cookies.remove('panierId');
+    document.querySelector('#pane4 .content').innerHTML = '';
+}
+
+function getPanierPrecedent() {
+    paniers = JSON.parse(localStorage.getItem('paniers'));
+    window.location = '/panier/' + paniers[0];
+}

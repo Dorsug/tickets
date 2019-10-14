@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>GesTickets2</title>
+        <!--
+        <link rel="stylesheet" href="/assets/css/styles.css">
+        -->
+        <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png" id="favicon">
+        <style>
+            body > div {
+                display: inline-block;
+            }
+            .bulle {
+                display: block;
+                border-radius: 5px;
+                margin: 0.5em;
+                margin-right: 1em;
+                padding: 0.5em;
+                cursor: pointer;
+                /*
+                border: 2px solid;
+                */
+                background: #999;
+            }
+            button {
+                display: inline-block;
+                font-size: 1em;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="panier">
+            {% for seance in panier %}
+            <p class="bulle">
+                <strong>{{ seance['Numero atelier'] }} - {{ seance['Nom atelier'] }}</strong><br />
+                {{ seance['heureDebut'] | time_split }} - {{ seance['heurefin'] | time_split }}<br />
+                {{ seance['prix'] }}<br />
+            </p>
+            {% endfor %}
+        </div>
+        <div id="menu">
+            <button onclick="window.location = '/'">Revenir en arrière</button>
+            <button onclick="modifier()">Modifier</button>
+        </div>
+    </body>
+    <script src="/assets/js/js.cookie.js"></script>
+    <script>
+        function modifier() {
+            path = window.location.pathname;
+            panierId = path.substring(path.lastIndexOf('/')+1);
+            Cookies.set('panierId', panierId);
+            window.location = '/';
+        }
+    </script>
+</html>

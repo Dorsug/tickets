@@ -126,3 +126,10 @@ def paiement():
 
     # Supprime id du panier validé ét redirige vers la page principale
     return render_template('paiement.html')
+
+
+@app.route('/panier/<int:panierId>')
+def panierPrecedent(panierId):
+    c = db.get_cursor()
+    panier = db.callproc(c, 'afficherContenuPanier', panierId)
+    return render_template('panierPrecedent.html', panier=panier)
