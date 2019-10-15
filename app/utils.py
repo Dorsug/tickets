@@ -37,6 +37,13 @@ def viderPanier(panierId):
     return success
 
 
+def payerPanier(panierId, modePaiement, codePostal):
+    c = db.get_cursor()
+    result = db.callproc(c, 'payerPanier', panierId, modePaiement, (codePostal if codePostal else None), '@success')
+    success = result[0]['out_done']
+    return success
+
+
 def marquePanierPaye(panierId):
     c = db.get_cursor()
     db.callproc(c, 'marquerPanierPaye', panierId, '@sucess')

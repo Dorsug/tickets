@@ -43,7 +43,7 @@ CREATE TABLE CompteurPanier (
   idPanier int(11) NOT NULL AUTO_INCREMENT UNIQUE KEY COMMENT 'Permet de déterminer un ID pour le panier',
   Paye tinyint(1) NOT NULL COMMENT 'Spécifie si le panier à été payé ou non',
   fk_moyPaiement int(11) DEFAULT NULL COMMENT 'Clé étrangère du moyen de paiement',
-  CodePostal char(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '00000' COMMENT 'Code postail de la personne ayant payé',
+  CodePostal char(5) COMMENT 'Code postal de la personne ayant payé',
   fk_client int(11) DEFAULT NULL COMMENT 'Identifiant de la personne ayant réservée',
   CONSTRAINT CompteurPanier_ibfk_1 FOREIGN KEY (fk_moyPaiement) REFERENCES MoyenPaiement (pk_id),
   CONSTRAINT CompteurPanier_ibfk_2 FOREIGN KEY (fk_client) REFERENCES Client (pk_id)

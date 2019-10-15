@@ -107,9 +107,6 @@ def panier():
 
 @app.route('/paiement', methods=['POST'])
 def paiement():
-    # TODO Voir ou stocker modePaiement et codePostal
-    # print(request.form)
-
     try:
         panierId = request.cookies['panierId']
     except KeyError: # Il n'y a pas de panier
@@ -120,7 +117,7 @@ def paiement():
     except KeyError:
         imprimante = '1' # Défaut de l'interface
 
-    utils.marquePanierPaye(panierId)
+    utils.payerPanier(panierId, request.form['modePaiement'], request.form['codePostal'])
 
     utils.impressionEtiquettes(panierId, imprimante)
 

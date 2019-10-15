@@ -844,29 +844,25 @@ END$$
 
 
 DROP PROCEDURE IF EXISTS PayerPanier$$
-CREATE DEFINER=`root`@`%` PROCEDURE `PayerPanier` (IN `in_idPanier` INT(11), IN `in_idMoyPaie` INT(11), IN `in_CodPost` VARCHAR(5), OUT `out_done` BOOLEAN)  NO SQL
+CREATE PROCEDURE PayerPanier (IN in_idPanier INT(11), IN in_MoyPaie VARCHAR(10), IN in_CodPost VARCHAR(5), OUT out_done BOOLEAN)
     COMMENT 'Paie le panier en indiquant moyen de paiement et code postal'
 BEGIN
-	SET out_done = 0;
-	
-	SELECT COUNT(CompteurPanier.idPanier) INTO @nbPanier FROM CompteurPanier
-	WHERE CompteurPanier.idPanier = in_idPanier;	
-    
-	IF @nbPanier = 1 THEN
-    	SELECT COUNT(MoyenPaiement.pk_id) INTO @nbID 
-        	FROM MoyenPaiement
-        	WHERE MoyenPaiement.pk_id = in_idMoyPaie;
-        IF @nbID = 1 THEN
-			UPDATE CompteurPanier 
-            	SET CompteurPanier.Paye = '1', 
-            	CompteurPanier.fk_moyPaiement = in_idMoyPaie,
-                CompteurPanier.CodePostal = in_CodPost
-            	WHERE CompteurPanier.idPanier = in_idPanier;
-			SET out_done = 1;
-    	END IF;
-	END IF;
-	
-	SELECT out_done;
+    SET out_done = 0;
+
+    SELECT MoyenPaiement.pk_id INTO @MoyPaieId
+        FROM MoyenPaiement
+        WHERE MoyenPaiement.Mode = in_MoyPaie;
+
+    IF @MoyPaieId <> '' THEN
+        UPDATE CompteurPanier
+        SET CompteurPanier.Paye = '1',
+        CompteurPanier.fk_moyPaiement = @MoyPaieId,
+        CompteurPanier.CodePostal = in_CodPost
+        WHERE CompteurPanier.idPanier = in_idPanier;
+        SET out_done = 1;
+    END IF;
+
+    SELECT out_done;
 END$$
 
 
