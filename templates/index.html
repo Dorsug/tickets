@@ -66,7 +66,7 @@
                     <button class="bulle" onclick="getPanierPrecedent()">Panier précédent</button>
                     <hr />
                     <button class="bulle" onclick="viderPanier()">Effacer</button>
-                    <button class="bulle" onclick="document.getElementById('paiement').style.display = 'block'">Paiement</button>
+                    <button class="bulle" onclick="showPaiement()">Paiement</button>
                 </div>
                 <div class="content">
                 </div>
@@ -74,7 +74,7 @@
         </div>
         <div id="paiement">
             <h1>Paiement</h1>
-            <form method="post" action="/paiement">
+            <form method="post" action="/paiement" onsubmit="showLoader()">
                 <div>
                     Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…" autofocus>
                 </div>
@@ -87,8 +87,9 @@
                     <input type="submit" value="Ok">
                 </div>
             </form>
-            <button onclick="document.getElementById('paiement').style.display = 'none'">Fermer</button>
+            <button onclick="hidePaiement()">Fermer</button>
         </div>
+        <div class="loader"></div>
     </body>
     <script src="assets/js/js.cookie.js"></script>
     <script src="assets/js/script.js"></script>

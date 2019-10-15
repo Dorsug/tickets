@@ -171,3 +171,23 @@ form div {
     position: absolute;
     top: 0;
 }
+
+/* Loader */
+.loader {
+  display: none;
+  border: 2vmax solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2vmax solid #3498db;
+  width: 25vmax;
+  height: 25vmax;
+  animation: spin 2s linear infinite;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

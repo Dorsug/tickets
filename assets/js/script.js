@@ -23,6 +23,16 @@ function _getData(res) {
     }
 }
 
+function _getCssRule(rule) {
+    let cssRules = [...document.styleSheets[0].cssRules];
+    cssRule = cssRules.find((x) => { return x.selectorText == rule } )
+    if (typeof(cssRule) == 'undefined') {
+        document.styleSheets[0].insertRule(rule + '{}', 0);
+        cssRule = document.styleSheets[0].cssRules[0];
+    }
+    return cssRule
+}
+
 
 function listerAteliers() {
     fetch('/ateliers')
@@ -192,4 +202,18 @@ function setNouveauPanier() {
 function getPanierPrecedent() {
     paniers = JSON.parse(localStorage.getItem('paniers'));
     window.location = '/panier/' + paniers[0];
+}
+
+function showPaiement() {
+    document.getElementById('paiement').style.display = 'block';
+    _getCssRule('.pane').style.filter = 'blur(3px)';
+}
+
+function hidePaiement() {
+    document.getElementById('paiement').style.display = 'none';
+    _getCssRule('.pane').style.filter = '';
+}
+
+function showLoader() {
+    document.querySelector('.loader').style.display = 'block';
 }
