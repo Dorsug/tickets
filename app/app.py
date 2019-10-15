@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, abort, redirect
-from flask import render_template_string
+from flask import render_template_string, after_this_request
+import flask
 from . import db
 from . import utils
 from . import generate
@@ -87,10 +88,12 @@ def panier():
         if seanceId is None:
             abort(400)
         panierId = request.cookies.get('panierId')
+        resp = flask.make_response('Ok')
         if panierId is None:
             panierId = utils.nouveauPanier()
+            resp.set_cookie('panierId', panierId)
         utils.ajouterSeanceAuPanier(panierId, seanceId)
-        return panierId
+        return resp
     elif request.method == 'DELETE':
         panierId = request.cookies.get('panierId')
         seanceId = request.values.get('seanceId')
@@ -121,8 +124,13 @@ def paiement():
 
     utils.impressionEtiquettes(panierId, imprimante)
 
-    # Supprime id du panier validé ét redirige vers la page principale
-    return render_template('paiement.html')
+    @after_this_request
+    def delete_cookie(response):
+        # Expire dans le passé, donc immédiatement
+        response.set_cookie('panierId', '', expires=0)
+        return response
+
+    return flask.redirect(flask.url_for('index'))
 
 
 @app.route('/panier/<int:panierId>')

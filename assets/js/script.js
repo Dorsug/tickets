@@ -142,9 +142,6 @@ function ajouterAuPanier(seanceId){
     })
     .then((res) => _getData(res))
     .then(function(data) {
-        if(Cookies.get('panierId') != data){
-            Cookies.set('panierId', data)
-        };
         majInterfacePanier();
     })
     .catch(function(err) {
@@ -214,6 +211,13 @@ function hidePaiement() {
     _getCssRule('.pane').style.filter = '';
 }
 
-function showLoader() {
+function paiement() {
+    // Fait apparaitre le 'loader'
     document.querySelector('.loader').style.display = 'block';
+
+    // Enregistre le panier dans le localStorage
+    panier_current = Cookies.get('panierId')
+    paniers_historic = JSON.parse(localStorage.getItem('paniers')) || new Array;
+    paniers_historic.unshift(panier_current)
+    localStorage.setItem('paniers', JSON.stringify(paniers_historic))
 }
