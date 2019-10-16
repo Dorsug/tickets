@@ -50,6 +50,7 @@ function listerAteliers() {
                 document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
             } catch (e) {}
             document.querySelector('#pane1 .ateliers').classList.add('selected');
+            document.querySelector('#pane3 .content').innerHTML = '';
         // Remplissage des données
         document.querySelector('#pane2 .content').innerHTML = data;
     })
