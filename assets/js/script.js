@@ -64,8 +64,8 @@ function listerReservations() {
     .then(function(data) {
         // Modifications esthétiques
             // Change la disposition des colonnes 2 et 3
-            document.getElementById('pane3').style.display = 'none';
-            document.getElementById('pane2').style['grid-column'] = '2 / span 2';
+            document.getElementById('pane3').style.display = '';
+            document.getElementById('pane2').style['grid-column'] = '2 / span 1';
             // Change les classe 'selected' dans la colonne 1
             try {
                 document.querySelector('#pane1 .selected').classList.remove('selected');
@@ -74,6 +74,7 @@ function listerReservations() {
                 document.querySelector('#pane1 .horaires > .selected').classList.remove('selected');
             } catch (e) {}
             document.querySelector('#pane1 .reservations').classList.add('selected');
+            document.querySelector('#pane3 .content').innerHTML = '';
         // Remplissage des données
         document.querySelector('#pane2 .content').innerHTML = data;
     })
@@ -125,7 +126,7 @@ function listerSeancesPourHoraire(element, horaire) {
 }
 
 function majInterfacePanier() {
-    fetch('/panier?action=lister')
+    fetch('/panier')
     .then((res) => _getData(res))
     .then(function(data) {
         document.querySelector('#pane4 .content').innerHTML = data;
@@ -185,6 +186,18 @@ function resaSearch() {
             elements[i].style.display = "none";
         }
     }
+}
+
+function showReservationContent(panierId) {
+    fetch('/panier/' + encodeURIComponent(panierId))
+    .then((res) => _getData(res))
+    .then(function(data) {
+        document.querySelector('#pane3 .content').innerHTML = data;
+        console.log(data);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 }
 
 function setPrinter(printer) {

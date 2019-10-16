@@ -70,20 +70,9 @@ def reservations():
     return generate.listerReservations()
 
 
-@app.route("/panier", methods=["GET", "POST", "DELETE"])
+@app.route("/panier", methods=["POST", "DELETE"])
 def panier():
-    if request.method == "GET":
-        action = request.values.get("action")
-        if action == "new":
-            return utils.nouveauPanier()
-        if action == "lister":
-            panierId = request.cookies.get("panierId")
-            if panierId is None:
-                abort(400)
-            return generate.listerPanier(panierId)
-        else:
-            abort(404)
-    elif request.method == "POST":
+    if request.method == "POST":
         seanceId = request.values.get("seanceId")
         if seanceId is None:
             abort(400)
@@ -104,28 +93,38 @@ def panier():
         else:
             utils.enleverDuPanier(panierId, seanceId)
         return ""
-    else:
-        abort(404)
 
 
-def impression(request):
-    try:
-        panierId = request.cookies["panierId"]
-    except KeyError:  # Il n'y a pas de panier
+@app.route("/panier", methods=["GET"])
+def listerContenuPanier_cookie():
+    panierId = request.cookies.get("panierId")
+    if panierId is None:
         abort(400)
+    return generate.listerPanier(panierId)
 
+
+@app.route("/panier/<int:panierId>", methods=["GET"])
+def listerContenuPanier_urlParam(panierId):
+    return generate.listerPanier(panierId)
+
+
+def impression(request, panierId):
     try:
         imprimante = request.cookies["imprimante"]
     except KeyError:
         imprimante = "1"  # Défaut de l'interface
 
     utils.impressionEtiquettes(panierId, imprimante)
-    return panierId, imprimante
 
 
 @app.route("/paiement", methods=["POST"])
 def paiement():
-    panierId, imprimante = impression(request)
+    try:
+        panierId = request.cookies["panierId"]
+    except KeyError:  # Il n'y a pas de panier
+        abort(400)
+
+    impression(request, panierId)
 
     utils.payerPanier(
         panierId, request.form["modePaiement"], request.form["codePostal"]
@@ -140,10 +139,10 @@ def paiement():
     return flask.redirect(flask.url_for("index"))
 
 
-@app.route("/impression", methods=["POST"])
-def route_impression():
-    impression(request)
-    return flask.redirect(flask.url_for("index")
+@app.route("/impression/<int:panierId>", methods=["POST"])
+def route_impression(panierId):
+    impression(request, panierId)
+    return flask.redirect(flask.url_for("index"))
 
 
 @app.route("/panier/<int:panierId>")

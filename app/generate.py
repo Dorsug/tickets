@@ -39,7 +39,7 @@ def listerReservations():
         <input type="text" id="resaSearchBar" onkeyup="resaSearch()" placeholder="Recherche">
         {% for reservation in reservations %}
         <p class="bulle"
-            onclick="Cookies.set('panierId', {{ reservation.panier }}); majInterfacePanier()">
+            onclick="showReservationContent({{ reservation.panier }})">
             {{ reservation.nom }} {{ reservation.prenom }}<br />
             {{ reservation.mail }}
         </p>
