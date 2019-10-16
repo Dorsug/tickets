@@ -108,8 +108,7 @@ def panier():
         abort(404)
 
 
-@app.route("/paiement", methods=["POST"])
-def paiement():
+def impression(request):
     try:
         panierId = request.cookies["panierId"]
     except KeyError:  # Il n'y a pas de panier
@@ -120,11 +119,17 @@ def paiement():
     except KeyError:
         imprimante = "1"  # Défaut de l'interface
 
+    utils.impressionEtiquettes(panierId, imprimante)
+    return panierId, imprimante
+
+
+@app.route("/paiement", methods=["POST"])
+def paiement():
+    panierId, imprimante = impression(request)
+
     utils.payerPanier(
         panierId, request.form["modePaiement"], request.form["codePostal"]
     )
-
-    utils.impressionEtiquettes(panierId, imprimante)
 
     @after_this_request
     def delete_cookie(response):
@@ -133,6 +138,12 @@ def paiement():
         return response
 
     return flask.redirect(flask.url_for("index"))
+
+
+@app.route("/impression", methods=["POST"])
+def route_impression():
+    impression(request)
+    return flask.redirect(flask.url_for("index")
 
 
 @app.route("/panier/<int:panierId>")
