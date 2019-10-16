@@ -189,12 +189,15 @@ function resaSearch() {
     }
 }
 
-function showReservationContent(panierId) {
+function showReservationContent(panierId, el) {
     fetch('/panier/' + encodeURIComponent(panierId))
     .then((res) => _getData(res))
     .then(function(data) {
+        try {
+            document.querySelector('#pane2 .selected').classList.remove('selected');
+        } catch (e) {}
+        el.classList.add('selected');
         document.querySelector('#pane3 .content').innerHTML = data;
-        console.log(data);
     })
     .catch(function(err) {
         console.log(err);
