@@ -51,6 +51,7 @@ h1 {
 
 .menu .bulle {
     height: 2em;
+    width: calc(100% - 1em);
     font-size: 1em;
     padding: 0;
 }
@@ -95,6 +96,10 @@ h1 {
 
 #pane3 * {
     border-color: #999;
+}
+
+#pane4 * {
+    border-color: #444;
 }
 
 #pane1 .selected,
