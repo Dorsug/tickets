@@ -139,8 +139,12 @@ def paiement():
     return flask.redirect(flask.url_for("index"))
 
 
-@app.route("/impression/<int:panierId>", methods=["POST"])
-def route_impression(panierId):
+@app.route("/impression", methods=["POST"])
+def route_impression():
+    try:
+        panierId = request.values.get("panierId")
+    except KeyError:
+        abort(400)
     impression(request, panierId)
     return flask.redirect(flask.url_for("index"))
 

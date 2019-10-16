@@ -238,3 +238,7 @@ function paiement() {
     paniers_historic.unshift(panier_current)
     localStorage.setItem('paniers', JSON.stringify(paniers_historic))
 }
+
+function impression() {
+    document.querySelector('.loader').style.display = 'block';
+}

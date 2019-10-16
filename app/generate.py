@@ -38,11 +38,15 @@ def listerReservations():
     template = """
         <input type="text" id="resaSearchBar" onkeyup="resaSearch()" placeholder="Recherche">
         {% for reservation in reservations %}
-        <p class="bulle"
+        <div class="bulle"
             onclick="showReservationContent({{ reservation.panier }}, this)">
             {{ reservation.nom }} {{ reservation.prenom }}<br />
-            {{ reservation.mail }}
-        </p>
+            {{ reservation.mail }} <br />
+            <form method="post" action="/impression" onsubmit="impression()">
+                <input type="submit" value="Impression"></input>
+                <input name="panierId" type="hidden" value="{{ reservation.panier }}">
+            </form>
+        </div>
         {% endfor %}
     """
     return render_template_string(template, reservations=reservations)
