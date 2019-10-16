@@ -4,7 +4,7 @@ from . import db
 
 def listerAtelier():
     c = db.get_cursor()
-    ateliers = db.callproc(c, 'listerAtelier')
+    ateliers = db.callproc(c, "listerAtelier")
     template = """
         {% for atelier in ateliers %}
         <p onclick="listerSeances(this, {{ atelier['ID'] }});" class="bulle">
@@ -19,7 +19,7 @@ def listerAtelier():
 
 def listerHoraires():
     c = db.get_cursor()
-    seances = db.callproc(c, 'listerSeances')
+    seances = db.callproc(c, "listerSeances")
     template = """
         {% for seance in seances %}
         <p class="bulle">
@@ -34,7 +34,7 @@ def listerHoraires():
 
 def listerReservations():
     c = db.get_cursor()
-    reservations = db.callproc(c, 'listerPreReservations')
+    reservations = db.callproc(c, "listerPreReservations")
     template = """
         <input type="text" id="resaSearchBar" onkeyup="resaSearch()" placeholder="Recherche">
         {% for reservation in reservations %}
@@ -50,7 +50,7 @@ def listerReservations():
 
 def listerSeancesPourAtelier(atelierId, date):
     c = db.get_cursor()
-    seances = db.callproc(c, 'listerSeancesPourAtelier', atelierId, date)
+    seances = db.callproc(c, "listerSeancesPourAtelier", atelierId, date)
     template = """
         {% for seance in seances %}
         <p 
@@ -67,7 +67,7 @@ def listerSeancesPourAtelier(atelierId, date):
 
 def listerSeancesPourHoraire(horaire, date):
     c = db.get_cursor()
-    seances = db.callproc(c, 'listerSeancesPourHoraire', horaire, date)
+    seances = db.callproc(c, "listerSeancesPourHoraire", horaire, date)
     template = """
         {% for seance in seances %}
         <p class="bulle" onclick="ajouterAuPanier({{ seance['Id'] }});">
@@ -83,7 +83,7 @@ def listerSeancesPourHoraire(horaire, date):
 
 def listerPanier(panierId):
     c = db.get_cursor()
-    panier = db.callproc(c, 'afficherContenuPanier', panierId)
+    panier = db.callproc(c, "afficherContenuPanier", panierId)
     template = """
         {% for seance in panier %}
         <p class="bulle">

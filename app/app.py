@@ -7,134 +7,136 @@ from . import generate
 
 
 def time_split(timedelta):
-    return ':'.join(str(timedelta).split(':')[0:2])
+    return ":".join(str(timedelta).split(":")[0:2])
 
 
-app = Flask('gestickets2', static_folder='assets')
+app = Flask("gestickets2", static_folder="assets")
 app.teardown_appcontext(db.close_db)
-app.jinja_env.filters['time_split'] = time_split
-app.config.from_pyfile('config.default')
+app.jinja_env.filters["time_split"] = time_split
+app.config.from_pyfile("config.default")
 try:
-    app.config.from_pyfile('config.local')
+    app.config.from_pyfile("config.local")
 except FileNotFoundError:
     pass
 
 
 ages = [
-        {'intv': [0, 99], 'interface': 'Tout Public'},
-        {'intv': [0, 4], 'interface': '0 - 4'},
-        {'intv': [4, 6], 'interface': '4 - 6'},
-        {'intv': [6, 8], 'interface': '6 - 8'},
-        {'intv': [8, 10], 'interface': '8 - 10'},
-        {'intv': [10, 12], 'interface': '10 - 12'},
-        {'intv': [12, 14], 'interface':'12 - 14'},
-        {'intv': [14, 18], 'interface': '14 - 18'}
-        ]
+    {"intv": [0, 99], "interface": "Tout Public"},
+    {"intv": [0, 4], "interface": "0 - 4"},
+    {"intv": [4, 6], "interface": "4 - 6"},
+    {"intv": [6, 8], "interface": "6 - 8"},
+    {"intv": [8, 10], "interface": "8 - 10"},
+    {"intv": [10, 12], "interface": "10 - 12"},
+    {"intv": [12, 14], "interface": "12 - 14"},
+    {"intv": [14, 18], "interface": "14 - 18"},
+]
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == 'GET':
+    if request.method == "GET":
         return render_template(
-            'index.html',
-            ages=[x['interface'] for x in ages],
-            heures=app.config['HORAIRES'],
-            dates=app.config['DATES'],
-            printers=app.config['IMPRIMANTES']
+            "index.html",
+            ages=[x["interface"] for x in ages],
+            heures=app.config["HORAIRES"],
+            dates=app.config["DATES"],
+            printers=app.config["IMPRIMANTES"],
         )
 
 
-@app.route('/ateliers')
+@app.route("/ateliers")
 def ateliers():
     return generate.listerAtelier()
 
 
-@app.route('/seances')
+@app.route("/seances")
 def seances():
-    atelierId = request.values.get('atelierId')
-    horaire = request.values.get('horaire')
-    date = request.cookies.get('date')
+    atelierId = request.values.get("atelierId")
+    horaire = request.values.get("horaire")
+    date = request.cookies.get("date")
     if atelierId:
-        return generate.listerSeancesPourAtelier(atelierId, app.config['DATES'][date])
+        return generate.listerSeancesPourAtelier(atelierId, app.config["DATES"][date])
     elif horaire:
-        return generate.listerSeancesPourHoraire(horaire, app.config['DATES'][date])
+        return generate.listerSeancesPourHoraire(horaire, app.config["DATES"][date])
 
 
-@app.route('/horaires')
+@app.route("/horaires")
 def horaires():
     return generate.listerHoraires()
 
 
-@app.route('/reservations')
+@app.route("/reservations")
 def reservations():
     return generate.listerReservations()
 
 
-@app.route('/panier', methods=['GET', 'POST', 'DELETE'])
+@app.route("/panier", methods=["GET", "POST", "DELETE"])
 def panier():
-    if request.method == 'GET':
-        action = request.values.get('action')
-        if action == 'new':
+    if request.method == "GET":
+        action = request.values.get("action")
+        if action == "new":
             return utils.nouveauPanier()
-        if action == 'lister':
-            panierId = request.cookies.get('panierId')
+        if action == "lister":
+            panierId = request.cookies.get("panierId")
             if panierId is None:
                 abort(400)
             return generate.listerPanier(panierId)
         else:
             abort(404)
-    elif request.method == 'POST':
-        seanceId = request.values.get('seanceId')
+    elif request.method == "POST":
+        seanceId = request.values.get("seanceId")
         if seanceId is None:
             abort(400)
-        panierId = request.cookies.get('panierId')
-        resp = flask.make_response('Ok')
+        panierId = request.cookies.get("panierId")
+        resp = flask.make_response("Ok")
         if panierId is None:
             panierId = utils.nouveauPanier()
-            resp.set_cookie('panierId', panierId)
+            resp.set_cookie("panierId", panierId)
         utils.ajouterSeanceAuPanier(panierId, seanceId)
         return resp
-    elif request.method == 'DELETE':
-        panierId = request.cookies.get('panierId')
-        seanceId = request.values.get('seanceId')
+    elif request.method == "DELETE":
+        panierId = request.cookies.get("panierId")
+        seanceId = request.values.get("seanceId")
         if panierId is None:
             abort(400)
-        if seanceId is None: # Vider tout le panier
+        if seanceId is None:  # Vider tout le panier
             utils.viderPanier(panierId)
         else:
             utils.enleverDuPanier(panierId, seanceId)
-        return ''
+        return ""
     else:
         abort(404)
 
 
-@app.route('/paiement', methods=['POST'])
+@app.route("/paiement", methods=["POST"])
 def paiement():
     try:
-        panierId = request.cookies['panierId']
-    except KeyError: # Il n'y a pas de panier
+        panierId = request.cookies["panierId"]
+    except KeyError:  # Il n'y a pas de panier
         abort(400)
 
     try:
-        imprimante = request.cookies['imprimante']
+        imprimante = request.cookies["imprimante"]
     except KeyError:
-        imprimante = '1' # Défaut de l'interface
+        imprimante = "1"  # Défaut de l'interface
 
-    utils.payerPanier(panierId, request.form['modePaiement'], request.form['codePostal'])
+    utils.payerPanier(
+        panierId, request.form["modePaiement"], request.form["codePostal"]
+    )
 
     utils.impressionEtiquettes(panierId, imprimante)
 
     @after_this_request
     def delete_cookie(response):
         # Expire dans le passé, donc immédiatement
-        response.set_cookie('panierId', '', expires=0)
+        response.set_cookie("panierId", "", expires=0)
         return response
 
-    return flask.redirect(flask.url_for('index'))
+    return flask.redirect(flask.url_for("index"))
 
 
-@app.route('/panier/<int:panierId>')
+@app.route("/panier/<int:panierId>")
 def panierPrecedent(panierId):
     c = db.get_cursor()
-    panier = db.callproc(c, 'afficherContenuPanier', panierId)
-    return render_template('panierPrecedent.html', panier=panier)
+    panier = db.callproc(c, "afficherContenuPanier", panierId)
+    return render_template("panierPrecedent.html", panier=panier)

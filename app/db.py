@@ -5,14 +5,14 @@ from os import environ
 
 # Setup so connection to db is done only once
 def get_db():
-    if 'db' not in g:
+    if "db" not in g:
         config = current_app.config
         g.db = mysql.connector.connect(
-            host=config['MYSQL_HOST'],
-            database=config['MYSQL_DB'],
-            user=config['MYSQL_USER'],
-            password=config['MYSQL_PASSWORD'],
-            auth_plugin='mysql_native_password'
+            host=config["MYSQL_HOST"],
+            database=config["MYSQL_DB"],
+            user=config["MYSQL_USER"],
+            password=config["MYSQL_PASSWORD"],
+            auth_plugin="mysql_native_password",
         )
         g.db.autocommit = True
     return g.db
@@ -40,6 +40,6 @@ def callproc(cursor, procname, *args):
 
 
 def close_db(e=None):
-    db = g.pop('db', None)
+    db = g.pop("db", None)
     if db is not None:
         db.close()
