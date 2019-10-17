@@ -62,14 +62,14 @@ def _clean_timedelta(td):
 
 
 def sha1_cache(func):
-    def wrapper(*args):
-        strargs = [str(x) for x in args]
-        hash = sha1((",".join(strargs)).encode("utf-8")).hexdigest()
+    def wrapper(**k):
+        strargs = f"{k['numero']},{k['nom']},{k['date']},{k['debut']},{k['structure']}"
+        hash = sha1(strargs.encode("utf-8")).hexdigest()
         filename = "labels/" + hash + ".png"
         if path.isfile(filename):
             return filename
         else:
-            return func(*args, filename)
+            return func(**k, filename=filename)
 
     return wrapper
 

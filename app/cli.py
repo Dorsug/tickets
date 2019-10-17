@@ -10,9 +10,9 @@ def register_cli(app):
         for seance in seances:
             print(seance)
             utils._generationEtiquettes(
-                seance["numero"],
-                seance["atelierNom"],
-                seance["date"],
-                seance["heureDebut"],
-                seance["structureNom"],
+                numero=seance["numero"],
+                nom=seance["atelierNom"],
+                date=seance["date"],
+                debut=seance["heureDebut"],
+                structure=seance["structureNom"],
             )
