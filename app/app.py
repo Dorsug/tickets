@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, abort, redirect
-from flask import render_template_string, after_this_request
+from flask import render_template_string, after_this_request, jsonify
 import flask
 from . import db
 from . import utils
 from . import generate
+
+from itertools import groupby, islice
 
 
 def time_split(timedelta):
@@ -154,3 +156,24 @@ def panierPrecedent(panierId):
     c = db.get_cursor()
     panier = db.callproc(c, "afficherContenuPanier", panierId)
     return render_template("panierPrecedent.html", panier=panier)
+
+
+@app.route("/dispo/<string:date>")
+def dispo(date):
+    c = db.get_cursor()
+    seances = db.callproc(c, "listerPlacesDispo", date)
+
+    seancesTriees = []
+    for k, g in groupby(seances, lambda x: x["nom"]):
+        l = [x["placesRestantes"] for x in g]
+        seancesTriees.append((k, l))
+
+    if request.headers["Accept"] == "application/json":
+        return jsonify(seancesTriees)
+    else:
+        n = request.values.get("n")
+        if n:
+            seancesTriees = seancesTriees[: int(n)]
+        return render_template(
+            "dispo.html", seances=seancesTriees, horaires=app.config["HORAIRES"]
+        )

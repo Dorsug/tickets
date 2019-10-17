@@ -983,6 +983,23 @@ BEGIN
 END$$
 
 
+DROP PROCEDURE IF EXISTS ListerPlacesDispo$$
+CREATE PROCEDURE ListerPlacesDispo (in_date DATE)
+BEGIN
+    SELECT
+        Seance.heureDebut,
+        Atelier.numero,
+        Atelier.nom,
+        Atelier.nombreplace - (
+            SELECT COUNT(Panier.fk_seance) FROM Panier
+            WHERE Seance.pk_id = Panier.fk_seance
+        ) AS placesRestantes
+    FROM Seance
+    INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
+    AND Seance.date = in_date;
+END$$
+
+
 DELIMITER ;
 
 COMMIT;

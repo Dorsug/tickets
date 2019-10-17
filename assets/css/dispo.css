@@ -1,0 +1,37 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+html {
+box-sizing: border-box;
+}
+
+*, *:before, *:after {
+box-sizing: inherit;
+}
+div {
+  border: 1px solid black;
+  text-align: center;
+  vertical-align:middle;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body {
+  display: grid;
+  grid-auto-columns: 1fr;
+}
+.horaire {
+  grid-column: 1;
+  font-size: 2em;
+  background: #ddd;
+}
+.atelier {
+  grid-row: 1;
+  font-size: 1.5em;
+  background: #ddd;
+}
+.seance {
+  font-size: 2em;
+}
