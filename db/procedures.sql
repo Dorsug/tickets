@@ -320,20 +320,18 @@ END$$
 
 
 DROP PROCEDURE IF EXISTS ListerSeances$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerSeances` ()  SELECT
-        Seance.pk_id AS "ID",
-    Seance.date AS "Date",
-    Seance.heureDebut AS "Heure debut",
-    Seance.heureFin AS "Heure fin",
-    Atelier.numero AS "Numero atelier",
-    Atelier.nom AS "Nom de l'atelier",
-    Atelier.description AS "Description de l'atelier",
-    Atelier.agemini AS "Age mini",
-    Atelier.agemaxi AS "Age maxi",
-    Atelier.nombreplace AS "Nombre de places",
-    Atelier.prix AS "Prix"
-FROM Seance, Atelier
-WHERE Seance.fk_atelier = Atelier.pk_id$$
+CREATE PROCEDURE ListerSeances ()
+BEGIN
+    SELECT
+        Atelier.numero,
+        Atelier.nom AS 'atelierNom',
+        Seance.date,
+        Seance.heureDebut,
+        Structure.nom AS 'structureNom'
+    FROM Seance
+    INNER JOIN Atelier ON Seance.fk_atelier = Atelier.pk_id
+    INNER JOIN Structure ON Atelier.fk_structure = Structure.pk_id;
+END$$
 
 
 DROP PROCEDURE IF EXISTS ListerSeancesDispo$$

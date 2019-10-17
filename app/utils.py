@@ -1,6 +1,6 @@
 from . import db
 from hashlib import sha1
-from os import mkdir
+from os import mkdir, path
 from PIL import Image, ImageDraw, ImageFont
 
 from brother_ql.conversion import convert
@@ -61,10 +61,21 @@ def _clean_timedelta(td):
     return ":".join(str(td).split(":")[:2])
 
 
-def _generationEtiquettes(numero, nom, date, debut, fin, structure):
-    hash = sha1((f"{numero},{nom},{date},{debut},{fin}").encode("utf-8")).hexdigest()
+def sha1_cache(func):
+    def wrapper(*args):
+        strargs = [str(x) for x in args]
+        hash = sha1((",".join(strargs)).encode("utf-8")).hexdigest()
+        filename = "labels/" + hash + ".png"
+        if path.isfile(filename):
+            return filename
+        else:
+            return func(*args, filename)
 
-    horaire = f"{_clean_timedelta(debut)} - {_clean_timedelta(fin)}"
+    return wrapper
+
+
+@sha1_cache
+def _generationEtiquettes(numero, nom, date, debut, structure, filename):
     # Reverse dictionnary search
     date = next(
         key for key, value in current_app.config["DATES"].items() if value == str(date)
@@ -82,10 +93,8 @@ def _generationEtiquettes(numero, nom, date, debut, fin, structure):
     # Ajout du texte
     draw.multiline_text((10, 10), f"N°{numero}. {nom}", fill=0, font=font_normal)
     draw.text((10, 170), f"{structure}", fill=0, font=font_small)
-    draw.text((10, 230), horaire, fill=0, font=font_small)
+    draw.text((10, 230), f"{_clean_timedelta(debut)}", fill=0, font=font_small)
     draw.text((500, 230), str(date), fill=0, font=font_small)
-
-    filename = "labels/" + hash + ".png"
 
     try:
         img.save(filename)
