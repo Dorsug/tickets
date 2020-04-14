@@ -1,6 +1,6 @@
 -- Liste les ateliers disponible
 CREATE TABLE Atelier (
-  id INT PRIMARY KEY,        -- Clé primaire atelier
+  id INTEGER PRIMARY KEY,    -- Clé primaire atelier
   -- structure INT NOT NULL,    -- Clé secondaire de la structure
   numero INT NOT NULL,       -- Numéro d’atelier
   nom VARCHAR(100) NOT NULL, -- Nom de l’atelier

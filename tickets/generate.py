@@ -4,13 +4,13 @@ from . import db
 
 def listerAtelier():
     c = db.get_cursor()
-    ateliers = db.callproc(c, "listerAtelier")
+    ateliers = db.Proc.listerAtelier(c)
     template = """
         {% for atelier in ateliers %}
-        <p onclick="listerSeances(this, {{ atelier['ID'] }});" class="bulle">
-            <strong>{{ atelier['Numero'] }} - {{ atelier['Nom'] }}</strong><br />
-            Age: {{ atelier['Age mini'] }}  - {{ atelier['Age maxi'] }}<br />
-            {{ atelier['Prix'] }}€
+        <p onclick="listerSeances(this, {{ atelier['id'] }});" class="bulle">
+            <strong>{{ atelier['numero'] }} - {{ atelier['nom'] }}</strong><br />
+            Age: {{ atelier['age_mini'] }}  - {{ atelier['age_maxi'] }}<br />
+            {{ atelier['prix'] }}€
         </p>
         {% endfor %}
     """

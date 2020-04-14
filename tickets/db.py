@@ -1,4 +1,4 @@
-import mysql.connector
+import sqlite3
 from flask import g, current_app
 from os import environ
 
@@ -15,6 +15,22 @@ def get_cursor():
     cn = get_db()
     return cn.cursor()
 
+
+class Proc(object):
+    @staticmethod
+    def listerAtelier(cursor):
+        cursor.execute('''
+            SELECT
+                Atelier.id,
+                Atelier.numero,
+                Atelier.nom,
+                Atelier.description,
+                Atelier.age_mini,
+                Atelier.age_maxi,
+                Atelier.nombreplace,
+                Atelier.prix
+            FROM Atelier''')
+        return cursor.fetchall()
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)

@@ -254,19 +254,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAssociation` ()  SELECT
 FROM Association$$
 
 
-DROP PROCEDURE IF EXISTS ListerAtelier$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAtelier` ()  SELECT
-    Atelier.pk_id AS "ID",
-    Atelier.numero AS "Numero",
-    Atelier.nom AS "Nom",
-    Atelier.description AS "Description",
-    Atelier.agemini AS "Age mini",
-    Atelier.agemaxi AS "Age maxi",
-    Atelier.nombreplace AS "Nombre de places",
-    Atelier.prix AS "Prix"
-FROM Atelier$$
-
-
 DROP PROCEDURE IF EXISTS ListerAteliersPourHoraire$$
 CREATE DEFINER=`root`@`%` PROCEDURE `ListerAteliersPourHoraire` (IN `in_HeureDebut` TIME, IN `in_HeureFin` TIME)  NO SQL
     COMMENT 'Retourne la liste des atelier pour les créneaux horaires'
