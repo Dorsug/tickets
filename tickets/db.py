@@ -6,15 +6,8 @@ from os import environ
 # Setup so connection to db is done only once
 def get_db():
     if "db" not in g:
-        config = current_app.config
-        g.db = mysql.connector.connect(
-            host=config["MYSQL_HOST"],
-            database=config["MYSQL_DB"],
-            user=config["MYSQL_USER"],
-            password=config["MYSQL_PASSWORD"],
-            auth_plugin="mysql_native_password",
-        )
-        g.db.autocommit = True
+        g.db = sqlite3.connect(current_app.config['DATABASE'])
+        g.db.row_factory = sqlite3.Row
     return g.db
 
 

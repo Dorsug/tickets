@@ -8,6 +8,7 @@ from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
 
 from flask import current_app
+import threading
 
 
 def nouveauPanier():
@@ -128,9 +129,9 @@ def impressionEtiquettes(panierId, imprimante):
                 nom=seance["Nom atelier"],
                 date=seance["date"],
                 debut=seance["heureDebut"],
-                fin=seance["heurefin"],
                 structure=seance["structure"],
             )
         )
     imprimante_id = current_app.config["IMPRIMANTES"][int(imprimante) - 1]
-    # _sendToPrinter(images, imprimante_id)
+    t = threading.Thread(target=_sendToPrinter, args=(images, imprimante_id))
+    t.start()

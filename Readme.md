@@ -1,6 +1,6 @@
 # Gestickets2
 ## Répartition du code
-- `app`: Code python
+- `tickets`: Code python
     - `app.py`: Fichier principale, redistribution des requêtes
     - `db.py`: Gestion de la connexion à la base de données
     - `generate.py`: Création du html après lecture de la base de données.
