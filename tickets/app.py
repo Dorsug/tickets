@@ -16,10 +16,6 @@ app = Flask("gestickets2", static_folder="assets")
 app.teardown_appcontext(db.close_db)
 app.jinja_env.filters["time_split"] = time_split
 app.config.from_pyfile("config.default")
-try:
-    app.config.from_pyfile("config.local")
-except FileNotFoundError:
-    pass
 
 
 ages = [
