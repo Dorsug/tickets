@@ -11,6 +11,14 @@ CREATE TABLE Atelier (
   prix DECIMAL(6,2) NOT NULL -- Coût de l'aterlier
 );
 
+-- Séance dispensées par les ateliers
+CREATE TABLE Seance (
+  id INTEGER PRIMARY KEY,     -- Clé primaire
+  datetime DATETIME NOT NULL, -- Date et Horaire de la séance
+  atelier INT NOT NULL,       -- Atelier concerné
+  CONSTRAINT Seance_fk_1 FOREIGN KEY (atelier) REFERENCES Atelier (id)
+);
+
 -- CREATE TABLE Structure (
 --   pk_id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Clé primaire Structure',
 --   Nom varchar(255) NOT NULL COMMENT 'Nom de la structure',
@@ -43,16 +51,6 @@ CREATE TABLE Atelier (
 --   CONSTRAINT CompteurPanier_ibfk_1 FOREIGN KEY (fk_moyPaiement) REFERENCES MoyenPaiement (pk_id),
 --   CONSTRAINT CompteurPanier_ibfk_2 FOREIGN KEY (fk_client) REFERENCES Client (pk_id)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- 
--- 
--- CREATE TABLE Seance (
---     pk_id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Clé primaire',
---     date date NOT NULL COMMENT 'Date de la séance',
---     heureDebut time NOT NULL COMMENT 'Heure de début de la séance',
---     heureFin time NOT NULL COMMENT 'Heure de fin de la séance',
---     fk_atelier int(11) NOT NULL COMMENT 'Atelier concerné',
---     CONSTRAINT Seance_ibfk_1 FOREIGN KEY (fk_atelier) REFERENCES Atelier (pk_id)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Séance dispensées par les ateliers';
 -- 
 -- 
 -- CREATE TABLE Panier (
