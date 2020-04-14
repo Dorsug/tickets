@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, abort, redirect
 from flask import render_template_string, after_this_request, jsonify
 import flask
+import os.path
+from os import mkdir
 from . import db
 from . import utils
 from . import generate
@@ -15,6 +17,11 @@ def time_split(timedelta):
 app = Flask("gestickets2", static_folder="assets")
 app.teardown_appcontext(db.close_db)
 app.jinja_env.filters["time_split"] = time_split
+try:
+    mkdir(app.instance_path)
+except FileExistsError:
+    pass
+app.config.from_mapping(DATABASE=os.path.join(app.instance_path, 'tickets.sqlite'))
 app.config.from_pyfile("config.default")
 
 
