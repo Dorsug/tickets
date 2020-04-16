@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, abort, redirect
 from flask import render_template_string, after_this_request, jsonify
 from flask import Blueprint, current_app
+from flask import current_app as capp
 import flask
 from . import db
 from . import utils
@@ -42,10 +43,11 @@ def seances():
     atelierId = request.values.get("atelierId")
     horaire = request.values.get("horaire")
     date = request.cookies.get("date")
+    capp.logger.debug(f"{atelierId=}, {horaire=}, {date=}")
     if atelierId:
-        return generate.listerSeancesPourAtelier(atelierId, current_app.config["DATES"][date])
+        return generate.listerSeancePourAtelier(atelierId, utils.get_date(date))
     elif horaire:
-        return generate.listerSeancesPourHoraire(horaire, current_app.config["DATES"][date])
+        return generate.listerSeancePourHoraire(horaire, utils.get_date(date))
 
 
 @bp.route("/horaires")

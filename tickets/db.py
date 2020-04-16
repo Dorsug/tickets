@@ -32,6 +32,30 @@ class Proc(object):
             FROM Atelier''')
         return cursor.fetchall()
 
+    @staticmethod
+    def listerSeancePourAtelier(cursor, atelierId, date):
+        cursor.execute('''
+            SELECT
+                Seance.id AS "seance_id",
+                Seance.datetime,
+                Atelier.numero AS "atelier_numero",
+                Atelier.nom AS "atelier_nom",
+                Atelier.age_mini,
+                Atelier.age_maxi,
+                -- Atelier.nombreplace - (
+                --     SELECT COUNT(Panier.fk_seance) FROM Panier
+                --     WHERE Seance.pk_id = Panier.fk_seance
+                -- ) AS placesRestantes,
+                Atelier.nombrePlace,
+                Atelier.prix
+            FROM Seance
+            INNER JOIN Atelier ON Seance.atelier = Atelier.id
+            WHERE Seance.atelier = ?
+            AND Seance.datetime >= ? AND Seance.datetime <= ?;''',
+            (atelierId, date + ' 00:00:00', date + ' 23:59:59'))
+        return cursor.fetchall()
+
+
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)
 

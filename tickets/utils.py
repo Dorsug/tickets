@@ -20,6 +20,17 @@ def get_horaires():
     return [x['(TIME(datetime))'] for x in data]
 
 
+@lru_cache
+def get_date(name):
+    c = db.get_cursor()
+    data = c.execute('SELECT DISTINCT(DATE(datetime)) FROM seance').fetchall()
+    dates = [x['(DATE(datetime))'] for x in data]
+    if name == 'dimanche':
+        return dates[1]
+    else:
+        return dates[0]
+
+
 def nouveauPanier():
     c = db.get_cursor()
     panier = db.callproc(c, "obtenirIdPanier", "@idPanier")[0]["out_id"]
