@@ -22,16 +22,14 @@ ages = [
 ]
 
 
-@bp.route("/", methods=["GET", "POST"])
+@bp.route("/", methods=["GET"])
 def index():
-    if request.method == "GET":
-        return render_template(
-            "index.html",
-            ages=[x["interface"] for x in ages],
-            horaires=utils.get_horaires()
-        )
-            # printers=current_app.config["IMPRIMANTES"],
-            # dates=current_app.config["DATES"],
+    return render_template(
+        "index.html",
+        ages=[x["interface"] for x in ages],
+        horaires=utils.get_horaires()
+    )
+    # printers=current_app.config["IMPRIMANTES"],
 
 
 @bp.route("/ateliers")
