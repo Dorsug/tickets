@@ -27,9 +27,9 @@ def index():
     if request.method == "GET":
         return render_template(
             "index.html",
-            ages=[x["interface"] for x in ages]
+            ages=[x["interface"] for x in ages],
+            horaires=utils.get_horaires()
         )
-            # heures=current_app.config["HORAIRES"],
             # printers=current_app.config["IMPRIMANTES"],
             # dates=current_app.config["DATES"],
 

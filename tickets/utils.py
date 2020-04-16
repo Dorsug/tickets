@@ -10,6 +10,15 @@ from brother_ql.raster import BrotherQLRaster
 from flask import current_app
 import threading
 
+from functools import lru_cache
+
+
+@lru_cache
+def get_horaires():
+    c = db.get_cursor()
+    data = c.execute('SELECT DISTINCT(TIME(datetime)) FROM seance').fetchall()
+    return [x['(TIME(datetime))'] for x in data]
+
 
 def nouveauPanier():
     c = db.get_cursor()

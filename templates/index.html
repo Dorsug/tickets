@@ -21,12 +21,12 @@
                 </div>
                 <div class="bulle horaires">
                     Horaires
-                    {% for heure in heures %}
+                    {% for horaire in horaires %}
                         <div 
                             class="bulle horaire"
-                            onclick="listerSeancesPourHoraire(this, '{{ heure }}')"
+                            onclick="listerSeancesPourHoraire(this, '{{ horaire }}')"
                         >
-                            {{ heure }}
+                            {{ horaire | time_split }}
                         </div>
                     {% endfor %}
                 </div>
