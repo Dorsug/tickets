@@ -1,29 +1,14 @@
 from flask import Flask, render_template, request, abort, redirect
 from flask import render_template_string, after_this_request, jsonify
+from flask import Blueprint, current_app
 import flask
-import os.path
-from os import mkdir
 from . import db
 from . import utils
 from . import generate
 
 from itertools import groupby, islice
 
-
-def time_split(timedelta):
-    return ":".join(str(timedelta).split(":")[0:2])
-
-
-app = Flask("gestickets2", static_folder="assets")
-app.teardown_appcontext(db.close_db)
-app.jinja_env.filters["time_split"] = time_split
-try:
-    mkdir(app.instance_path)
-except FileExistsError:
-    pass
-app.config.from_mapping(DATABASE=os.path.join(app.instance_path, 'tickets.sqlite'))
-app.config.from_pyfile("config.default")
-
+bp = Blueprint("client", __name__)
 
 ages = [
     {"intv": [0, 99], "interface": "Tout Public"},
@@ -37,45 +22,45 @@ ages = [
 ]
 
 
-@app.route("/", methods=["GET", "POST"])
+@bp.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
         return render_template(
             "index.html",
-            ages=[x["interface"] for x in ages],
-            heures=app.config["HORAIRES"],
-            dates=app.config["DATES"],
-            printers=app.config["IMPRIMANTES"],
+            ages=[x["interface"] for x in ages]
         )
+            # heures=current_app.config["HORAIRES"],
+            # printers=current_app.config["IMPRIMANTES"],
+            # dates=current_app.config["DATES"],
 
 
-@app.route("/ateliers")
+@bp.route("/ateliers")
 def ateliers():
     return generate.listerAtelier()
 
 
-@app.route("/seances")
+@bp.route("/seances")
 def seances():
     atelierId = request.values.get("atelierId")
     horaire = request.values.get("horaire")
     date = request.cookies.get("date")
     if atelierId:
-        return generate.listerSeancesPourAtelier(atelierId, app.config["DATES"][date])
+        return generate.listerSeancesPourAtelier(atelierId, current_app.config["DATES"][date])
     elif horaire:
-        return generate.listerSeancesPourHoraire(horaire, app.config["DATES"][date])
+        return generate.listerSeancesPourHoraire(horaire, current_app.config["DATES"][date])
 
 
-@app.route("/horaires")
+@bp.route("/horaires")
 def horaires():
     return generate.listerHoraires()
 
 
-@app.route("/reservations")
+@bp.route("/reservations")
 def reservations():
     return generate.listerReservations()
 
 
-@app.route("/panier", methods=["POST", "DELETE"])
+@bp.route("/panier", methods=["POST", "DELETE"])
 def panier():
     if request.method == "POST":
         seanceId = request.values.get("seanceId")
@@ -100,7 +85,7 @@ def panier():
         return ""
 
 
-@app.route("/panier", methods=["GET"])
+@bp.route("/panier", methods=["GET"])
 def listerContenuPanier_cookie():
     panierId = request.cookies.get("panierId")
     if panierId is None:
@@ -108,7 +93,7 @@ def listerContenuPanier_cookie():
     return generate.listerPanier(panierId)
 
 
-@app.route("/panier/<int:panierId>", methods=["GET"])
+@bp.route("/panier/<int:panierId>", methods=["GET"])
 def listerContenuPanier_urlParam(panierId):
     return generate.listerPanier(panierId)
 
@@ -122,7 +107,7 @@ def impression(request, panierId):
     utils.impressionEtiquettes(panierId, imprimante)
 
 
-@app.route("/paiement", methods=["POST"])
+@bp.route("/paiement", methods=["POST"])
 def paiement():
     try:
         panierId = request.cookies["panierId"]
@@ -144,7 +129,7 @@ def paiement():
     return flask.redirect(flask.url_for("index"))
 
 
-@app.route("/impression", methods=["POST"])
+@bp.route("/impression", methods=["POST"])
 def route_impression():
     try:
         panierId = request.values.get("panierId")
@@ -154,14 +139,14 @@ def route_impression():
     return flask.redirect(flask.url_for("index"))
 
 
-@app.route("/panier/<int:panierId>")
+@bp.route("/panier/<int:panierId>")
 def panierPrecedent(panierId):
     c = db.get_cursor()
     panier = db.callproc(c, "afficherContenuPanier", panierId)
     return render_template("panierPrecedent.html", panier=panier)
 
 
-@app.route("/dispo/<string:date>")
+@bp.route("/dispo/<string:date>")
 def dispo(date):
     c = db.get_cursor()
     seances = db.callproc(c, "listerPlacesDispo", date)
@@ -178,5 +163,5 @@ def dispo(date):
         if n:
             seancesTriees = seancesTriees[: int(n)]
         return render_template(
-            "dispo.html", seances=seancesTriees, horaires=app.config["HORAIRES"]
+            "dispo.html", seances=seancesTriees, horaires=current_app.config["HORAIRES"]
         )
