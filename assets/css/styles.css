@@ -33,6 +33,22 @@ body {
   grid-column: 1;
   background: #dfdfdf;
   padding-top: 2em;
+  padding-left: 1em;
+  font-size: 0.9em;
+}
+
+.menu_title {
+  font-size: 1.3em;
+  display: flex;
+  align-items: center;
+}
+
+.menu_title_content {
+  padding-left: 0.5em;
+}
+
+.menu_title img {
+  width: 1em;
 }
 
 .menu_item_head {
