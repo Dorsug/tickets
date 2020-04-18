@@ -29,35 +29,25 @@ CREATE TABLE Structure (
 );
 
 
+CREATE TABLE Panier (
+  id INTEGER PRIMARY KEY,
+  paye tinyint(1) NOT NULL DEFAULT 0,
+  moyenPaiement INTEGER,
+  codePostal char(5)
+);
+
+
+CREATE TABLE ItemPanier (
+  id INTEGER PRIMARY KEY,
+  panier INTEGER NOT NULL,
+  seance INTEGER NOT NULL,
+  CONSTRAINT Panier_fk_1 FOREIGN KEY (panier) REFERENCES Panier (id)
+  CONSTRAINT Panier_fk_2 FOREIGN KEY (seance) REFERENCES Seance (id)
+);
+
 -- CREATE TABLE Client (
 --   pk_id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Clé primaire',
 --   Nom varchar(16) NOT NULL COMMENT 'Nom de la personne',
 --   Prenom varchar(16) NOT NULL COMMENT 'Prénom de la personne',
 --   Mail varchar(255) NOT NULL COMMENT 'Adresse mailo de la personne'
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Identifier les clients ayant réservé une séance à l''avance';
--- 
--- 
--- CREATE TABLE MoyenPaiement (
---   pk_id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Clé primaire moyen paiement',
---   Mode varchar(10) NOT NULL UNIQUE KEY COMMENT 'Mode du moyen de paiement'
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Liste des moyen de paiement';
--- 
--- 
--- CREATE TABLE CompteurPanier (
---   idPanier int(11) NOT NULL AUTO_INCREMENT UNIQUE KEY COMMENT 'Permet de déterminer un ID pour le panier',
---   Paye tinyint(1) NOT NULL COMMENT 'Spécifie si le panier à été payé ou non',
---   fk_moyPaiement int(11) DEFAULT NULL COMMENT 'Clé étrangère du moyen de paiement',
---   CodePostal char(5) COMMENT 'Code postal de la personne ayant payé',
---   fk_client int(11) DEFAULT NULL COMMENT 'Identifiant de la personne ayant réservée',
---   CONSTRAINT CompteurPanier_ibfk_1 FOREIGN KEY (fk_moyPaiement) REFERENCES MoyenPaiement (pk_id),
---   CONSTRAINT CompteurPanier_ibfk_2 FOREIGN KEY (fk_client) REFERENCES Client (pk_id)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
--- 
--- 
--- CREATE TABLE Panier (
---   pk_id int(11) NOT NULL COMMENT 'Identifiant du panier',
---   fk_seance int(11) NOT NULL COMMENT 'ID de Séance résevée',
---   date date NOT NULL COMMENT 'Date de réservation',
---   heure time NOT NULL COMMENT 'Heure de réservatiuon',
---   CONSTRAINT Panier_ibfk_1 FOREIGN KEY (fk_seance) REFERENCES Seance (pk_id)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Regroupe l''ensemble des reservations des séances';
