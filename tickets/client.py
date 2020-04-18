@@ -5,7 +5,6 @@ from flask import current_app as capp
 import flask
 from . import db
 from . import utils
-from . import generate
 
 from itertools import groupby, islice
 
@@ -31,7 +30,7 @@ def index():
 
 @bp.route("/reservations")
 def reservations():
-    return generate.listerReservations()
+    return 'TODO'
 
 
 @bp.route("/panier", methods=["POST", "DELETE"])
@@ -68,12 +67,12 @@ def listerContenuPanier_cookie():
     panierId = request.cookies.get("panierId")
     if panierId is None:
         abort(400)
-    return generate.listerPanier(panierId)
+    return 'TODO'
 
 
 @bp.route("/panier/<int:panierId>", methods=["GET"])
 def listerContenuPanier_urlParam(panierId):
-    return generate.listerPanier(panierId)
+    return 'TODO'
 
 
 def impression(request, panierId):

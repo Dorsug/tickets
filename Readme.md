@@ -3,7 +3,6 @@
 - `tickets`: Code python
     - `app.py`: Fichier principale, redistribution des requêtes
     - `db.py`: Gestion de la connexion à la base de données
-    - `generate.py`: Création du html après lecture de la base de données.
     - `utils.py`: Modification de la base de données en fonction des requêtes reçues. / création des tickets
 - `db`: Fichiers sql
 - `assets/js/script.js`: Requêtes ajax
