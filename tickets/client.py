@@ -11,17 +11,6 @@ from itertools import groupby, islice
 
 bp = Blueprint("client", __name__)
 
-ages = [
-    {"intv": [0, 99], "interface": "Tout Public"},
-    {"intv": [0, 4], "interface": "0 - 4"},
-    {"intv": [4, 6], "interface": "4 - 6"},
-    {"intv": [6, 8], "interface": "6 - 8"},
-    {"intv": [8, 10], "interface": "8 - 10"},
-    {"intv": [10, 12], "interface": "10 - 12"},
-    {"intv": [12, 14], "interface": "12 - 14"},
-    {"intv": [14, 18], "interface": "14 - 18"},
-]
-
 
 @bp.route("/", methods=["GET"])
 def index():
@@ -38,28 +27,6 @@ def index():
         ).fetchall()
         atelier['seances'] = {x['datetime'].split(' ')[1]:dict(x) for x in seances}
     return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers)
-
-
-@bp.route("/ateliers")
-def ateliers():
-    return generate.listerAtelier()
-
-
-@bp.route("/seances")
-def seances():
-    atelierId = request.values.get("atelierId")
-    horaire = request.values.get("horaire")
-    date = request.cookies.get("date")
-    capp.logger.debug(f"{atelierId=}, {horaire=}, {date=}")
-    if atelierId:
-        return generate.listerSeancePourAtelier(atelierId, utils.get_date(date))
-    elif horaire:
-        return generate.listerSeancePourHoraire(horaire, utils.get_date(date))
-
-
-@bp.route("/horaires")
-def horaires():
-    return generate.listerHoraires()
 
 
 @bp.route("/reservations")
