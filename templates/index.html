@@ -13,84 +13,79 @@
     </head>
 
     <body>
-        <div id="main">
-            <div id="pane1" class="pane">
-                <h1>Filtres</h1>
-                <div class="bulle ateliers" onclick="listerAteliers()">
-                    Ateliers
-                </div>
-                <div class="bulle horaires">
-                    Horaires
-                    {% for horaire in horaires %}
-                        <div 
-                            class="bulle horaire"
-                            onclick="listerSeancesPourHoraire(this, '{{ horaire }}')"
-                        >
-                            {{ horaire | time_split }}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="bulle reservations"
-                    onclick="listerReservations()"
-                >
-                    Réservations
-                </div>
-                <div class="bulle dates">
-                    Date
-                    <label><input type="radio" name="date" value="samedi">Samedi</label>
-                    <label><input type="radio" name="date" value="dimanche">Dimanche</label>
-                </div>
-                <div class="bulle printer">
-                    Imprimante:
-                    <select name="printer" onchange="setPrinter(this.value);">
-                        {% for printer in printers %}
-                            <option value="{{ loop.index }}">{{ loop.index }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div id="pane2" class="pane" style="grid-column: 2">
-                <h1>Ateliers</h1>
-                <div class="content">
-                </div>
-            </div>
-            <div id="pane3" class="pane">
-                <h1>Séances</h1>
-                <div class="content">
-                </div>
-            </div>
-            <div id="pane4" class="pane">
-                <h1>Panier</h1>
-                <div class="menu">
-                    <button class="bulle" onclick="setNouveauPanier()">Nouveau Panier</button>
-                    <button class="bulle" onclick="getPanierPrecedent()">Panier précédent</button>
-                    <hr />
-                    <button class="bulle" onclick="viderPanier()">Effacer</button>
-                    <button class="bulle" onclick="showPaiement()">Paiement</button>
-                </div>
-                <div class="content">
-                </div>
-            </div>
+      <div id="menu">
+        <div class="reservation menu_item">
+          <div class="menu_item_head"><span class="title">Réservations</span><img src="/assets/img/chevron-right.svg" class="arrow"></div>
         </div>
-        <div id="paiement">
-            <h1>Paiement</h1>
-            <form method="post" action="/paiement" onsubmit="paiement()">
-                <div>
-                    Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…" autofocus>
-                </div>
-                <div>
-                    <label for="modePaiment">Mode de paiement: </label>
-                    <label><input type="radio" name="modePaiement" value="espece" required checked/>Espèce</label>
-                    <label><input type="radio" name="modePaiement" value="cheque" required/>Chèque</label>
-                </div>
-                <div>
-                    <input type="submit" value="Ok">
-                </div>
-            </form>
-            <button onclick="hidePaiement()">Fermer</button>
+        <hr>
+        <div class="date menu_item" onclick="menu_toggle(this);">
+          <div class="menu_item_head"><span class="title">Date<span class="content">Samedi</span></span><img src="/assets/img/chevron-down.svg" class="arrow"></div>
+          <ul class="choice">
+            <li onclick="select(this);">Samedi</li>
+            <li onclick="select(this);">Dimanche</li>
+          </ul>
         </div>
-        <div class="loader"></div>
+        <hr />
+        <div class="imprimante menu_item" onclick="menu_toggle(this);">
+          <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="/assets/img/chevron-down.svg" class="arrow"></div>
+          <ul class="choice">
+            <li onclick="select(this);">1</li>
+            <li onclick="select(this);">2</li>
+            <li onclick="select(this);">3</li>
+            <li onclick="select(this);">4</li>
+          </ul>
+        </div>
+      </div>
+      <div id="main">
+        {% for atelier in ateliers %}
+          <div class="temps">
+            <div class="horaire_head"></div>
+            {% if loop.index is odd and not loop.first %}
+              <div class="horaires">
+                {% for horaire in horaires %}
+                  <div class="horaire">
+                    <span>{{ horaire | time_split }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <div class="atelier">
+            <div class="atelier_head">
+              <h3>{{ atelier.nom }}</h3>
+            </div>
+            <div class="seances">
+              {% for horaire in horaires %}
+              {% set seance = atelier.seances[horaire | time_split] %}
+              {% if seance %}
+                <div class="seance" onclick="console.log('id={{ seance.id }}')">
+                  {{ seance.id }}
+                </div>
+              {% else %}
+                <div class="seance"></div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div id="resume">
+      </div>
     </body>
+    <script>
+      function menu_toggle(el) {
+        console.log(el);
+        if (el.querySelector('.choice').style.display == 'block') {
+          el.querySelector('.choice').style.display = 'none';
+        } else {
+          el.querySelector('.choice').style.display = 'block';
+        }
+      }
+
+      function select(el) {
+        el.closest('.menu_item').querySelector('.content').innerText = el.innerText;
+      }
+    </script>
     <script src="assets/js/js.cookie.js"></script>
     <script src="assets/js/script.js"></script>
     <script>
