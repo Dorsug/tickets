@@ -54,11 +54,16 @@
             <div class="atelier_head">
               <h3>{{ atelier.nom }}</h3>
             </div>
-            <div class="seances">
+            <div class="seances" data-atelier="{{ atelier.nom }}">
               {% for horaire in horaires %}
               {% set seance = atelier.seances[horaire | time_split] %}
               {% if seance %}
-                <div class="seance" onclick="console.log('id={{ seance.id }}')">
+              <div
+                class="seance"
+                onclick="ajouterAuPanier(this);"
+                data-id="{{ seance.id }}"
+                data-horaire="{{ seance['datetime'].split(' ')[1] }}"
+              >
                   {{ seance.id }}
                 </div>
               {% else %}
@@ -72,6 +77,7 @@
       <div id="resume">
       </div>
     </body>
+
     <script>
       function menu_toggle(el) {
         console.log(el);
@@ -93,4 +99,10 @@
             majInterfacePanier();
         }
     </script>
+
+    <template id="panier_item-template">
+      <div class="panier_item">
+        <span class="titre"></span><span class="content"></span>
+      </div>
+    </template>
 </html>

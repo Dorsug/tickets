@@ -45,14 +45,23 @@ function majInterfacePanier() {
     });
 }
 
-function ajouterAuPanier(seanceId){
+function ajouterAuPanier(obj){
+    seanceId = obj.getAttribute('data-id');
+    horaire = obj.getAttribute('data-horaire');
+    atelier = obj.parentNode.getAttribute('data-atelier');
+
+    container = document.querySelector('#panier .content');
+
     fetch('/panier', {
         method: 'POST',
         body: new URLSearchParams({'seanceId': seanceId}),
     })
     .then((res) => _getData(res))
     .then(function(data) {
-        majInterfacePanier();
+        tmp1 = document.getElementById('panier_item-template').content.cloneNode(true);
+        tmp1.querySelector('.titre').innerText = horaire;
+        tmp1.querySelector('.content').innerText = atelier;
+        container.appendChild(tmp1);
     })
     .catch(function(err) {
         console.log(err);
