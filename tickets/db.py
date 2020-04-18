@@ -11,9 +11,11 @@ def get_db():
     return g.db
 
 
-def get_cursor():
-    cn = get_db()
-    return cn.cursor()
+def get_cursor(cur=None):
+    if cur is None:
+        return get_db().cursor()
+    else:
+        return cur
 
 
 class Proc(object):
@@ -75,4 +77,5 @@ def callproc(cursor, procname, *args):
 def close_db(e=None):
     db = g.pop("db", None)
     if db is not None:
+        db.commit()
         db.close()
