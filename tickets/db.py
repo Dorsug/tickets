@@ -57,6 +57,20 @@ class Proc(object):
             (atelierId, date + ' 00:00:00', date + ' 23:59:59'))
         return cursor.fetchall()
 
+    @staticmethod
+    def nouveauPanier(cur=None):
+        cur = get_cursor(cur)
+        cur.execute('INSERT INTO Panier (id) VALUES (NULL)')
+        cur.execute('SELECT last_insert_rowid() AS panierId')
+        return cur.fetchone()['panierId']
+
+    @staticmethod
+    def ajouterSeanceAuPanier(panier, seance, cur=None):
+        cur = get_cursor(cur)
+        cur.execute('INSERT INTO ItemPanier (panier, seance) VALUES (?, ?)', (panier, seance))
+        cur.execute('SELECT last_insert_rowid() AS itemId')
+        return cur.fetchone()['itemId']
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)

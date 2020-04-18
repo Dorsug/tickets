@@ -41,12 +41,16 @@ def panier():
         if seanceId is None:
             abort(400)
         panierId = request.cookies.get("panierId")
-        resp = flask.make_response("Ok")
         if panierId is None:
-            panierId = utils.nouveauPanier()
-            resp.set_cookie("panierId", panierId)
-        utils.ajouterSeanceAuPanier(panierId, seanceId)
-        return resp
+            panierId = db.Proc.nouveauPanier()
+            capp.logger.debug(f"{panierId=}")
+            @after_this_request
+            def add_cookie(response):
+                response.set_cookie("panierId", str(panierId))
+                return response
+        itemId = db.Proc.ajouterSeanceAuPanier(panierId, seanceId)
+        return jsonify(itemId=itemId)
+
     elif request.method == "DELETE":
         panierId = request.cookies.get("panierId")
         seanceId = request.values.get("seanceId")

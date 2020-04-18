@@ -121,19 +121,6 @@ BEGIN
 END$$
 
 
-DROP PROCEDURE IF EXISTS AjouterSeanceAuPanier$$
-CREATE PROCEDURE AjouterSeanceAuPanier (IN in_idPanier INT(11), IN in_idSeance INT(11), OUT `out_result` INT(11))
-    COMMENT 'Retourne 1 si effectué 0 sinon'
-BEGIN
-    SET out_result = 0;
-    IF in_idPanier <> '' THEN
-        INSERT INTO Panier (`pk_id`, `fk_seance`) VALUES (in_idPanier, in_idSeance);
-        SET out_result = 1;
-    END IF;
-    SELECT out_result;
-END$$
-
-
 DROP PROCEDURE IF EXISTS AjoutMoyenPaiement$$
 CREATE DEFINER=`root`@`%` PROCEDURE `AjoutMoyenPaiement` (IN `in_MoyenPaiement` VARCHAR(10), OUT `out_done` BOOLEAN)  NO SQL
     COMMENT 'Permet d''ajouter un moyen de paiement'
@@ -814,17 +801,6 @@ BEGIN
                 END IF;
         END IF;
         SELECT out_result;
-END$$
-
-
-DROP PROCEDURE IF EXISTS ObtenirIDpanier$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ObtenirIDpanier` (OUT `out_id` INT(11))  NO SQL
-    COMMENT 'Crée une entrée et retourne le dernier ID de la table'
-BEGIN
-        INSERT INTO CompteurPanier (CompteurPanier.idPanier) VALUES (NULL);
-    SET out_id = LAST_INSERT_ID();
-
-        SELECT out_id;
 END$$
 
 

@@ -31,19 +31,6 @@ def get_date(name):
         return dates[0]
 
 
-def nouveauPanier():
-    c = db.get_cursor()
-    panier = db.callproc(c, "obtenirIdPanier", "@idPanier")[0]["out_id"]
-    return str(panier)
-
-
-def ajouterSeanceAuPanier(panierId, seanceId):
-    c = db.get_cursor()
-    result = db.callproc(c, "ajouterSeanceAuPanier", panierId, seanceId, "@success")
-    success = result[0]["out_result"]
-    return success
-
-
 def enleverDuPanier(panierId, seanceId):
     c = db.get_cursor()
     result = db.callproc(c, "enleverDuPanier", panierId, seanceId, "@success")
