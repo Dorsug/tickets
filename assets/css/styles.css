@@ -109,6 +109,23 @@ hr {
   margin: 0 auto 0 auto;
 }
 
+/* menu -- info */
+.menu_info .menu_item_head {
+  border-left-width: 3px;
+  border-left-style: solid;
+  margin: 0.9em 0;
+  margin-left: 1em;
+  padding: 0.3em 0;
+}
+
+.menu_info .title {
+  padding-left: 0.5em;
+}
+
+.menu_info .menu_item_head:hover {
+  background: inherit !important;
+}
+
 /* main */
 #main {
   grid-column: 2;
@@ -131,14 +148,13 @@ hr {
   color: var(--c2);
   box-shadow: 5px 0px 5px -4px #666;
   z-index: 0;
-  border-left: 2px solid;
-  border-left-color: blue;
-  border-right: 2px solid var(--c1);
+  border-left: 3px solid;
+  border-right: 3px solid var(--c1);
 }
 
 .atelier:hover .atelier_head {
-  border-left-width: 5px;
-  border-right-width: 5px;
+  border-left-width: 8px;
+  border-right-width: 8px;
 }
 
 .seances, .horaires {

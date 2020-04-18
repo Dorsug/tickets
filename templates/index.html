@@ -7,6 +7,13 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="assets/css/styles.css">
+        <style>
+          {% for pole in poles %}
+          [data-pole="{{ pole.id }}"] {
+            border-left-color: #{{ pole.couleur }};
+          }
+          {% endfor %}
+        </style>
 
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png" id="favicon">
@@ -53,11 +60,16 @@
           </div>
         </div>
 
-        <div class="menu_group">
+        <div class="menu_info menu_group">
           <h2 class="menu_title"
             ><img src="/assets/img/info.svg"
             ><span class="menu_title_content">Infos</span
           ></h2>
+          {% for pole in poles %}
+            <div class="menu_item_head" data-pole="{{ pole.id }}"
+              ><span class="title">{{ pole.nom }}</span
+            ></div>
+          {% endfor %}
         </div>
       </div>
 
@@ -76,7 +88,7 @@
             {% endif %}
           </div>
           <div class="atelier">
-            <div class="atelier_head">
+            <div class="atelier_head" data-pole="{{ atelier.pole }}">
               <h3>{{ atelier.nom }}</h3>
             </div>
             <div class="seances" data-atelier="{{ atelier.nom }}">

@@ -16,8 +16,10 @@ def index():
     c = db.get_cursor()
     date = utils.get_date(request.cookies.get("date"))
     capp.logger.debug(f"{date=}")
-    ateliers = c.execute('SELECT id, nom, numero, nombreplace FROM atelier').fetchall()
+    ateliers = c.execute('SELECT id, nom, numero, pole, nombreplace FROM atelier').fetchall()
     ateliers = [dict(x) for x in ateliers]
+    poles = c.execute('SELECT id, nom, couleur FROM pole').fetchall()
+    poles = [dict(x) for x in poles]
     for atelier in ateliers:
         seances = c.execute('''SELECT seance.id, seance.datetime FROM seance
             WHERE seance.atelier = ?
@@ -25,7 +27,7 @@ def index():
             (atelier['id'], date + ' 00:00:00', date + ' 23:59:59')
         ).fetchall()
         atelier['seances'] = {x['datetime'].split(' ')[1]:dict(x) for x in seances}
-    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers)
+    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles)
 
 
 @bp.route("/reservations")

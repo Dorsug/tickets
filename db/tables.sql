@@ -9,7 +9,9 @@ CREATE TABLE Atelier (
   age_maxi INT NOT NULL,      -- Age maximum pour participer à l'atelier
   nombreplace INT NOT NULL,  -- Nombre de participants prévu'
   prix DECIMAL(6,2) NOT NULL, -- Coût de l'aterlier
-  CONSTRAINT Atelier_fk_1 FOREIGN KEY (structure) REFERENCES Structure (id)
+  pole INT,
+  CONSTRAINT Atelier_fk_1 FOREIGN KEY (structure) REFERENCES Structure (id),
+  CONSTRAINT Atelier_fk_2 FOREIGN KEY (pole) REFERENCES Pole (id)
 );
 
 -- Séance dispensées par les ateliers
@@ -43,6 +45,12 @@ CREATE TABLE ItemPanier (
   seance INTEGER NOT NULL,
   CONSTRAINT Panier_fk_1 FOREIGN KEY (panier) REFERENCES Panier (id)
   CONSTRAINT Panier_fk_2 FOREIGN KEY (seance) REFERENCES Seance (id)
+);
+
+CREATE TABLE Pole (
+  id INTEGER PRIMARY KEY,
+  nom VARCHAR(100) NOT NULL,
+  couleur CHAR(6) NOT NULL
 );
 
 -- CREATE TABLE Client (
