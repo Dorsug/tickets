@@ -60,9 +60,10 @@ function ajouterAuPanier(obj){
         method: 'POST',
         body: new URLSearchParams({'seanceId': seanceId}),
     })
-    .then((res) => _getData(res))
+    .then((res) => _getData(res, 'json'))
     .then(function(data) {
         tmp1 = document.getElementById('panier_item-template').content.cloneNode(true);
+        tmp1.querySelector('div').setAttribute('data-id', data['itemId']);
         tmp1.querySelector('.titre').innerText = horaire;
         tmp1.querySelector('.content').innerText = atelier;
         container.appendChild(tmp1);
@@ -72,14 +73,17 @@ function ajouterAuPanier(obj){
     });
 }
 
-function enleverDuPanier(seanceId){
+function enleverDuPanier(obj){
+    panierItem = obj.parentNode;
+    itemId = panierItem.getAttribute('data-id');
+
     fetch('/panier', {
         method: "DELETE",
-        body: new URLSearchParams({'seanceId': seanceId}),
+        body: new URLSearchParams({'itemId': itemId}),
     })
     .then((res) => _getData(res))
     .then(function(data){
-        majInterfacePanier();
+        panierItem.remove();
     })
     .catch(function(err) {
         console.log(err);

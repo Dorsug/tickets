@@ -53,15 +53,15 @@ def panier():
         return jsonify(itemId=itemId)
 
     elif request.method == "DELETE":
-        panierId = request.cookies.get("panierId")
-        seanceId = request.values.get("seanceId")
-        if panierId is None:
-            abort(400)
-        if seanceId is None:  # Vider tout le panier
+        itemId = request.values.get("itemId")
+        if itemId is None:  # Vider tout le panier
+            panierId = request.cookies.get("panierId")
+            if panierId is None:
+                abort(400)
             utils.viderPanier(panierId)
         else:
-            utils.enleverDuPanier(panierId, seanceId)
-        return ""
+            db.Proc.enleverDuPanier(itemId)
+        return jsonify(success=True)
 
 
 @bp.route("/panier", methods=["GET"])

@@ -223,15 +223,6 @@ BEGIN
 END$$
 
 
-DROP PROCEDURE IF EXISTS EnleverDuPanier$$
-CREATE PROCEDURE EnleverDuPanier (IN in_idPanier INT(11), IN in_idSeance INT(11), OUT out_result INT(11))
-BEGIN
-    DELETE FROM Panier WHERE Panier.pk_id = in_idPanier AND Panier.fk_seance = in_idSeance LIMIT 1;
-    SET out_result = 1;
-    SELECT out_result;
-END$$
-
-
 DROP PROCEDURE IF EXISTS ListerAssociation$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListerAssociation` ()  SELECT
     Association.pk_id AS "ID",

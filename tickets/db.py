@@ -71,6 +71,11 @@ class Proc(object):
         cur.execute('SELECT last_insert_rowid() AS itemId')
         return cur.fetchone()['itemId']
 
+    @staticmethod
+    def enleverDuPanier(itemId, cur=None):
+        cur = get_cursor(cur)
+        cur.execute('DELETE FROM ItemPanier WHERE id = ?', (itemId,))
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)
