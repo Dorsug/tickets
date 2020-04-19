@@ -15,9 +15,13 @@ for (box of inputDate.querySelectorAll('input')) {
 }
 
 
-function _getData(res) {
+function _getData(res, format='text') {
     if(res.ok) {
-        return res.text()
+        if (format == 'text') {
+            return res.text();
+        } else if (format == 'json') {
+            return res.json();
+        }
     } else {
         throw new Error(res.status);
     }
