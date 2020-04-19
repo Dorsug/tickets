@@ -201,3 +201,30 @@ hr {
   width: 100%;
   margin: 1.5em 0;
 }
+
+#panier {
+  padding: 0 1em;
+}
+
+.panier_item {
+  margin: 0.3em 0;
+  padding-top: 2px;
+}
+
+.panier_item:hover {
+  background: #fff;
+}
+
+.cross:hover .panier_item {
+  background: #ddd;
+}
+
+.cross {
+  width: 1em;
+  align-self: flex-end;
+  float: right;
+}
+
+.cross:hover use {
+  color: red;
+}

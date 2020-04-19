@@ -113,6 +113,14 @@
     <template id="panier_item-template">
       <div class="panier_item">
         <span class="titre"></span><span class="content"></span>
+        <svg
+          onmouseenter="this.parentNode.style.background = '#ddd'"
+          onmouseleave="this.parentNode.style.background = '#fff'"
+          onclick="enleverDuPanier(this)"
+          class="cross"
+          viewBox="0 2 24 24">
+          <use xlink:href="/assets/img/x.svg#main"></use>
+        </svg>
       </div>
     </template>
 </html>
