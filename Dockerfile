@@ -24,3 +24,9 @@ COPY . .
 ENV FLASK_APP tickets
 ENTRYPOINT ["flask"]
 CMD ["run", "--host=0.0.0.0", "--port=80"]
+
+
+# -- Dev image --
+FROM runner AS dev
+ENV FLASK_ENV development
+RUN flask initdb && flask testdata
