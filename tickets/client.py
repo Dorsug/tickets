@@ -13,15 +13,13 @@ bp = Blueprint("client", __name__)
 
 @bp.route("/", methods=["GET"])
 def index():
-    c = db.get_cursor()
+    cur = db.get_cursor()
     date = utils.get_date(request.cookies.get("date"))
     capp.logger.debug(f"{date=}")
-    ateliers = c.execute('SELECT id, nom, numero, pole, nombreplace FROM atelier').fetchall()
-    ateliers = [dict(x) for x in ateliers]
-    poles = c.execute('SELECT id, nom, couleur FROM pole').fetchall()
-    poles = [dict(x) for x in poles]
+    ateliers = db.select('SELECT id, nom, numero, pole, nombreplace FROM atelier', cur=cur)
+    poles = db.select('SELECT id, nom, couleur FROM pole', cur=cur)
     for atelier in ateliers:
-        seances = c.execute('''
+        seances = db.select('''
             SELECT
                 Seance.id,
                 Seance.datetime,
@@ -32,9 +30,7 @@ def index():
             FROM seance
             WHERE seance.atelier = ?
             AND seance.datetime BETWEEN ? AND ?''',
-            (atelier['id'], date + ' 00:00:00', date + ' 23:59:59')
-        ).fetchall()
-        seances = [dict(x) for x in seances]
+            (atelier['id'], date + ' 00:00:00', date + ' 23:59:59'), cur=cur)
         for seance in seances:
             seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
             del seance['placesPrises']

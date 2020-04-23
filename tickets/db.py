@@ -18,6 +18,11 @@ def get_cursor(cur=None):
         return cur
 
 
+def select(req, *param, cur=None):
+    cur = get_cursor(cur)
+    return [dict(x) for x in cur.execute(req, *param).fetchall()]
+
+
 class Proc(object):
     @staticmethod
     def listerAtelier(cursor):
