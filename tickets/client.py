@@ -66,7 +66,7 @@ def panier():
             panierId = request.cookies.get("panierId")
             if panierId is None:
                 abort(400)
-            utils.viderPanier(panierId)
+            db.Proc.viderPanier(panierId)
         else:
             db.Proc.enleverDuPanier(itemId)
         return jsonify(success=True)

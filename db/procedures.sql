@@ -928,15 +928,6 @@ BEGIN
 END$$
 
 
-DROP PROCEDURE IF EXISTS ViderPanier$$
-CREATE PROCEDURE ViderPanier (IN in_idPanier INT(11), OUT out_result INT(11))
-BEGIN
-    DELETE FROM Panier WHERE Panier.pk_id = in_idPanier;
-    SET out_result = 1;
-    SELECT out_result;
-END$$
-
-
 DROP PROCEDURE IF EXISTS ListerPlacesDispo$$
 CREATE PROCEDURE ListerPlacesDispo (in_date DATE)
 BEGIN

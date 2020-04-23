@@ -31,13 +31,6 @@ def get_date(name):
         return dates[0]
 
 
-def viderPanier(panierId):
-    c = db.get_cursor()
-    result = db.callproc(c, "viderPanier", panierId, "@success")
-    success = result[0]["out_result"]
-    return success
-
-
 def payerPanier(panierId, modePaiement, codePostal):
     c = db.get_cursor()
     result = db.callproc(

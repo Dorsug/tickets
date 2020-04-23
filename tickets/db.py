@@ -81,6 +81,11 @@ class Proc(object):
         cur = get_cursor(cur)
         cur.execute('DELETE FROM ItemPanier WHERE id = ?', (itemId,))
 
+    @staticmethod
+    def viderPanier(panier, cur=None):
+        cur = get_cursor(cur)
+        cur.execute('DELETE FROM ItemPanier WHERE panier = ?', (panier,))
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)
