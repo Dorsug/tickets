@@ -21,11 +21,23 @@ def index():
     poles = c.execute('SELECT id, nom, couleur FROM pole').fetchall()
     poles = [dict(x) for x in poles]
     for atelier in ateliers:
-        seances = c.execute('''SELECT seance.id, seance.datetime FROM seance
+        seances = c.execute('''
+            SELECT
+                Seance.id,
+                Seance.datetime,
+                (SELECT COUNT(ItemPanier.id)
+                    FROM ItemPanier
+                    WHERE ItemPanier.seance = Seance.id
+                ) AS placesPrises
+            FROM seance
             WHERE seance.atelier = ?
             AND seance.datetime BETWEEN ? AND ?''',
             (atelier['id'], date + ' 00:00:00', date + ' 23:59:59')
         ).fetchall()
+        seances = [dict(x) for x in seances]
+        for seance in seances:
+            seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
+            del seance['placesPrises']
         atelier['seances'] = {x['datetime'].split(' ')[1]:dict(x) for x in seances}
     return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles)
 
