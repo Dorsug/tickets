@@ -160,4 +160,22 @@
         </svg>
       </div>
     </template>
+
+    <template id="popup_error-template">
+      <div class="popup">
+        <div class="main">
+          <div class="icon"><svg
+            viewBox="0 0 24 24"
+            ><use xlink:href="/assets/img/x-circle.svg#main"></use></svg></div>
+          <p class="content">
+            La séance est pleine
+          </p>
+        </div>
+        <div class="progress"><div class="bar"></div> </div>
+
+        <svg class="close" viewBox="0 2 24 24"
+          onclick="this.parentNode.remove(); clearTimeout(popupTimeout)"
+          ><use xlink:href="/assets/img/x.svg#main"></use></svg>
+      </div>
+    </template>
 </html>

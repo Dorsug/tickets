@@ -53,6 +53,20 @@ CREATE TABLE Pole (
   couleur CHAR(6) NOT NULL
 );
 
+
+-- Déclencheurs table::ItemPanier
+CREATE TRIGGER VerifPanier BEFORE INSERT ON ItemPanier FOR EACH ROW
+WHEN
+    (SELECT Atelier.nombreplace - COUNT(ItemPanier.seance)
+        FROM Seance
+        INNER JOIN Atelier ON Seance.atelier = Atelier.id
+        INNER JOIN ItemPanier ON Seance.id = ItemPanier.seance AND Seance.id = NEW.seance
+    ) <= 0
+BEGIN
+    SELECT RAISE(ABORT, 'SeanceFull');
+END;
+
+
 -- CREATE TABLE Client (
 --   pk_id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Clé primaire',
 --   Nom varchar(16) NOT NULL COMMENT 'Nom de la personne',

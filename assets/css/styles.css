@@ -260,3 +260,63 @@ hr {
 .cross:hover use {
   color: red;
 }
+
+/* Popup */
+.popup {
+  --border-radius: 0.3em;
+  --progress-bar-height: 0.2em;
+
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  width: 40%;
+  max-width: 30em;
+  transform: translate(-50%, 0);
+  background: #c64444;
+  color: #eee;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.popup .main {
+ display: flex;
+}
+
+.popup svg {
+  width: 2em;
+  vertical-align: middle;
+}
+
+.popup .icon {
+  background: #a90d0e;
+  padding: 0.5em;
+  border-top-left-radius: var(--border-radius);
+}
+
+.popup .content {
+  padding-left: 1em;
+}
+
+.popup .close {
+  position: absolute;
+  right: 0.2em;
+  width: 1em;
+  top: 0.2em;
+}
+
+/* progress bar */
+@keyframes progress-bar {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+.progress {
+ height: var(--progress-bar-height);
+}
+
+.bar {
+ width: 0;
+ height: var(--progress-bar-height);
+ background: #ee5158;
+ animation: 3s linear progress-bar;
+}

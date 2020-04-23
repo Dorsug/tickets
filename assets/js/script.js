@@ -14,6 +14,7 @@ for (box of inputDate.querySelectorAll('input')) {
     };
 }
 
+var popupTimeout
 
 function _getData(res, format='text') {
     if(res.ok) {
@@ -67,7 +68,11 @@ function ajouterAuPanier(obj){
         obj.innerText = Number(obj.innerText) - 1;
     })
     .catch(function(err) {
-        console.log(err);
+        if (err.message == "410") {
+            tmp1 = document.getElementById('popup_error-template').content.cloneNode(true);
+            document.body.appendChild(tmp1);
+            popupTimeout = setTimeout(function () { document.querySelector('.popup').remove();}, 3000);
+        } else { console.log(err); }
     });
 }
 

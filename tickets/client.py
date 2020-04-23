@@ -5,6 +5,7 @@ from flask import current_app as capp
 import flask
 from . import db
 from . import utils
+import sqlite3
 
 from itertools import groupby, islice
 
@@ -57,7 +58,13 @@ def panier():
             def add_cookie(response):
                 response.set_cookie("panierId", str(panierId))
                 return response
-        itemId = db.Proc.ajouterSeanceAuPanier(panierId, seanceId)
+        try:
+            itemId = db.Proc.ajouterSeanceAuPanier(panierId, seanceId)
+        except sqlite3.IntegrityError as e:
+            if e.args[0] == 'SeanceFull':
+                abort(410) # HTTP code: Gone
+            else:
+                raise
         return jsonify(itemId=itemId)
 
     elif request.method == "DELETE":
