@@ -37,16 +37,9 @@ function _getCssRule(rule) {
     return cssRule
 }
 
-
-function majInterfacePanier() {
-    fetch('/panier')
-    .then((res) => _getData(res))
-    .then(function(data) {
-        document.querySelector('#pane4 .content').innerHTML = data;
-    })
-    .catch(function(err) {
-        console.log(err);
-    });
+function _updateCompteurPlaces(seanceId, add=1) {
+    seance = document.querySelector(`.seance[data-id="${seanceId}"]`);
+    seance.innerText = Number(seance.innerText) + add;
 }
 
 function ajouterAuPanier(obj){
@@ -62,11 +55,16 @@ function ajouterAuPanier(obj){
     })
     .then((res) => _getData(res, 'json'))
     .then(function(data) {
+        //// Ajoute l'item dans le panier
         tmp1 = document.getElementById('panier_item-template').content.cloneNode(true);
-        tmp1.querySelector('div').setAttribute('data-id', data['itemId']);
+        div = tmp1.querySelector('div');
+        div.setAttribute('data-id', data['itemId']);
+        div.setAttribute('data-seance', seanceId);
         tmp1.querySelector('.titre').innerText = horaire;
         tmp1.querySelector('.content').innerText = atelier;
         container.appendChild(tmp1);
+        // Décrémente de 1 le nombre de places dans l'interface
+        obj.innerText = Number(obj.innerText) - 1;
     })
     .catch(function(err) {
         console.log(err);
@@ -76,6 +74,7 @@ function ajouterAuPanier(obj){
 function enleverDuPanier(obj){
     panierItem = obj.parentNode;
     itemId = panierItem.getAttribute('data-id');
+    seanceId = panierItem.getAttribute('data-seance');
 
     fetch('/panier', {
         method: "DELETE",
@@ -84,6 +83,7 @@ function enleverDuPanier(obj){
     .then((res) => _getData(res))
     .then(function(data){
         panierItem.remove();
+        _updateCompteurPlaces(seanceId);
     })
     .catch(function(err) {
         console.log(err);
@@ -94,7 +94,11 @@ function viderPanier() {
     fetch('/panier', {method: "DELETE"})
     .then((res) => _getData(res))
     .then(function(data){
-        majInterfacePanier();
+        panier = document.querySelector('#panier .content');
+        for (item of panier.children) {
+            _updateCompteurPlaces(item.getAttribute('data-seance'));
+        }
+        panier.innerHTML = "";
     })
     .catch(function(err) {
         console.log(err);
