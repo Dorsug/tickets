@@ -131,24 +131,3 @@ def panierPrecedent(panierId):
     c = db.get_cursor()
     panier = db.callproc(c, "afficherContenuPanier", panierId)
     return render_template("panierPrecedent.html", panier=panier)
-
-
-@bp.route("/dispo/<string:date>")
-def dispo(date):
-    c = db.get_cursor()
-    seances = db.callproc(c, "listerPlacesDispo", date)
-
-    seancesTriees = []
-    for k, g in groupby(seances, lambda x: x["nom"]):
-        l = [x["placesRestantes"] for x in g]
-        seancesTriees.append((k, l))
-
-    if request.headers["Accept"] == "application/json":
-        return jsonify(seancesTriees)
-    else:
-        n = request.values.get("n")
-        if n:
-            seancesTriees = seancesTriees[: int(n)]
-        return render_template(
-            "dispo.html", seances=seancesTriees, horaires=current_app.config["HORAIRES"]
-        )
