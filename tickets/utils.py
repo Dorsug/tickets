@@ -128,3 +128,11 @@ def impressionEtiquettes(panierId, imprimante):
     imprimante_id = current_app.config["IMPRIMANTES"][int(imprimante) - 1]
     t = threading.Thread(target=_sendToPrinter, args=(images, imprimante_id))
     t.start()
+
+
+def ptime(time_info):
+    """
+    :param time_object time_info: "xx:xx:yy"
+    :returns "xx:xx":
+    """
+    return str(time_info)[:5]

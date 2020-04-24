@@ -13,10 +13,8 @@ def create_app():
         pass
 
 
-    def time_split(timedelta):
-        return ":".join(str(timedelta).split(":")[0:2])
-
-    app.jinja_env.filters["time_split"] = time_split
+    from tickets import utils
+    app.jinja_env.filters["ptime"] = utils.ptime
 
     from tickets import db
     app.teardown_appcontext(db.close_db)

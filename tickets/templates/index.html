@@ -81,7 +81,7 @@
               <div class="horaires">
                 {% for horaire in horaires %}
                   <div class="horaire">
-                    <span>{{ horaire | time_split }}</span>
+                    <span>{{ horaire | ptime }}</span>
                   </div>
                 {% endfor %}
               </div>
@@ -93,13 +93,13 @@
             </div>
             <div class="seances" data-atelier="{{ atelier.nom }}">
               {% for horaire in horaires %}
-              {% set seance = atelier.seances[horaire | time_split] %}
+              {% set seance = atelier.seances[horaire | ptime] %}
               {% if seance %}
               <div
                 class="seance"
                 onclick="ajouterAuPanier(this);"
                 data-id="{{ seance.id }}"
-                data-horaire="{{ seance['datetime'].split(' ')[1] }}"
+                data-horaire="{{ seance['horaire'] | ptime }}"
               >
                   {{ seance.placesRestantes }}
                 </div>
