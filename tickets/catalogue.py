@@ -44,39 +44,40 @@ def reservations():
     return 'TODO'
 
 
-@bp.route("/panier", methods=["POST", "DELETE"])
-def panier():
-    if request.method == "POST":
-        seanceId = request.values.get("seanceId")
-        if seanceId is None:
-            abort(400)
+@bp.route("/panier", methods=["POST"])
+def ajouterAupanier():
+    seanceId = request.values.get("seanceId")
+    if seanceId is None:
+        abort(400)
+    panierId = request.cookies.get("panierId")
+    if panierId is None:
+        panierId = db.Proc.nouveauPanier()
+        capp.logger.debug(f"{panierId=}")
+        @after_this_request
+        def add_cookie(response):
+            response.set_cookie("panierId", str(panierId))
+            return response
+    try:
+        itemId = db.Proc.ajouterSeanceAuPanier(panierId, seanceId)
+    except sqlite3.IntegrityError as e:
+        if e.args[0] == 'SeanceFull':
+            abort(410) # HTTP code: Gone
+        else:
+            raise
+    return jsonify(itemId=itemId)
+
+
+@bp.route("/panier", methods=["DELETE"])
+def enleverDuPanier():
+    itemId = request.values.get("itemId")
+    if itemId is None:  # Vider tout le panier
         panierId = request.cookies.get("panierId")
         if panierId is None:
-            panierId = db.Proc.nouveauPanier()
-            capp.logger.debug(f"{panierId=}")
-            @after_this_request
-            def add_cookie(response):
-                response.set_cookie("panierId", str(panierId))
-                return response
-        try:
-            itemId = db.Proc.ajouterSeanceAuPanier(panierId, seanceId)
-        except sqlite3.IntegrityError as e:
-            if e.args[0] == 'SeanceFull':
-                abort(410) # HTTP code: Gone
-            else:
-                raise
-        return jsonify(itemId=itemId)
-
-    elif request.method == "DELETE":
-        itemId = request.values.get("itemId")
-        if itemId is None:  # Vider tout le panier
-            panierId = request.cookies.get("panierId")
-            if panierId is None:
-                abort(400)
-            db.Proc.viderPanier(panierId)
-        else:
-            db.Proc.enleverDuPanier(itemId)
-        return jsonify(success=True)
+            abort(400)
+        db.Proc.viderPanier(panierId)
+    else:
+        db.Proc.enleverDuPanier(itemId)
+    return jsonify(success=True)
 
 
 @bp.route("/panier", methods=["GET"])
