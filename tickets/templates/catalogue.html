@@ -141,11 +141,6 @@
     </script>
     <script src="{{ url_for('static', filename='js/js.cookie.js') }}"></script>
     <script src="{{ url_for('static', filename='js/catalogue.js') }}"></script>
-    <script>
-        if (Cookies.get('panierId')) {
-            majInterfacePanier();
-        }
-    </script>
 
     <template id="panier_item-template">
       <div class="panier_item">

@@ -1,19 +1,3 @@
-inputDate = document.querySelector('#pane1 .dates')
-// Set the default
-date = Cookies.get('date');
-if (typeof date == 'undefined') {
-    Cookies.set('date', 'samedi');
-    date = 'samedi';
-}
-// Check the correct box
-inputDate.querySelector('input[value="' + date + '"]').checked = true;
-// Define callback to change when clicked
-for (box of inputDate.querySelectorAll('input')) {
-    box.onclick = function () { 
-        Cookies.set('date', this.value);
-    };
-}
-
 var popupTimeout
 
 function _getData(res, format='text') {
@@ -178,4 +162,39 @@ function paiement() {
 
 function impression() {
     document.querySelector('.loader').style.display = 'block';
+}
+
+/* Run at application start to set defaults */
+
+/*
+inputDate = document.querySelector('#pane1 .dates')
+// Set the default
+date = Cookies.get('date');
+if (typeof date == 'undefined') {
+    Cookies.set('date', 'samedi');
+    date = 'samedi';
+}
+// Check the correct box
+inputDate.querySelector('input[value="' + date + '"]').checked = true;
+// Define callback to change when clicked
+for (box of inputDate.querySelectorAll('input')) {
+    box.onclick = function () {
+        Cookies.set('date', this.value);
+    };
+}
+*/
+
+if (Cookies.get('panierId')) {
+    fetch('/panier', {
+        method: 'GET',
+    })
+    .then((res) => _getData(res, 'json'))
+    .then(function(data) {
+        for (item of data) {
+            _ajouterAuPanier(item['id'], item['seance'], item['horaire'], item['atelier']);
+        }
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 }

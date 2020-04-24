@@ -86,6 +86,22 @@ class Proc(object):
         cur = get_cursor(cur)
         cur.execute('DELETE FROM ItemPanier WHERE panier = ?', (panier,))
 
+    @staticmethod
+    def listerContenuPanier(panier, cur=None):
+        cur = get_cursor(cur)
+        return select('''
+            SELECT
+                ItemPanier.id,
+                ItemPanier.seance,
+                TIME(Seance.datetime) AS horaire,
+                Atelier.nom AS atelier
+            FROM ItemPanier
+            JOIN Seance ON ItemPanier.seance = Seance.id
+            JOIN Atelier ON Atelier.id = Seance.atelier
+            WHERE panier = ?''',
+            (panier,), cur=cur
+        )
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)
