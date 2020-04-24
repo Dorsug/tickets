@@ -1,7 +1,0 @@
-{% for atelier in ateliers %}
-<p class="bulle" onclick="ajouterAuPanier({{ atelier['id'] }});">
-    {{ atelier.numero }}. {{ atelier.nom }}<br />
-    {{ atelier.heureDebut }}-{{ atelier.heureFin }}<br />
-    {{ atelier.agemini }}-{{ atelier.agemaxi }} ans
-</p>
-{% endfor %}

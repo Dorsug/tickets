@@ -9,7 +9,7 @@ import sqlite3
 
 from itertools import groupby, islice
 
-bp = Blueprint("client", __name__)
+bp = Blueprint("catalogue", __name__)
 
 
 @bp.route("/", methods=["GET"])
@@ -36,7 +36,7 @@ def index():
             seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
             del seance['placesPrises']
         atelier['seances'] = {x['datetime'].split(' ')[1]:dict(x) for x in seances}
-    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles)
+    return render_template("catalogue.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles)
 
 
 @bp.route("/reservations")

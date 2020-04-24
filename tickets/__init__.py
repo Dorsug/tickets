@@ -4,7 +4,7 @@ from os import mkdir
 
 
 def create_app():
-    app = Flask("gestickets2", static_folder="assets")
+    app = Flask("__tickets__")
     app.config.from_mapping(DATABASE=os.path.join(app.instance_path, 'tickets.sqlite'))
 
     try:
@@ -24,8 +24,8 @@ def create_app():
     from tickets import cli
     cli.register_cli(app)
 
-    from tickets import client
-    app.register_blueprint(client.bp)
+    from tickets import catalogue
+    app.register_blueprint(catalogue.bp)
 
     app.add_url_rule("/", endpoint="index")
 

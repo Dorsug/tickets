@@ -6,7 +6,7 @@
         <title>GesTickets2</title>
 
         <!-- Styles -->
-        <link rel="stylesheet" href="assets/css/styles.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogue.css') }}">
         <style>
           {% for pole in poles %}
           [data-pole="{{ pole.id }}"] {
@@ -16,33 +16,33 @@
         </style>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png" id="favicon">
+        <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}" id="favicon">
     </head>
 
     <body>
       <div id="menu">
         <div class="menu_group">
           <h2 class="menu_title"
-            ><img src="/assets/img/grid.svg"
+              ><img src="{{ url_for('static', filename='img/grid.svg') }}"
             ><span class="menu_title_content">Vue</span
           ></h2>
           <div class="menu_reservation menu_item">
             <div class="menu_item_head"
               ><span class="title">Réservations</span
-              ><img src="/assets/img/chevron-right.svg" class="arrow"
+              ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
             ></div>
           </div>
         </div>
 
         <div class="menu_group">
           <h2 class="menu_title"
-            ><img src="/assets/img/settings.svg"
+              ><img src="{{ url_for('static', filename='img/settings.svg') }}"
             ><span class="menu_title_content">Préférence</span
           ></h2>
           <div class="menu_date menu_item" onclick="menu_toggle(this);">
             <div class="menu_item_head"
               ><span class="title">Date<span class="content">Samedi</span></span
-              ><img src="/assets/img/chevron-down.svg" class="arrow"
+              ><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"
             ></div>
             <ul class="choice">
               <li onclick="select(this);">Samedi</li>
@@ -50,7 +50,7 @@
             </ul>
           </div>
           <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">
-            <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="/assets/img/chevron-down.svg" class="arrow"></div>
+            <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
             <ul class="choice">
               <li onclick="select(this);">1</li>
               <li onclick="select(this);">2</li>
@@ -62,7 +62,7 @@
 
         <div class="menu_info menu_group">
           <h2 class="menu_title"
-            ><img src="/assets/img/info.svg"
+              ><img src="{{ url_for('static', filename='img/info.svg') }}"
             ><span class="menu_title_content">Infos</span
           ></h2>
           {% for pole in poles %}
@@ -114,9 +114,9 @@
       <div id="resume">
         <h3 class="title">Panier</h3>
         <div class="control">
-          <div class="control_item"><img src="/assets/img/plus-circle.svg" /><span class="title">Nouveau</span></div>
-          <div class="control_item" onclick="viderPanier()"><img src="/assets/img/trash-2.svg" /><span class="title">Supprimer</span></div>
-          <div class="control_item"><img src="/assets/img/dollar-sign.svg" /><span class="title">Paiement</span></div>
+          <div class="control_item"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
+          <div class="control_item" onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /><span class="title">Supprimer</span></div>
+          <div class="control_item"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
         </div>
         <hr />
         <div id="panier">
@@ -139,8 +139,8 @@
         el.closest('.menu_item').querySelector('.content').innerText = el.innerText;
       }
     </script>
-    <script src="assets/js/js.cookie.js"></script>
-    <script src="assets/js/script.js"></script>
+    <script src="{{ url_for('static', filename='js/js.cookie.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/catalogue.js') }}"></script>
     <script>
         if (Cookies.get('panierId')) {
             majInterfacePanier();
@@ -156,7 +156,7 @@
           onclick="enleverDuPanier(this)"
           class="cross"
           viewBox="0 2 24 24">
-          <use xlink:href="/assets/img/x.svg#main"></use>
+          <use xlink:href="{{ url_for('static', filename='img/x.svg') }}#main"></use>
         </svg>
       </div>
     </template>
@@ -166,7 +166,7 @@
         <div class="main">
           <div class="icon"><svg
             viewBox="0 0 24 24"
-            ><use xlink:href="/assets/img/x-circle.svg#main"></use></svg></div>
+            ><use xlink:href="{{ url_for('static', filename='img/x-circle.svg') }}#main"></use></svg></div>
           <p class="content">
             La séance est pleine
           </p>
@@ -175,7 +175,7 @@
 
         <svg class="close" viewBox="0 2 24 24"
           onclick="this.parentNode.remove(); clearTimeout(popupTimeout)"
-          ><use xlink:href="/assets/img/x.svg#main"></use></svg>
+          ><use xlink:href="{{ url_for('static', filename='img/x.svg') }}#main"></use></svg>
       </div>
     </template>
 </html>
