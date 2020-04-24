@@ -23,7 +23,7 @@ def index():
         seances = db.select('''
             SELECT
                 Seance.id,
-                Seance.datetime,
+                TIME(Seance.datetime) AS horaire,
                 (SELECT COUNT(ItemPanier.id)
                     FROM ItemPanier
                     WHERE ItemPanier.seance = Seance.id
@@ -35,7 +35,7 @@ def index():
         for seance in seances:
             seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
             del seance['placesPrises']
-        atelier['seances'] = {x['datetime'].split(' ')[1]:dict(x) for x in seances}
+        atelier['seances'] = {utils.ptime(x['horaire']):dict(x) for x in seances}
     return render_template("catalogue.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles)
 
 
