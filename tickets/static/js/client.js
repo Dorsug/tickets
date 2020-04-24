@@ -43,12 +43,21 @@ function _updateCompteurPlaces(seanceId, add=1) {
     seance.innerText = Number(seance.innerText) + add;
 }
 
+function _ajouterAuPanier(itemId, seanceId, horaire, atelier) {
+    tmp1 = document.getElementById('panier_item-template').content.cloneNode(true);
+    div = tmp1.querySelector('div');
+    div.setAttribute('data-id', itemId);
+    div.setAttribute('data-seance', seanceId);
+    tmp1.querySelector('.titre').innerText = horaire;
+    tmp1.querySelector('.content').innerText = atelier;
+
+    document.querySelector('#panier .content').appendChild(tmp1);
+}
+
 function ajouterAuPanier(obj){
     seanceId = obj.getAttribute('data-id');
     horaire = obj.getAttribute('data-horaire');
     atelier = obj.parentNode.getAttribute('data-atelier');
-
-    container = document.querySelector('#panier .content');
 
     fetch('/panier', {
         method: 'POST',
@@ -56,14 +65,8 @@ function ajouterAuPanier(obj){
     })
     .then((res) => _getData(res, 'json'))
     .then(function(data) {
-        //// Ajoute l'item dans le panier
-        tmp1 = document.getElementById('panier_item-template').content.cloneNode(true);
-        div = tmp1.querySelector('div');
-        div.setAttribute('data-id', data['itemId']);
-        div.setAttribute('data-seance', seanceId);
-        tmp1.querySelector('.titre').innerText = horaire;
-        tmp1.querySelector('.content').innerText = atelier;
-        container.appendChild(tmp1);
+        // Ajoute l'item dans le panier
+        _ajouterAuPanier(data['itemId'], seanceId, horaire, atelier);
         // Décrémente de 1 le nombre de places dans l'interface
         obj.innerText = Number(obj.innerText) - 1;
     })
