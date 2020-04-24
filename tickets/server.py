@@ -81,16 +81,14 @@ def enleverDuPanier():
 
 
 @bp.route("/panier", methods=["GET"])
-def listerContenuPanier_cookie():
-    panierId = request.cookies.get("panierId")
+def listerContenuPanier():
+    panierId = request.values.get("q", request.cookies.get("panierId"))
     if panierId is None:
         abort(400)
-    return 'TODO'
-
-
-@bp.route("/panier/<int:panierId>", methods=["GET"])
-def listerContenuPanier_urlParam(panierId):
-    return 'TODO'
+    items = db.Proc.listerContenuPanier(panierId)
+    for item in items:
+        item['horaire'] = utils.ptime(item['horaire'])
+    return jsonify(items)
 
 
 def impression(request, panierId):
@@ -132,10 +130,3 @@ def route_impression():
         abort(400)
     impression(request, panierId)
     return flask.redirect(flask.url_for("index"))
-
-
-@bp.route("/panier/<int:panierId>")
-def panierPrecedent(panierId):
-    c = db.get_cursor()
-    panier = db.callproc(c, "afficherContenuPanier", panierId)
-    return render_template("panierPrecedent.html", panier=panier)
