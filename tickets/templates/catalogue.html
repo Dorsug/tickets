@@ -1,130 +1,123 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>GesTickets2</title>
+{% extends "base.html" %}
 
-        <!-- Styles -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogue.css') }}">
-        <style>
-          {% for pole in poles %}
-          [data-pole="{{ pole.id }}"] {
-            border-left-color: #{{ pole.couleur }};
-          }
-          {% endfor %}
-        </style>
+{% block header %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogue.css') }}">
+  <style>
+    {% for pole in poles %}
+    [data-pole="{{ pole.id }}"] {
+      border-left-color: #{{ pole.couleur }};
+    }
+    {% endfor %}
+  </style>
+{% endblock %}
 
-        <!-- Favicon -->
-        <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}" id="favicon">
-    </head>
-
-    <body>
-      <div id="menu">
-        <div class="menu_group">
-          <h2 class="menu_title"
-              ><img src="{{ url_for('static', filename='img/grid.svg') }}"
-            ><span class="menu_title_content">Vue</span
-          ></h2>
-          <div class="menu_reservation menu_item">
-            <div class="menu_item_head"
-              ><span class="title">Réservations</span
-              ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
-            ></div>
-          </div>
-        </div>
-
-        <div class="menu_group">
-          <h2 class="menu_title"
-              ><img src="{{ url_for('static', filename='img/settings.svg') }}"
-            ><span class="menu_title_content">Préférence</span
-          ></h2>
-          <div class="menu_date menu_item" onclick="menu_toggle(this);">
-            <div class="menu_item_head"
-              ><span class="title">Date<span class="content">Samedi</span></span
-              ><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"
-            ></div>
-            <ul class="choice">
-              <li onclick="select(this);">Samedi</li>
-              <li onclick="select(this);">Dimanche</li>
-            </ul>
-          </div>
-          <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">
-            <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
-            <ul class="choice">
-              <li onclick="select(this);">1</li>
-              <li onclick="select(this);">2</li>
-              <li onclick="select(this);">3</li>
-              <li onclick="select(this);">4</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="menu_info menu_group">
-          <h2 class="menu_title"
-              ><img src="{{ url_for('static', filename='img/info.svg') }}"
-            ><span class="menu_title_content">Infos</span
-          ></h2>
-          {% for pole in poles %}
-            <div class="menu_item_head" data-pole="{{ pole.id }}"
-              ><span class="title">{{ pole.nom }}</span
-            ></div>
-          {% endfor %}
-        </div>
+{% block content %}
+  <div id="menu">
+    <div class="menu_group">
+      <h2 class="menu_title"
+          ><img src="{{ url_for('static', filename='img/grid.svg') }}"
+        ><span class="menu_title_content">Vue</span
+      ></h2>
+      <div class="menu_reservation menu_item">
+        <div class="menu_item_head"
+          ><span class="title">Réservations</span
+          ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
+        ></div>
       </div>
+    </div>
 
-      <div id="main">
-        {% for atelier in ateliers %}
-          <div class="temps">
-            <div class="horaire_head"></div>
-            {% if loop.index is odd and not loop.first %}
-              <div class="horaires">
-                {% for horaire in horaires %}
-                  <div class="horaire">
-                    <span>{{ horaire | ptime }}</span>
-                  </div>
-                {% endfor %}
+    <div class="menu_group">
+      <h2 class="menu_title"
+          ><img src="{{ url_for('static', filename='img/settings.svg') }}"
+        ><span class="menu_title_content">Préférence</span
+      ></h2>
+      <div class="menu_date menu_item" onclick="menu_toggle(this);">
+        <div class="menu_item_head"
+          ><span class="title">Date<span class="content">Samedi</span></span
+          ><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"
+        ></div>
+        <ul class="choice">
+          <li onclick="select(this);">Samedi</li>
+          <li onclick="select(this);">Dimanche</li>
+        </ul>
+      </div>
+      <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">
+        <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
+        <ul class="choice">
+          <li onclick="select(this);">1</li>
+          <li onclick="select(this);">2</li>
+          <li onclick="select(this);">3</li>
+          <li onclick="select(this);">4</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="menu_info menu_group">
+      <h2 class="menu_title"
+          ><img src="{{ url_for('static', filename='img/info.svg') }}"
+        ><span class="menu_title_content">Infos</span
+      ></h2>
+      {% for pole in poles %}
+        <div class="menu_item_head" data-pole="{{ pole.id }}"
+          ><span class="title">{{ pole.nom }}</span
+        ></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div id="main">
+    {% for atelier in ateliers %}
+      <div class="temps">
+        <div class="horaire_head"></div>
+        {% if loop.index is odd and not loop.first %}
+          <div class="horaires">
+            {% for horaire in horaires %}
+              <div class="horaire">
+                <span>{{ horaire | ptime }}</span>
               </div>
-            {% endif %}
+            {% endfor %}
           </div>
-          <div class="atelier">
-            <div class="atelier_head" data-pole="{{ atelier.pole }}">
-              <h3>{{ atelier.nom }}</h3>
-            </div>
-            <div class="seances" data-atelier="{{ atelier.nom }}">
-              {% for horaire in horaires %}
-              {% set seance = atelier.seances[horaire | ptime] %}
-              {% if seance %}
-              <div
-                class="seance"
-                onclick="ajouterAuPanier(this);"
-                data-id="{{ seance.id }}"
-                data-horaire="{{ seance['horaire'] | ptime }}"
-              >
-                  {{ seance.placesRestantes }}
-                </div>
-              {% else %}
-                <div class="seance"></div>
-              {% endif %}
-              {% endfor %}
-            </div>
-          </div>
-        {% endfor %}
+        {% endif %}
       </div>
-      <div id="resume">
-        <h3 class="title">Panier</h3>
-        <div class="control">
-          <div class="control_item"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
-          <div class="control_item" onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /><span class="title">Supprimer</span></div>
-          <div class="control_item"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
+      <div class="atelier">
+        <div class="atelier_head" data-pole="{{ atelier.pole }}">
+          <h3>{{ atelier.nom }}</h3>
         </div>
-        <hr />
-        <div id="panier">
-          <div class="content"></div>
+        <div class="seances" data-atelier="{{ atelier.nom }}">
+          {% for horaire in horaires %}
+          {% set seance = atelier.seances[horaire | ptime] %}
+          {% if seance %}
+          <div
+            class="seance"
+            onclick="ajouterAuPanier(this);"
+            data-id="{{ seance.id }}"
+            data-horaire="{{ seance['horaire'] | ptime }}"
+          >
+              {{ seance.placesRestantes }}
+            </div>
+          {% else %}
+            <div class="seance"></div>
+          {% endif %}
+          {% endfor %}
         </div>
       </div>
-    </body>
+    {% endfor %}
+  </div>
+  <div id="resume">
+    <h3 class="title">Panier</h3>
+    <div class="control">
+      <div class="control_item"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
+      <div class="control_item" onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /><span class="title">Supprimer</span></div>
+      <div class="control_item"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
+    </div>
+    <hr />
+    <div id="panier">
+      <div class="content"></div>
+    </div>
+  </div>
+{% endblock %}
 
+{% block script %}
     <script>
       function menu_toggle(el) {
         console.log(el);
@@ -141,7 +134,9 @@
     </script>
     <script src="{{ url_for('static', filename='js/js.cookie.js') }}"></script>
     <script src="{{ url_for('static', filename='js/catalogue.js') }}"></script>
+{% endblock %}
 
+{% block template %}
     <template id="panier_item-template">
       <div class="panier_item">
         <span class="titre"></span><span class="content"></span>
@@ -173,4 +168,4 @@
           ><use xlink:href="{{ url_for('static', filename='img/x.svg') }}#main"></use></svg>
       </div>
     </template>
-</html>
+{% endblock %}

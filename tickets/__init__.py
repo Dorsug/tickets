@@ -23,8 +23,8 @@ def create_app():
     cli.register_cli(app)
 
     from tickets import catalogue
+    from tickets import admin
     app.register_blueprint(catalogue.bp)
-
-    app.add_url_rule("/", endpoint="index")
+    app.register_blueprint(admin.bp)
 
     return app
