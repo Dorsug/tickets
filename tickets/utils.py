@@ -7,7 +7,7 @@ from brother_ql.conversion import convert
 from brother_ql.backends.helpers import send
 from brother_ql.raster import BrotherQLRaster
 
-from flask import current_app
+from flask import current_app, url_for, Markup
 import threading
 
 from functools import lru_cache
@@ -136,3 +136,17 @@ def ptime(time_info):
     :returns "xx:xx":
     """
     return str(time_info)[:5]
+
+
+# -- Jinja --
+def load_jinja(app):
+    app.jinja_env.filters['ptime'] = ptime
+
+    @app.context_processor
+    def use_processor():
+        def use(name, append='#main'):
+            return Markup(f"""
+                <svg viewBox="0 2 24 24">
+                <use xlink:href="{url_for('static', filename='img/' + name + '.svg')}{append}">
+                </use></svg>""")
+        return dict(use=use)

@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON; -- Sqlite specific
+
 -- Liste les ateliers disponible
 CREATE TABLE Atelier (
   id INTEGER PRIMARY KEY,    -- Clé primaire atelier

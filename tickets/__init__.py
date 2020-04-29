@@ -14,7 +14,7 @@ def create_app():
 
 
     from tickets import utils
-    app.jinja_env.filters["ptime"] = utils.ptime
+    utils.load_jinja(app)
 
     from tickets import db
     app.teardown_appcontext(db.close_db)

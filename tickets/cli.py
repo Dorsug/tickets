@@ -27,7 +27,7 @@ def register_cli(app):
         except FileNotFoundError:
             pass
         db = sqlite3.connect(app.config['DATABASE'])
-        with open('db/tables.sql') as f:
+        with open('tickets/tables.sql') as f:
             db.cursor().executescript(f.read())
         db.commit()
         db.close()

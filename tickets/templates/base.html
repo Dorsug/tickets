@@ -16,8 +16,12 @@
     </head>
 
     <body>
+      <div id="menu">
+        {% block menu %}{% endblock %}
+      </div>
       {% block content %}{% endblock %}
     </body>
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     {% block script %}{% endblock %}
     {% block template %}{% endblock %}
 </html>

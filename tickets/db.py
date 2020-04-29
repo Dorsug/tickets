@@ -24,21 +24,7 @@ def select(req, *param, cur=None):
 
 
 class Proc(object):
-    @staticmethod
-    def listerAtelier(cursor):
-        cursor.execute('''
-            SELECT
-                Atelier.id,
-                Atelier.numero,
-                Atelier.nom,
-                Atelier.description,
-                Atelier.age_mini,
-                Atelier.age_maxi,
-                Atelier.nombreplace,
-                Atelier.prix
-            FROM Atelier''')
-        return cursor.fetchall()
-
+    # -- catalogue related --
     @staticmethod
     def listerSeancePourAtelier(cursor, atelierId, date):
         cursor.execute('''
@@ -101,6 +87,25 @@ class Proc(object):
             WHERE panier = ?''',
             (panier,), cur=cur
         )
+
+    # -- admin related --
+    @staticmethod
+    def listerAtelier(cur=None):
+        return select('''
+            SELECT
+                Atelier.id,
+                Structure.nom AS structure,
+                Atelier.numero,
+                Atelier.nom,
+                Atelier.description,
+                Atelier.age_mini,
+                Atelier.age_maxi,
+                Atelier.nombreplace,
+                Atelier.prix,
+                Pole.nom AS pole
+            FROM Atelier
+            JOIN Structure ON Structure.id = Atelier.structure
+            JOIN Pole ON Pole.id = Atelier.pole''', cur=cur)
 
 
 def callproc(cursor, procname, *args):

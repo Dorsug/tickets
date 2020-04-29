@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/catalogue.css') }}">
   <style>
     {% for pole in poles %}
@@ -11,60 +12,60 @@
   </style>
 {% endblock %}
 
-{% block content %}
-  <div id="menu">
-    <div class="menu_group">
-      <h2 class="menu_title"
-          ><img src="{{ url_for('static', filename='img/grid.svg') }}"
-        ><span class="menu_title_content">Vue</span
-      ></h2>
-      <div class="menu_reservation menu_item">
-        <div class="menu_item_head"
-          ><span class="title">Réservations</span
-          ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
-        ></div>
-      </div>
-    </div>
-
-    <div class="menu_group">
-      <h2 class="menu_title"
-          ><img src="{{ url_for('static', filename='img/settings.svg') }}"
-        ><span class="menu_title_content">Préférence</span
-      ></h2>
-      <div class="menu_date menu_item" onclick="menu_toggle(this);">
-        <div class="menu_item_head"
-          ><span class="title">Date<span class="content">Samedi</span></span
-          ><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"
-        ></div>
-        <ul class="choice">
-          <li onclick="select(this);">Samedi</li>
-          <li onclick="select(this);">Dimanche</li>
-        </ul>
-      </div>
-      <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">
-        <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
-        <ul class="choice">
-          <li onclick="select(this);">1</li>
-          <li onclick="select(this);">2</li>
-          <li onclick="select(this);">3</li>
-          <li onclick="select(this);">4</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="menu_info menu_group">
-      <h2 class="menu_title"
-          ><img src="{{ url_for('static', filename='img/info.svg') }}"
-        ><span class="menu_title_content">Infos</span
-      ></h2>
-      {% for pole in poles %}
-        <div class="menu_item_head" data-pole="{{ pole.id }}"
-          ><span class="title">{{ pole.nom }}</span
-        ></div>
-      {% endfor %}
+{% block menu %}
+  <div class="menu_group">
+    <h2 class="menu_title"
+        ><img src="{{ url_for('static', filename='img/grid.svg') }}"
+      ><span class="menu_title_content">Vue</span
+    ></h2>
+    <div class="menu_reservation menu_item">
+      <div class="menu_item_head"
+        ><span class="title">Réservations</span
+        ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
+      ></div>
     </div>
   </div>
 
+  <div class="menu_group">
+    <h2 class="menu_title"
+        ><img src="{{ url_for('static', filename='img/settings.svg') }}"
+      ><span class="menu_title_content">Préférence</span
+    ></h2>
+    <div class="menu_date menu_item" onclick="menu_toggle(this);">
+      <div class="menu_item_head"
+        ><span class="title">Date<span class="content">Samedi</span></span
+        ><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"
+      ></div>
+      <ul class="choice">
+        <li onclick="select(this);">Samedi</li>
+        <li onclick="select(this);">Dimanche</li>
+      </ul>
+    </div>
+    <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">
+      <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
+      <ul class="choice">
+        <li onclick="select(this);">1</li>
+        <li onclick="select(this);">2</li>
+        <li onclick="select(this);">3</li>
+        <li onclick="select(this);">4</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="menu_info menu_group">
+    <h2 class="menu_title"
+        ><img src="{{ url_for('static', filename='img/info.svg') }}"
+      ><span class="menu_title_content">Infos</span
+    ></h2>
+    {% for pole in poles %}
+      <div class="menu_item_head" data-pole="{{ pole.id }}"
+        ><span class="title">{{ pole.nom }}</span
+      ></div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block content %}
   <div id="main">
     {% for atelier in ateliers %}
       <div class="temps">

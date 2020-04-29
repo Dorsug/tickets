@@ -1,0 +1,13 @@
+#menu .menu_item {
+  display: flex;
+  align-items: center;
+  font-size: 1.3em;
+}
+
+#menu svg {
+  width: 1em;
+}
+
+#menu .title {
+  padding-left: 0.5em
+}
