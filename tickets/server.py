@@ -17,7 +17,7 @@ def index():
     cur = db.get_cursor()
     date = utils.get_date(request.cookies.get("date"))
     capp.logger.debug(f"{date=}")
-    ateliers = db.select('SELECT id, nom, numero, pole, nombreplace FROM atelier', cur=cur)
+    ateliers = db.select('SELECT id, nom, numero, pole, nombreplace, description FROM atelier', cur=cur)
     poles = db.select('SELECT id, nom, couleur FROM pole', cur=cur)
     for atelier in ateliers:
         seances = db.select('''

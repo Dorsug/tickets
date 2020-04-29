@@ -164,6 +164,18 @@ function impression() {
     document.querySelector('.loader').style.display = 'block';
 }
 
+function selectDescription(el) {
+    className = 'selected';
+    el_descr = el.closest('.atelier').querySelector('.description');
+    for (div of document.querySelectorAll('.atelier .description.selected') || []) {
+        if (div != el_descr) {
+            div.classList.remove(className);
+        }
+    }
+    el_descr.classList.toggle('selected');
+
+}
+
 /* Run at application start to set defaults */
 
 /*
