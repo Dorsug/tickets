@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Dispo</title>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/static/css/dispo.css">
+        <script src="/static/js/dispo.js" defer></script>
+    </head>
+    <body>
+        {% for horaire in horaires %}
+        <div class="horaire" style="grid-row: {{ loop.index + 1 }}">
+            {{ horaire }}
+        </div>
+        {% endfor %}
+        {% for atelier in seances %}
+            {% set column = loop.index + 1 %}
+            <div class="atelier" style="grid-column: {{ column }}">
+              {{ atelier.0 }}
+            </div>
+            {% for seance in atelier.1 %}
+                <div class="seance"
+                    style="grid-column: {{ column }};grid-row: {{ loop.index + 1 }};
+                    background: {% if column % 2 == 0 %}#bbb{% else %}#999{% endif %}"
+                >
+                  {{ seance }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </body>
+</html>

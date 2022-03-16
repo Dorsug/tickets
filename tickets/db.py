@@ -132,6 +132,24 @@ class Proc(object):
             (moyenPaiement, codePostal, panier)
         )
 
+    @staticmethod
+    def listerPlacesDispo(date, cur=None):
+        cur = get_cursor(cur)
+        return select('''
+            SELECT
+                time(Seance.datetime),
+                Atelier.numero,
+                Atelier.nom,
+                Atelier.nombreplace - (
+                    SELECT COUNT(itemPanier.seance) FROM itemPanier
+                    WHERE Seance.id = itemPanier.seance
+                ) AS placesRestantes
+            FROM Seance
+            INNER JOIN Atelier ON Seance.atelier = Atelier.id
+            AND date(Seance.datetime) = ?''',
+            (date,), cur=cur
+        )
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)
