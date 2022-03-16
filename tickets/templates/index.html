@@ -117,15 +117,32 @@
       <div id="resume">
         <h3 class="title">Panier</h3>
         <div class="control">
-          <div class="control_item"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
+          <div class="control_item" onclick="setNouveauPanier()"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
           <div class="control_item" onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /><span class="title">Supprimer</span></div>
-          <div class="control_item"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
+          <div class="control_item" onclick="showPaiement()"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
         </div>
         <hr />
         <div id="panier">
           <div class="content"></div>
         </div>
       </div>
+        <div id="paiement">
+            <h1>Paiement</h1>
+            <form method="post" action="/paiement" onsubmit="paiement()">
+                <div>
+                    Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…" autofocus>
+                </div>
+                <div>
+                    <label for="modePaiment">Mode de paiement: </label>
+                    <label><input type="radio" name="modePaiement" value="0" required checked/>Espèce</label>
+                    <label><input type="radio" name="modePaiement" value="1" required/>Chèque</label>
+                </div>
+                <div>
+                    <input type="submit" value="Ok">
+                </div>
+            </form>
+            <button onclick="hidePaiement()">Fermer</button>
+        </div>
     </body>
 
     <script>

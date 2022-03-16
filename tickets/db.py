@@ -102,6 +102,36 @@ class Proc(object):
             (panier,), cur=cur
         )
 
+    @staticmethod
+    def infoPanierPourEtiquettes(panier, cur=None):
+        cur = get_cursor(cur)
+        return select('''
+            SELECT
+                atelier.numero,
+                atelier.nom AS atelierNom,
+                seance.datetime,
+                structure.nom AS structureNom
+            FROM atelier
+            INNER JOIN seance ON atelier.id = seance.atelier
+            INNER JOIN itempanier ON seance.id = itempanier.seance
+            INNER JOIN structure ON atelier.structure = structure.id
+            WHERE itempanier.panier = ?''',
+            (panier,), cur=cur
+        )
+
+    @staticmethod
+    def payerPanier(panier, moyenPaiement, codePostal, cur=None):
+        cur = get_cursor(cur)
+        cur.execute('''
+            UPDATE Panier
+            SET
+                Paye = 1,
+                moyenPaiement = ?,
+                CodePostal = ?
+            WHERE id = ?''',
+            (moyenPaiement, codePostal, panier)
+        )
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)

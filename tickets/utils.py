@@ -33,16 +33,7 @@ def get_date(name):
 
 def payerPanier(panierId, modePaiement, codePostal):
     c = db.get_cursor()
-    result = db.callproc(
-        c,
-        "payerPanier",
-        panierId,
-        modePaiement,
-        (codePostal if codePostal else None),
-        "@success",
-    )
-    success = result[0]["out_done"]
-    return success
+    result = db.Proc.payerPanier(panierId, modePaiement, codePostal, c)
 
 
 def marquePanierPaye(panierId):
@@ -70,11 +61,6 @@ def sha1_cache(func):
 
 @sha1_cache
 def _generationEtiquettes(numero, nom, date, debut, structure, filename):
-    # Reverse dictionnary search
-    date = next(
-        key for key, value in current_app.config["DATES"].items() if value == str(date)
-    )
-
     # Création de de l'image
     img = Image.new(mode="L", size=(696, 291), color=255)
     font_normal = ImageFont.truetype("fonts/OpenSans-Regular.ttf", 48)
@@ -110,22 +96,28 @@ def _sendToPrinter(images, imprimante_id):
         blocking=False,
     )
 
+IMPRIMANTES = [
+    'file:///dev/usb/lp0',
+    'file:///dev/usb/lp1',
+    'file:///dev/usb/lp2',
+    'file:///dev/usb/lp3'
+]
 
 def impressionEtiquettes(panierId, imprimante):
     c = db.get_cursor()
-    panier = db.callproc(c, "afficherContenuPanier", panierId)
+    panier = db.Proc.infoPanierPourEtiquettes(panierId, c)
     images = []
     for seance in panier:
         images.append(
             _generationEtiquettes(
-                numero=seance["Numero atelier"],
-                nom=seance["Nom atelier"],
-                date=seance["date"],
-                debut=seance["heureDebut"],
-                structure=seance["structure"],
+                numero=seance["numero"],
+                nom=seance["atelierNom"],
+                date=seance["datetime"],
+                debut=seance["datetime"],
+                structure=seance["structureNom"],
             )
         )
-    imprimante_id = current_app.config["IMPRIMANTES"][int(imprimante) - 1]
+    imprimante_id = IMPRIMANTES[int(imprimante) - 1]
     t = threading.Thread(target=_sendToPrinter, args=(images, imprimante_id))
     t.start()
 

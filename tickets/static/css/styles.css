@@ -282,6 +282,18 @@ hr {
   color: red;
 }
 
+/* Paiement popup confirmation */
+
+#paiement {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background-color: white;
+  transform: translate(-50%, -50%);
+  padding: 5rem;
+}
+
 /* Popup */
 .popup {
   --border-radius: 0.3em;
