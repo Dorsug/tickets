@@ -35,7 +35,11 @@ CREATE TABLE Panier (
   id INTEGER PRIMARY KEY,
   paye tinyint(1) NOT NULL DEFAULT 0,
   moyenPaiement INTEGER,
-  codePostal char(5)
+  codePostal char(5),
+  -- Si le panier est associé à une réservation / client
+  nom VARCHAR(100),
+  prenom VARCHAR(100),
+  email VARCHAR(255)
 );
 
 
@@ -65,11 +69,3 @@ WHEN
 BEGIN
     SELECT RAISE(ABORT, 'SeanceFull');
 END;
-
-
--- CREATE TABLE Client (
---   pk_id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Clé primaire',
---   Nom varchar(16) NOT NULL COMMENT 'Nom de la personne',
---   Prenom varchar(16) NOT NULL COMMENT 'Prénom de la personne',
---   Mail varchar(255) NOT NULL COMMENT 'Adresse mailo de la personne'
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Identifier les clients ayant réservé une séance à l''avance';

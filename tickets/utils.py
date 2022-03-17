@@ -41,6 +41,11 @@ def marquePanierPaye(panierId):
     db.callproc(c, "marquerPanierPaye", panierId, "@sucess")
 
 
+def reserver(*args):
+    c = db.get_cursor()
+    db.Proc.reserver(*args, c)
+
+
 def _clean_timedelta(td):
     # Enlève les secondes
     return ":".join(str(td).split(":")[:2])

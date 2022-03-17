@@ -150,6 +150,22 @@ class Proc(object):
             (date,), cur=cur
         )
 
+    @staticmethod
+    def reserver(panier, nom, prenom, email, moyenPaiement, codePostal, cur=None):
+        cur = get_cursor(cur)
+        cur.execute('''
+            UPDATE PANIER
+            SET
+                paye = 1,
+                nom = ?,
+                prenom = ?,
+                email = ?,
+                moyenPaiement = ?,
+                codePostal = ?
+            WHERE id = ?''',
+            (nom, prenom, email, moyenPaiement, codePostal, panier)
+        )
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)

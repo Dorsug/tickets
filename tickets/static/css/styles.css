@@ -282,9 +282,9 @@ hr {
   color: red;
 }
 
-/* Paiement popup confirmation */
+/* Finalize popup confirmation */
 
-#paiement {
+.finalizePopup {
   display: none;
   position: absolute;
   left: 50%;

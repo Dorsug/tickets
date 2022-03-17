@@ -36,7 +36,7 @@ def index():
             seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
             del seance['placesPrises']
         atelier['seances'] = {utils.ptime(x['horaire']):dict(x) for x in seances}
-    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles)
+    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False))
 
 
 @bp.route("/reservations")
@@ -120,6 +120,26 @@ def paiement():
         return response
 
     return flask.redirect(flask.url_for("index"))
+
+
+@bp.route("/reserver", methods=["POST"])
+def reserver():
+    try:
+        panierId = request.cookies["panierId"]
+    except KeyError:  # Il n'y a pas de panier
+        abort(400)
+
+    utils.reserver(
+        panierId, *[request.form[key] for key in ["nom", "prenom", "email", "modePaiement", "codePostal"]],
+    )
+
+    @after_this_request
+    def delete_cookie(response):
+        # Expire dans le passé, donc immédiatement
+        response.set_cookie("panierId", "", expires=0)
+        return response
+
+    return flask.redirect(flask.url_for("index", admin=True))
 
 
 @bp.route("/impression", methods=["POST"])

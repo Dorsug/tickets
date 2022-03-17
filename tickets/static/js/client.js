@@ -149,6 +149,16 @@ function hidePaiement() {
     _getCssRule('.pane').style.filter = '';
 }
 
+function showReserver() {
+    document.getElementById('reserver').style.display = 'block';
+    _getCssRule('.pane').style.filter = 'blur(3px)';
+}
+
+function hideReserver() {
+    document.getElementById('reserver').style.display = 'none';
+    _getCssRule('.pane').style.filter = '';
+}
+
 function paiement() {
     // Fait apparaitre le 'loader'
     document.querySelector('.loader').style.display = 'block';
