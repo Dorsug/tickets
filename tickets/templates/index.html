@@ -1,222 +1,101 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>GesTickets2</title>
-
-        <!-- Styles -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-        <style>
-          {% for pole in poles %}
-          [data-pole="{{ pole.id }}"] {
-            border-left-color: #{{ pole.couleur }};
-          }
-          {% endfor %}
-        </style>
-
-        <!-- Favicon -->
-        <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}" id="favicon">
-    </head>
-
-    <body>
-      <div id="menu">
-        <div class="menu_group">
-          <h2 class="menu_title"
-              ><img src="{{ url_for('static', filename='img/grid.svg') }}"
-            ><span class="menu_title_content">Vue</span
-          ></h2>
-          <div class="menu_reservation menu_item">
-            <div class="menu_item_head"
-              ><span class="title">Réservations</span
-              ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
-            ></div>
-          </div>
-        </div>
-
-        <div class="menu_group">
-          <h2 class="menu_title"
-              ><img src="{{ url_for('static', filename='img/settings.svg') }}"
-            ><span class="menu_title_content">Préférence</span
-          ></h2>
-          <div class="menu_date menu_item" onclick="menu_toggle(this);">
-            <div class="menu_item_head"
-              ><span class="title">Date<span class="content">Samedi</span></span
-              ><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"
-            ></div>
-            <ul class="choice">
-              <li onclick="select(this);">Samedi</li>
-              <li onclick="select(this);">Dimanche</li>
-            </ul>
-          </div>
-          <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">
-            <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
-            <ul class="choice">
-              <li onclick="select(this);">1</li>
-              <li onclick="select(this);">2</li>
-              <li onclick="select(this);">3</li>
-              <li onclick="select(this);">4</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="menu_info menu_group">
-          <h2 class="menu_title"
-              ><img src="{{ url_for('static', filename='img/info.svg') }}"
-            ><span class="menu_title_content">Infos</span
-          ></h2>
-          {% for pole in poles %}
-            <div class="menu_item_head" data-pole="{{ pole.id }}"
-              ><span class="title">{{ pole.nom }}</span
-            ></div>
+{% extends "base.html" %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">{% endblock %}
+{% block main %}
+  {% for atelier in ateliers %}
+    <div class="temps">
+      <div class="horaire_head"></div>
+      {% if loop.index is odd and not loop.first %}
+        <div class="horaires">
+          {% for horaire in horaires %}
+            <div class="horaire">
+              <span>{{ horaire | ptime }}</span>
+            </div>
           {% endfor %}
         </div>
+      {% endif %}
+    </div>
+    <div class="atelier">
+      <div class="atelier_head" data-pole="{{ atelier.pole }}" onclick="selectDescription(this)">
+        <h3>{{ atelier.nom }}</h3>
       </div>
-
-      <div id="main">
-        {% for atelier in ateliers %}
-          <div class="temps">
-            <div class="horaire_head"></div>
-            {% if loop.index is odd and not loop.first %}
-              <div class="horaires">
-                {% for horaire in horaires %}
-                  <div class="horaire">
-                    <span>{{ horaire | ptime }}</span>
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}
+      <div class="seances" data-atelier="{{ atelier.nom }}">
+        {% for horaire in horaires %}
+        {% set seance = atelier.seances[horaire | ptime] %}
+        {% if seance %}
+        <div
+          class="seance"
+          onclick="ajouterAuPanier(this);"
+          data-id="{{ seance.id }}"
+          data-horaire="{{ seance['horaire'] | ptime }}"
+        >
+            {{ seance.placesRestantes }}
           </div>
-          <div class="atelier">
-            <div class="atelier_head" data-pole="{{ atelier.pole }}" onclick="selectDescription(this)">
-              <h3>{{ atelier.nom }}</h3>
-            </div>
-            <div class="seances" data-atelier="{{ atelier.nom }}">
-              {% for horaire in horaires %}
-              {% set seance = atelier.seances[horaire | ptime] %}
-              {% if seance %}
-              <div
-                class="seance"
-                onclick="ajouterAuPanier(this);"
-                data-id="{{ seance.id }}"
-                data-horaire="{{ seance['horaire'] | ptime }}"
-              >
-                  {{ seance.placesRestantes }}
-                </div>
-              {% else %}
-                <div class="seance"></div>
-              {% endif %}
-              {% endfor %}
-            </div>
-            <div class="description">
-              {{ atelier.description }}
-            </div>
-          </div>
+        {% else %}
+          <div class="seance"></div>
+        {% endif %}
         {% endfor %}
       </div>
-      <div id="resume">
-        <h3 class="title">Panier</h3>
-        <div class="control">
-          <div class="control_item" onclick="setNouveauPanier()"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
-          <div class="control_item" onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /><span class="title">Supprimer</span></div>
-          <div class="control_item" onclick="showPaiement()"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
-          {% if admin %}
-          <div class="control_item" onclick="showReserver()"><img src="{{ url_for('static', filename='img/user-check.svg') }}" /><span class="title">Réserver</span></div>
-          {% endif %}
-        </div>
-        <hr />
-        <div id="panier">
-          <div class="content"></div>
-        </div>
+      <div class="description">
+        {{ atelier.description }}
       </div>
+    </div>
+  {% endfor %}
+{% endblock %}
 
-      <div id="paiement" class="finalizePopup">
-          <h1>Paiement</h1>
-          <form method="post" action="/paiement" onsubmit="paiement()">
-              <div>
-                  Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…" autofocus>
-              </div>
-              <div>
-                  <label for="modePaiment">Mode de paiement: </label>
-                  <label><input type="radio" name="modePaiement" value="0" required checked/>Espèce</label>
-                  <label><input type="radio" name="modePaiement" value="1" required/>Chèque</label>
-              </div>
-              <div>
-                  <input type="submit" value="Ok">
-              </div>
-          </form>
-          <button onclick="hidePaiement()">Fermer</button>
-      </div>
+{% block sidebar %}
+  <h3 class="title">Panier</h3>
+  <div class="control">
+    <div class="control_item" onclick="setNouveauPanier()"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
+    <div class="control_item" onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /><span class="title">Supprimer</span></div>
+    <div class="control_item" onclick="showPaiement()"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
+    {% if admin %}
+    <div class="control_item" onclick="showReserver()"><img src="{{ url_for('static', filename='img/user-check.svg') }}" /><span class="title">Réserver</span></div>
+    {% endif %}
+  </div>
+  <hr />
+  <div id="panier">
+    <div class="content"></div>
+  </div>
+{% endblock %}
 
-      <div id="reserver" class="finalizePopup">
-          <h1>Réserver</h1>
-          <form method="post" action="/reserver">
-              <div>
-                <label for="nom">Nom: </label><input type=text name="nom" required/>
-                <label for="prenom">Prénom: </label><input type=text name="prenom" required/>
-                <label for="email">E-Mail: </label><input type=email name="email" required/>
-              <div>
-                  Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…">
-              </div>
-              <div>
-                  <label for="modePaiment">Mode de paiement: </label>
-                  <label><input type="radio" name="modePaiement" value="0" required checked/>Espèce</label>
-                  <label><input type="radio" name="modePaiement" value="1" required/>Chèque</label>
-              </div>
-              <div>
-                  <input type="submit" value="Ok">
-              </div>
-          </form>
-          <button onclick="hideReserver()">Fermer</button>
-      </div>
-    </body>
+{% block extra %}
+  <div id="paiement" class="finalizePopup">
+      <h1>Paiement</h1>
+      <form method="post" action="/paiement" onsubmit="paiement()">
+          <div>
+              Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…" autofocus>
+          </div>
+          <div>
+              <label for="modePaiment">Mode de paiement: </label>
+              <label><input type="radio" name="modePaiement" value="0" required checked/>Espèce</label>
+              <label><input type="radio" name="modePaiement" value="1" required/>Chèque</label>
+          </div>
+          <div>
+              <input type="submit" value="Ok">
+          </div>
+      </form>
+      <button onclick="hidePaiement()">Fermer</button>
+  </div>
 
-    <script>
-      function menu_toggle(el) {
-        console.log(el);
-        if (el.querySelector('.choice').style.display == 'block') {
-          el.querySelector('.choice').style.display = 'none';
-        } else {
-          el.querySelector('.choice').style.display = 'block';
-        }
-      }
-
-      function select(el) {
-        el.closest('.menu_item').querySelector('.content').innerText = el.innerText;
-      }
-    </script>
-    <script src="{{ url_for('static', filename='js/js.cookie.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/client.js') }}"></script>
-
-    <template id="panier_item-template">
-      <div class="panier_item">
-        <span class="titre"></span><span class="content"></span>
-        <svg
-          onmouseenter="this.parentNode.style.background = '#ddd'"
-          onmouseleave="this.parentNode.style.background = '#fff'"
-          onclick="enleverDuPanier(this)"
-          class="cross"
-          viewBox="0 2 24 24">
-          <use xlink:href="{{ url_for('static', filename='img/x.svg') }}#main"></use>
-        </svg>
-      </div>
-    </template>
-
-    <template id="popup_error-template">
-      <div class="popup">
-        <div class="main">
-          <div class="icon"><svg
-            viewBox="0 0 24 24"
-            ><use xlink:href="{{ url_for('static', filename='img/x-circle.svg') }}#main"></use></svg></div>
-          <p class="content">
-            La séance est pleine
-          </p>
-        </div>
-        <div class="progress"><div class="bar"></div> </div>
-
-        <svg class="close" viewBox="0 2 24 24"
-          onclick="this.parentNode.remove(); clearTimeout(popupTimeout)"
-          ><use xlink:href="{{ url_for('static', filename='img/x.svg') }}#main"></use></svg>
-      </div>
-    </template>
-</html>
+  <div id="reserver" class="finalizePopup">
+      <h1>Réserver</h1>
+      <form method="post" action="/reserver">
+          <div>
+            <label for="nom">Nom: </label><input type=text name="nom" required/>
+            <label for="prenom">Prénom: </label><input type=text name="prenom" required/>
+            <label for="email">E-Mail: </label><input type=email name="email" required/>
+          <div>
+              Code Postal : <input id="codePostal" name="codePostal" type="number" placeholder="31…">
+          </div>
+          <div>
+              <label for="modePaiment">Mode de paiement: </label>
+              <label><input type="radio" name="modePaiement" value="0" required checked/>Espèce</label>
+              <label><input type="radio" name="modePaiement" value="1" required/>Chèque</label>
+          </div>
+          <div>
+              <input type="submit" value="Ok">
+          </div>
+      </form>
+      <button onclick="hideReserver()">Fermer</button>
+  </div>
+{% endblock %}

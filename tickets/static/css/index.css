@@ -1,0 +1,158 @@
+/* main */
+.atelier, .temps {
+  display: flex;
+}
+
+.atelier {
+  flex-wrap: wrap;
+}
+
+.atelier .description {
+  padding: 1em;
+  margin-bottom: 1em;
+  border: 1px solid #cccccc;
+  border-top: 0;
+  display: none;
+}
+
+.atelier .description.selected {
+  display: block;
+}
+
+.atelier_head, .horaire_head {
+  width: 8rem;
+}
+
+.atelier_head {
+  margin: 0.1rem 0 0.1rem 0;
+  background: var(--c1);
+  color: var(--c2);
+  box-shadow: 5px 0px 5px -4px #666;
+  z-index: 0;
+  border-left: 3px solid;
+  border-right: 3px solid var(--c1);
+}
+
+.atelier_head:hover {
+  background: #ddd;
+  border-right-color: #ddd;
+}
+
+.atelier:hover .atelier_head {
+  border-left-width: 8px;
+  border-right-width: 8px;
+}
+
+.seances, .horaires {
+  display: flex;
+  flex-grow: 1;
+}
+
+.seance, .horaire {
+  width: calc(100% / 7);
+  border-right: 1px solid;
+}
+
+.seance {
+  background: var(--c3);
+  border-right-color: var(--c1);
+}
+
+.seance:hover {
+  background: #ddd;
+}
+
+.seance:active {
+  background: #eee;
+}
+
+.horaire {
+  border-right-color: var(--c3);
+  color: #777;
+}
+
+.horaire_head {
+  height: 0.5em;
+}
+
+.seance, .horaire, .atelier_head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seance {
+  margin: 1% 0 1% 0;
+}
+
+/* Finalize popup confirmation */
+
+.finalizePopup {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background-color: white;
+  transform: translate(-50%, -50%);
+  padding: 5rem;
+}
+
+/* Popup */
+.popup {
+  --border-radius: 0.3em;
+  --progress-bar-height: 0.2em;
+
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  width: 40%;
+  max-width: 30em;
+  transform: translate(-50%, 0);
+  background: #c64444;
+  color: #eee;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.popup .main {
+ display: flex;
+}
+
+.popup svg {
+  width: 2em;
+  vertical-align: middle;
+}
+
+.popup .icon {
+  background: #a90d0e;
+  padding: 0.5em;
+  border-top-left-radius: var(--border-radius);
+}
+
+.popup .content {
+  padding-left: 1em;
+}
+
+.popup .close {
+  position: absolute;
+  right: 0.2em;
+  width: 1em;
+  top: 0.2em;
+}
+
+/* progress bar */
+@keyframes progress-bar {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+.progress {
+ height: var(--progress-bar-height);
+}
+
+.bar {
+ width: 0;
+ height: var(--progress-bar-height);
+ background: #ee5158;
+ animation: 3s linear progress-bar;
+}
