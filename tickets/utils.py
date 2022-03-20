@@ -22,10 +22,12 @@ def get_horaires():
 
 @lru_cache
 def get_date(name):
+    # /!\ if there is more than two distinct date in the db,
+    # this is will spit out garbage
     c = db.get_cursor()
     data = c.execute('SELECT DISTINCT(DATE(datetime)) FROM seance').fetchall()
     dates = [x['(DATE(datetime))'] for x in data]
-    if name == 'dimanche':
+    if name == 'Dimanche':
         return dates[1]
     else:
         return dates[0]

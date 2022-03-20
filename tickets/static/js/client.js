@@ -186,6 +186,11 @@ function selectDescription(el) {
 
 }
 
+function selectDate(el) {
+    Cookies.set('date', el.innerText);
+    window.location.reload();
+}
+
 function showPage(el) {
     for (page of document.querySelectorAll('.page')) {
         page.style.display = 'none';

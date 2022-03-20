@@ -52,12 +52,12 @@
           ></h2>
           <div class="menu_date menu_item" onclick="menu_toggle(this);">
             <div class="menu_item_head"
-              ><span class="title">Date<span class="content">Samedi</span></span
+              ><span class="title">Date<span class="content">{{ date }}</span></span
               ><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"
             ></div>
             <ul class="choice">
-              <li onclick="select(this);">Samedi</li>
-              <li onclick="select(this);">Dimanche</li>
+              <li onclick="selectDate(this);">Samedi</li>
+              <li onclick="selectDate(this);">Dimanche</li>
             </ul>
           </div>
           <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">

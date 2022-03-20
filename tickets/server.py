@@ -16,8 +16,8 @@ bp = Blueprint("client", __name__)
 @bp.route("/", methods=["GET"])
 def index():
     cur = db.get_cursor()
-    date = utils.get_date(request.cookies.get("date"))
-    capp.logger.debug(f"{date=}")
+    date = request.cookies.get("date")
+    timestamp = utils.get_date(date)
     ateliers = db.select('SELECT id, nom, numero, pole, nombreplace, description FROM atelier', cur=cur)
     poles = db.select('SELECT id, nom, couleur FROM pole', cur=cur)
     for atelier in ateliers:
@@ -32,12 +32,12 @@ def index():
             FROM seance
             WHERE seance.atelier = ?
             AND seance.datetime BETWEEN ? AND ?''',
-            (atelier['id'], date + ' 00:00:00', date + ' 23:59:59'), cur=cur)
+            (atelier['id'], timestamp + ' 00:00:00', timestamp + ' 23:59:59'), cur=cur)
         for seance in seances:
             seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
             del seance['placesPrises']
         atelier['seances'] = {utils.ptime(x['horaire']):dict(x) for x in seances}
-    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False))
+    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False), date=date)
 
 
 @bp.route("/panier", methods=["POST"])
@@ -151,7 +151,12 @@ def route_impression():
 def reservations():
     c = db.get_cursor()
     clients, seances = db.Proc.listerReservations(c)
-    return render_template("reservations.html", clients=clients, seances=seances)
+    return render_template(
+        "reservations.html",
+        clients=clients,
+        seances=seances,
+        date=request.cookies.get("date"),
+    )
 
 
 HORAIRES = [
