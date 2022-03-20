@@ -6,7 +6,10 @@ import math
 
 def create_app():
     app = Flask("__tickets__", root_path=os.path.abspath("./tickets"))
-    app.config.from_mapping(DATABASE=os.path.join(app.instance_path, 'tickets.sqlite'))
+    app.config.from_mapping(
+        DATABASE=os.path.join(app.instance_path, 'tickets.sqlite'),
+        LABELS=os.path.join(app.instance_path, 'labels'),
+    )
 
     from tickets import utils
     app.jinja_env.globals.update(

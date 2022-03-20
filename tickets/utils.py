@@ -66,7 +66,7 @@ def sha1_cache(func):
     def wrapper(**k):
         strargs = f"{k['numero']},{k['nom']},{k['datetime']},{k['structure']}"
         hash = sha1(strargs.encode("utf-8")).hexdigest()
-        filename = "labels/" + hash + ".png"
+        filename = path.join(current_app.config.get('LABELS'), hash + ".png")
         if path.isfile(filename):
             return filename
         else:
@@ -94,7 +94,7 @@ def _generationEtiquettes(numero, nom, datetime, structure, filename):
     try:
         img.save(filename)
     except FileNotFoundError:  # Si le repertoire 'labels' n'existe pas
-        mkdir("labels")
+        mkdir(current_app.config.get('LABELS'))
         img.save(filename)
     return filename
 
