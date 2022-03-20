@@ -16,27 +16,36 @@ from functools import lru_cache
 @lru_cache
 def get_horaires():
     c = db.get_cursor()
-    data = c.execute('SELECT DISTINCT(TIME(datetime)) FROM seance').fetchall()
-    return [x['(TIME(datetime))'] for x in data]
+    data = c.execute('''
+        SELECT DISTINCT(STRFTIME('%H:%M', datetime)) AS time
+        FROM seance'''
+    ).fetchall()
+    return [x['time'] for x in data]
 
-
-@lru_cache
-def get_date(name):
+def get_possiblesDates():
     # /!\ if there is more than two distinct date in the db,
     # this is will spit out garbage
     c = db.get_cursor()
-    data = c.execute('SELECT DISTINCT(DATE(datetime)) FROM seance').fetchall()
-    dates = [x['(DATE(datetime))'] for x in data]
-    if name == 'Dimanche':
-        return dates[1]
-    else:
-        return dates[0]
+    data = c.execute('SELECT DISTINCT(DATE(datetime)) AS dates FROM seance').fetchall()
+    return [x['dates'] for x in data]
 
+def get_date(name):
+    dates = get_possiblesDates()
+    return dates[1] if name == 'Dimanche' else dates[0]
+
+def get_time(datetime):
+    return datetime.split(' ')[1]
+
+def get_naturalDate(datetime):
+    dates = get_possiblesDates()
+    return 'Samedi' if datetime.split(' ')[0] == dates[0] else 'Dimanche'
+
+def get_naturalDatetime(datetime):
+    return get_naturalDate(datetime)[:3] + ' ' + get_time(datetime)
 
 def payerPanier(panierId, modePaiement, codePostal):
     c = db.get_cursor()
     result = db.Proc.payerPanier(panierId, modePaiement, codePostal, c)
-
 
 def marquePanierPaye(panierId):
     c = db.get_cursor()
@@ -55,7 +64,7 @@ def _clean_timedelta(td):
 
 def sha1_cache(func):
     def wrapper(**k):
-        strargs = f"{k['numero']},{k['nom']},{k['date']},{k['debut']},{k['structure']}"
+        strargs = f"{k['numero']},{k['nom']},{k['datetime']},{k['structure']}"
         hash = sha1(strargs.encode("utf-8")).hexdigest()
         filename = "labels/" + hash + ".png"
         if path.isfile(filename):
@@ -67,7 +76,7 @@ def sha1_cache(func):
 
 
 @sha1_cache
-def _generationEtiquettes(numero, nom, date, debut, structure, filename):
+def _generationEtiquettes(numero, nom, datetime, structure, filename):
     # Création de de l'image
     img = Image.new(mode="L", size=(696, 291), color=255)
     font_normal = ImageFont.truetype("fonts/OpenSans-Regular.ttf", 48)
@@ -80,8 +89,7 @@ def _generationEtiquettes(numero, nom, date, debut, structure, filename):
     # Ajout du texte
     draw.multiline_text((10, 10), f"N°{numero}. {nom}", fill=0, font=font_normal)
     draw.text((10, 170), f"{structure}", fill=0, font=font_small)
-    draw.text((10, 230), f"{_clean_timedelta(debut)}", fill=0, font=font_small)
-    draw.text((500, 230), str(date), fill=0, font=font_small)
+    draw.text((10, 230), get_naturalDatetime(datetime), fill=0, font=font_small)
 
     try:
         img.save(filename)
@@ -119,8 +127,7 @@ def impressionEtiquettes(panierId, imprimante):
             _generationEtiquettes(
                 numero=seance["numero"],
                 nom=seance["atelierNom"],
-                date=seance["datetime"],
-                debut=seance["datetime"],
+                datetime=seance["datetime"],
                 structure=seance["structureNom"],
             )
         )

@@ -30,13 +30,13 @@
         </div>
         <div class="seances" data-atelier="{{ atelier.nom }}">
           {% for horaire in horaires %}
-          {% set seance = atelier.seances[horaire | ptime] %}
+          {% set seance = atelier.seances[date + ' ' + horaire] %}
           {% if seance %}
           <div
             class="seance"
             onclick="ajouterAuPanier(this);"
             data-id="{{ seance.id }}"
-            data-horaire="{{ seance['horaire'] | ptime }}"
+            data-horaire="{{ utils.get_naturalDatetime(seance['datetime']) }}"
           >
               {{ seance.placesRestantes }}
             </div>

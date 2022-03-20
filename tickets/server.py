@@ -16,28 +16,28 @@ bp = Blueprint("client", __name__)
 @bp.route("/", methods=["GET"])
 def index():
     cur = db.get_cursor()
-    date = request.cookies.get("date")
-    timestamp = utils.get_date(date)
+    natural_date = request.cookies.get("date")
+    date = utils.get_date(natural_date)
     ateliers = db.select('SELECT id, nom, numero, pole, nombreplace, description FROM atelier', cur=cur)
     poles = db.select('SELECT id, nom, couleur FROM pole', cur=cur)
     for atelier in ateliers:
         seances = db.select('''
             SELECT
                 Seance.id,
-                TIME(Seance.datetime) AS horaire,
+                Seance.datetime,
                 (SELECT COUNT(ItemPanier.id)
                     FROM ItemPanier
                     WHERE ItemPanier.seance = Seance.id
                 ) AS placesPrises
             FROM seance
             WHERE seance.atelier = ?
-            AND seance.datetime BETWEEN ? AND ?''',
-            (atelier['id'], timestamp + ' 00:00:00', timestamp + ' 23:59:59'), cur=cur)
+            AND DATE(seance.datetime) = ?''',
+            (atelier['id'], date), cur=cur)
         for seance in seances:
             seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
             del seance['placesPrises']
-        atelier['seances'] = {utils.ptime(x['horaire']):dict(x) for x in seances}
-    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False), date=date)
+        atelier['seances'] = {x['datetime']:dict(x) for x in seances}
+    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False), natural_date=natural_date, date=date)
 
 
 @bp.route("/panier", methods=["POST"])
@@ -83,7 +83,7 @@ def listerContenuPanier():
         abort(400)
     items = db.Proc.listerContenuPanier(panierId)
     for item in items:
-        item['horaire'] = utils.ptime(item['horaire'])
+        item['datetime'] = utils.get_naturalDatetime(item['datetime'])
     return jsonify(items)
 
 
@@ -155,7 +155,7 @@ def reservations():
         "reservations.html",
         clients=clients,
         seances=seances,
-        date=request.cookies.get("date"),
+        natural_date=request.cookies.get("date"),
     )
 
 

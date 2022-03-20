@@ -205,14 +205,12 @@ function showPage(el) {
 
 /* Run at application start to set defaults */
 
+// Set the default
+if (typeof date == 'undefined') {
+    Cookies.set('date', 'Samedi');
+}
 /*
 inputDate = document.querySelector('#pane1 .dates')
-// Set the default
-date = Cookies.get('date');
-if (typeof date == 'undefined') {
-    Cookies.set('date', 'samedi');
-    date = 'samedi';
-}
 // Check the correct box
 inputDate.querySelector('input[value="' + date + '"]').checked = true;
 // Define callback to change when clicked
@@ -230,7 +228,7 @@ if (Cookies.get('panierId')) {
     .then((res) => _getData(res, 'json'))
     .then(function(data) {
         for (item of data) {
-            _ajouterAuPanier(item['id'], item['seance'], item['horaire'], item['atelier']);
+            _ajouterAuPanier(item['id'], item['seance'], item['datetime'], item['atelier']);
         }
     })
     .catch(function(err) {

@@ -93,7 +93,7 @@ class Proc(object):
             SELECT
                 ItemPanier.id,
                 ItemPanier.seance,
-                TIME(Seance.datetime) AS horaire,
+                Seance.datetime,
                 Atelier.nom AS atelier
             FROM ItemPanier
             JOIN Seance ON ItemPanier.seance = Seance.id
