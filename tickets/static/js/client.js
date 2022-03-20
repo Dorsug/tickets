@@ -214,7 +214,7 @@ function showPage(el) {
 /* Run at application start to set defaults */
 
 // Set the default
-if (typeof date == 'undefined') {
+if (typeof Cookies.get('date') == 'undefined') {
     Cookies.set('date', 'Samedi');
 }
 /*
