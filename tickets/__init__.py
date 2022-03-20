@@ -9,6 +9,7 @@ def create_app():
     app.config.from_mapping(
         DATABASE=os.path.join(app.instance_path, 'tickets.sqlite'),
         LABELS=os.path.join(app.instance_path, 'labels'),
+        NUMBER_OF_PRINTERS=4,
     )
 
     from tickets import utils
@@ -17,6 +18,7 @@ def create_app():
         len=len,
         utils=utils,
         item_per_pages=app.config.get('item_per_pages', 10),
+        config=app.config,
     )
 
     try:

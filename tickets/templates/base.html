@@ -61,12 +61,11 @@
             </ul>
           </div>
           <div class="menu_imprimante menu_item" onclick="menu_toggle(this);">
-            <div class="menu_item_head"><span class="title">Imprimante<span class="content">1</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
+            <div class="menu_item_head"><span class="title">Imprimante<span class="content">{{ imprimante }}</span></span><img src="{{ url_for('static', filename='img/chevron-down.svg') }}" class="arrow"></div>
             <ul class="choice">
-              <li onclick="select(this);">1</li>
-              <li onclick="select(this);">2</li>
-              <li onclick="select(this);">3</li>
-              <li onclick="select(this);">4</li>
+              {% for printer in range(config.get('NUMBER_OF_PRINTERS')) %}
+                <li onclick="selectPrinter(this);">{{ printer + 1 }}</li>
+              {% endfor %}
             </ul>
           </div>
         </div>

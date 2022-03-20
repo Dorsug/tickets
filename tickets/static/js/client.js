@@ -191,6 +191,11 @@ function selectDate(el) {
     window.location.reload();
 }
 
+function selectPrinter(el) {
+    Cookies.set('imprimante', el.innerText);
+    select(el);
+}
+
 function showPage(el) {
     for (page of document.querySelectorAll('.page')) {
         page.style.display = 'none';

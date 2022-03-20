@@ -16,6 +16,7 @@ bp = Blueprint("client", __name__)
 @bp.route("/", methods=["GET"])
 def index():
     cur = db.get_cursor()
+    imprimante = request.cookies.get('imprimante')
     natural_date = request.cookies.get("date")
     date = utils.get_date(natural_date)
     ateliers = db.select('SELECT id, nom, numero, pole, nombreplace, description FROM atelier', cur=cur)
@@ -37,7 +38,7 @@ def index():
             seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
             del seance['placesPrises']
         atelier['seances'] = {x['datetime']:dict(x) for x in seances}
-    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False), natural_date=natural_date, date=date)
+    return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False), natural_date=natural_date, date=date, imprimante=imprimante)
 
 
 @bp.route("/panier", methods=["POST"])
@@ -156,6 +157,7 @@ def reservations():
         clients=clients,
         seances=seances,
         natural_date=request.cookies.get("date"),
+        imprimante=request.cookies.get('imprimante'),
     )
 
 

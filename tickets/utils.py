@@ -111,13 +111,6 @@ def _sendToPrinter(images, imprimante_id):
         blocking=False,
     )
 
-IMPRIMANTES = [
-    'file:///dev/usb/lp0',
-    'file:///dev/usb/lp1',
-    'file:///dev/usb/lp2',
-    'file:///dev/usb/lp3'
-]
-
 def impressionEtiquettes(panierId, imprimante):
     c = db.get_cursor()
     panier = db.Proc.infoPanierPourEtiquettes(panierId, c)
@@ -131,7 +124,7 @@ def impressionEtiquettes(panierId, imprimante):
                 structure=seance["structureNom"],
             )
         )
-    imprimante_id = IMPRIMANTES[int(imprimante) - 1]
+    imprimante_id = f'file:///dev/usb/lp{int(imprimante) - 1}'
     t = threading.Thread(target=_sendToPrinter, args=(images, imprimante_id))
     t.start()
 
