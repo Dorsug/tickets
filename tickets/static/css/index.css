@@ -123,6 +123,51 @@
   margin: 1% 0 1% 0;
 }
 
+/* resume */
+
+#resume hr {
+  width: 100%;
+  margin: 1.5em 0;
+}
+
+#viderPanier {
+  border: none;
+  float: right;
+  background-color: inherit;
+  padding: 0;
+}
+
+#panier {
+  min-height: 20em;
+  border-left: 1px solid grey;
+  margin: 0 1em;
+  padding-left: 1em;
+}
+
+.panier_item {
+  margin: 0.3em 0;
+  padding-top: 2px;
+}
+
+.panier_item:hover {
+  background: #fff;
+}
+
+.cross:hover .panier_item {
+  background: #ddd;
+}
+
+.cross {
+  width: 1em;
+  align-self: flex-end;
+  float: right;
+}
+
+.cross:hover use {
+  color: red;
+}
+
+
 /* Finalize popup confirmation */
 
 .finalizePopup {

@@ -35,7 +35,9 @@ function _ajouterAuPanier(itemId, seanceId, horaire, atelier) {
     tmp1.querySelector('.titre').innerText = horaire;
     tmp1.querySelector('.content').innerText = atelier;
 
-    document.querySelector('#panier .content').appendChild(tmp1);
+    document.querySelector('#panier').appendChild(tmp1);
+
+    document.querySelector('#panierId').innerText = Cookies.get('panierId');
 }
 
 function ajouterAuPanier(obj){
@@ -86,7 +88,7 @@ function viderPanier() {
     fetch('/panier', {method: "DELETE"})
     .then((res) => _getData(res))
     .then(function(data){
-        panier = document.querySelector('#panier .content');
+        panier = document.querySelector('#panier');
         for (item of panier.children) {
             _updateCompteurPlaces(item.getAttribute('data-seance'));
         }
@@ -131,7 +133,8 @@ function setPrinter(printer) {
 
 function setNouveauPanier() {
     Cookies.remove('panierId');
-    document.querySelector('#pane4 .content').innerHTML = '';
+    document.querySelector('#panierId').innerText = '';
+    document.querySelector('#panier .content').innerHTML = '';
 }
 
 function getPanierPrecedent() {

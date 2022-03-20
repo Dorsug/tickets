@@ -55,18 +55,17 @@
 {% endblock %}
 
 {% block sidebar %}
-  <h3 class="title">Panier</h3>
+<span>
+  <h3 class="title">Panier <span id=panierId>{{ panierId }}</span>
+    <button class="control_item" id=viderPanier onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /></button>
+  </h3>
+</span>
+  <div id="panier"></div>
   <div class="control">
-    <div class="control_item" onclick="setNouveauPanier()"><img src="{{ url_for('static', filename='img/plus-circle.svg') }}" /><span class="title">Nouveau</span></div>
-    <div class="control_item" onclick="viderPanier()"><img src="{{ url_for('static', filename='img/trash-2.svg') }}" /><span class="title">Supprimer</span></div>
-    <div class="control_item" onclick="showPaiement()"><img src="{{ url_for('static', filename='img/dollar-sign.svg') }}" /><span class="title">Paiement</span></div>
+    <div class="control_item" onclick="showPaiement()"><img src="{{ url_for('static', filename='img/check-circle.svg') }}" /><span class="title">Valider</span></div>
     {% if admin %}
     <div class="control_item" onclick="showReserver()"><img src="{{ url_for('static', filename='img/user-check.svg') }}" /><span class="title">Réserver</span></div>
     {% endif %}
-  </div>
-  <hr />
-  <div id="panier">
-    <div class="content"></div>
   </div>
 {% endblock %}
 
