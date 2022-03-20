@@ -140,6 +140,7 @@ hr {
   padding: 0 1em;
   box-shadow: -5px 0 5px #cfcfcf;
   z-index: 0;
+  overflow: scroll;
 }
 
 /* résumé */
