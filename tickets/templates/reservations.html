@@ -13,7 +13,7 @@
     </div>
     <ul class=seances>
       {% for seance in seances[client['id']] %}
-      <li>{{ seance.datetime }}, {{ seance.nom }}</li>
+      <li>{{ utils.get_naturalDatetime(seance.datetime) }}, {{ seance.nom }}</li>
       {% endfor %}
     </ul>
   </div>
