@@ -186,6 +186,18 @@ function selectDescription(el) {
 
 }
 
+function showPage(el) {
+    for (page of document.querySelectorAll('.page')) {
+        page.style.display = 'none';
+    }
+    document.querySelector('.page[data-pagenumber = "' + el.dataset.pagenumber + '"]').style.display = 'block';
+
+    for (page of document.querySelectorAll('.pageButton')) {
+        page.style.backgroundColor = 'var(--c3)';
+    }
+    document.querySelector('.pageButton[data-pagenumber = "' + el.dataset.pagenumber + '"]').style.backgroundColor = 'white';
+}
+
 /* Run at application start to set defaults */
 
 /*

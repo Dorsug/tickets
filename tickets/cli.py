@@ -36,7 +36,7 @@ def register_cli(app):
     def testdata():
         print('-- testdata --')
         db = sqlite3.connect(app.config['DATABASE'])
-        n = 10
+        n = 20
         for i in range(int(n/2)):
             db.execute(f"INSERT INTO Structure (id, nom) VALUES ({i}, 'Structure {i}')")
 
@@ -50,7 +50,17 @@ def register_cli(app):
             (7,3,7,'Atelier 7',NULL,0,99,10,2,3),
             (8,4,8,'Atelier 8',NULL,0,99,10,2,1),
             (9,4,9,'Atelier 9',NULL,0,99,10,2,2),
-            (10,5,10,'Atelier 10',NULL,0,99,10,2,4);''')
+            (10,5,10,'Atelier 10',NULL,0,99,10,2,4),
+            (11,0,11,'Atelier 11',NULL,0,99,10,2,1),
+            (12,1,12,'Atelier 12',NULL,0,99,10,2,2),
+            (13,1,13,'Atelier 13',NULL,0,99,10,2,1),
+            (14,2,14,'Atelier 14',NULL,0,99,10,2,3),
+            (15,2,15,'Atelier 15',NULL,0,99,10,2,2),
+            (16,3,16,'Atelier 16',NULL,0,99,10,2,4),
+            (17,3,17,'Atelier 17',NULL,0,99,10,2,3),
+            (18,4,18,'Atelier 18',NULL,0,99,10,2,1),
+            (19,4,19,'Atelier 19',NULL,0,99,10,2,2),
+            (20,5,20,'Atelier 20',NULL,0,99,10,2,4);''')
 
         db.execute('''UPDATE Atelier SET description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vulputate lacus nisl, eget sodales eros consectetur a. Aenean quis tincidunt urna. Integer a leo mauris. Donec in mi a mi scelerisque blandit non in lorem. Donec imperdiet tempor nulla in maximus. Quisque pellentesque nibh vitae dui maximus sollicitudin. Proin eget nulla in justo ornare accumsan. Donec at semper lorem, quis aliquam tellus. Pellentesque tincidunt ligula at elit suscipit tincidunt. Maecenas eleifend mauris vitae augue pellentesque elementum. Aenean tempus orci vitae arcu feugiat scelerisque.";''')
 

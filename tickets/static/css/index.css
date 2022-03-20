@@ -1,6 +1,41 @@
 .menu_inscriptions {
   background-color: white;
 }
+
+/* pages */
+
+#pageSelector {
+  height: 3em;
+  /* box-shadow: inset 0px -5px 5px -4px #666; */
+  background: linear-gradient(.25turn, white, #dfdfdf 15%, #dfdfdf 85%, white);
+  text-align: center;
+}
+
+.pageButton {
+  border: none;
+  background-color: #ccc;
+  position: relative;
+  height: 3em;
+  width: 5em;
+  font-weight: bold;
+  position: relative;
+  bottom: -0.6em;
+  margin: 0 0.5em;
+  border-radius: 10% 10% 0 0;
+}
+
+.pageButton[data-pagenumber="0"] {
+  background-color: white;
+}
+
+.page {
+  display: none;
+}
+
+.page[data-pagenumber="0"] {
+  display: block;
+}
+
 /* main */
 .atelier, .temps {
   display: flex;
