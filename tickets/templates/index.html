@@ -1,17 +1,7 @@
 {% extends "base.html" %}
 {% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">{% endblock %}
 {% block main %}
-{% set number_of_pages = range(ceil(len(ateliers) / item_per_pages)) %}
-  <div id="pageSelector">
-    {% for page_number in number_of_pages %}
-    <button class=pageButton onclick=showPage(this) data-pagenumber={{ page_number }}>
-      Page {{ page_number + 1 }}
-    </button>
-    {% endfor %}
-  </div>
-  {% for page_number in number_of_pages %}
-    <div class=page data-pagenumber={{ page_number }}>
-    {% for atelier in ateliers[page_number * item_per_pages:(page_number + 1) * item_per_pages] %}
+    {% for atelier in ateliers %}
       <div class="temps">
         <div class="horaire_head"></div>
         {% if loop.index is odd and not loop.first %}
@@ -50,8 +40,6 @@
         </div>
       </div>
     {% endfor %}
-    </div>
-  {% endfor %}
 {% endblock %}
 
 {% block sidebar %}

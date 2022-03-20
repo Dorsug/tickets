@@ -17,7 +17,6 @@ def create_app():
         ceil=math.ceil,
         len=len,
         utils=utils,
-        item_per_pages=app.config.get('item_per_pages', 10),
         config=app.config,
     )
 
