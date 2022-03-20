@@ -27,12 +27,22 @@
               ><img src="{{ url_for('static', filename='img/grid.svg') }}"
             ><span class="menu_title_content">Vue</span
           ></h2>
-          <div class="menu_reservation menu_item">
-            <div class="menu_item_head"
-              ><span class="title">Réservations</span
-              ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
-            ></div>
-          </div>
+          <a href="/">
+            <div class="menu_inscriptions menu_item">
+              <div class="menu_item_head"
+                ><span class="title">Inscriptions</span
+                ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
+              ></div>
+            </div>
+          </a>
+          <a href="/reservations">
+            <div class="menu_reservation menu_item">
+              <div class="menu_item_head"
+                ><span class="title">Réservations</span
+                ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
+              ></div>
+            </div>
+          </a>
         </div>
 
         <div class="menu_group">

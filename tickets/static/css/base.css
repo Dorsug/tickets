@@ -51,12 +51,21 @@ body {
   width: 1em;
 }
 
+.menu_group a {
+  position: relative;
+  z-index: 3;
+}
+
 .menu_item_head {
   padding: 1em 0 1em 0;
 }
 
 .menu_item:hover .menu_item_head {
   background: #eee;
+}
+
+a:visited .menu_item {
+  color: black;
 }
 
 .menu_item_head:hover {

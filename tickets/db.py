@@ -166,6 +166,27 @@ class Proc(object):
             (nom, prenom, email, moyenPaiement, codePostal, panier)
         )
 
+    @staticmethod
+    def listerReservations(cur=None):
+        cur = get_cursor(cur)
+        clients = select('''SELECT id, nom, prenom, email FROM panier WHERE nom IS NOT NULL ORDER BY id''', cur=cur)
+        seances = {x['id']: list() for x in clients}
+        items = select(f'''
+            SELECT
+                panier,
+                atelier.nom,
+                seance.datetime
+            FROM itempanier
+            JOIN seance ON itempanier.seance = seance.id
+            JOIN atelier ON seance.atelier = atelier.id
+            WHERE panier in ({','.join('?' for _ in seances.keys())})
+            ORDER BY panier''',
+            (*seances.keys(),), cur=cur
+        )
+        for item in items:
+            seances[item['panier']].append(item)
+        return clients, seances
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)

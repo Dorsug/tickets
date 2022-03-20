@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/reservations.css') }}">{% endblock %}
+{% block main %}
+  {% for client in clients %}
+  <div class=client>
+    <h4>
+      <span class=nom>{{ client.nom }}</span>
+      <span class=prenom>{{ client.prenom }}</span>
+    </h4>
+    <div class=info>
+      Panier: <span class=panier>{{ client.id }}</span>
+      EMail: <span class=email>{{ client.email }}</span>
+    </div>
+    <ul class=seances>
+      {% for seance in seances[client['id']] %}
+      <li>{{ seance.datetime }}, {{ seance.nom }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+{% endblock %}

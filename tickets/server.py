@@ -39,11 +39,6 @@ def index():
     return render_template("index.html", horaires=utils.get_horaires(), ateliers=ateliers, poles=poles, admin=(True if "admin" in request.args else False))
 
 
-@bp.route("/reservations")
-def reservations():
-    return 'TODO'
-
-
 @bp.route("/panier", methods=["POST"])
 def ajouterAupanier():
     seanceId = request.values.get("seanceId")
@@ -150,6 +145,13 @@ def route_impression():
         abort(400)
     impression(request, panierId)
     return flask.redirect(flask.url_for("index"))
+
+@bp.route("/reservations", methods=["GET"])
+def reservations():
+    c = db.get_cursor()
+    clients, seances = db.Proc.listerReservations(c)
+    return render_template("reservations.html", clients=clients, seances=seances)
+
 
 HORAIRES = [
     '10:30',

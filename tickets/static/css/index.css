@@ -1,3 +1,6 @@
+.menu_inscriptions {
+  background-color: white;
+}
 /* main */
 .atelier, .temps {
   display: flex;

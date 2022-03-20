@@ -1,0 +1,28 @@
+#main {
+  padding-top: 1em;
+}
+.client {
+  margin: 1em;
+}
+h4 {
+  margin: 0.5em 0;
+}
+.info {
+  margin-left: 1em;
+}
+.panier::before {
+  content: "(";
+}
+.panier::after {
+  content: ")";
+}
+.seances {
+  margin: 0;
+}
+.panier, .email {
+  color: #888;
+}
+
+.menu_reservation {
+  background-color: white;
+}
