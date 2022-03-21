@@ -36,7 +36,9 @@
           {% endfor %}
         </div>
         <div class="description">
-          {{ atelier.description }}
+          <span>De {{ atelier.age_mini }} à {{ atelier.age_maxi }} ans.</span>
+          <span>Proposé par {{ atelier.structure }}</span>
+          <p>{{ atelier.description }}</p>
         </div>
       </div>
     {% endfor %}

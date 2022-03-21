@@ -20,7 +20,21 @@ def index():
     panierId = request.cookies.get('panierId')
     natural_date = request.cookies.get("date")
     date = utils.get_date(natural_date)
-    ateliers = db.select('SELECT id, nom, numero, pole, nombreplace, description FROM atelier', cur=cur)
+    ateliers = db.select('''
+        SELECT
+            atelier.id,
+            atelier.nom,
+            atelier.numero,
+            atelier.pole,
+            atelier.nombreplace,
+            atelier.description,
+            atelier.age_mini,
+            atelier.age_maxi,
+            structure.nom AS structure
+        FROM atelier
+        JOIN structure ON atelier.structure = structure.id''',
+        cur=cur
+    )
     poles = db.select('SELECT id, nom, couleur FROM pole', cur=cur)
     for atelier in ateliers:
         seances = db.select('''
