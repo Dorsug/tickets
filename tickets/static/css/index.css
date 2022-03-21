@@ -28,6 +28,7 @@
 }
 
 .atelier_head {
+  text-align: center;
   margin: 0.1rem 0 0.1rem 0;
   background: var(--c1);
   box-shadow: 5px 0px 5px -4px #666;

@@ -4,7 +4,7 @@
     {% for atelier in ateliers %}
       <div class="temps">
         <div class="horaire_head"></div>
-        {% if loop.index is odd and not loop.first %}
+        {% if loop.index % 4 == 1 %}
           <div class="horaires">
             {% for horaire in horaires %}
               <div class="horaire">
@@ -16,7 +16,7 @@
       </div>
       <div class="atelier">
         <div class="atelier_head" data-pole="{{ atelier.pole }}" onclick="selectDescription(this)">
-          <h3>{{ atelier.numero }} - {{ atelier.nom }}</h3>
+          <h3>{{ atelier.numero }} <br /> {{ atelier.nom }}</h3>
         </div>
         <div class="seances" data-atelier="{{ atelier.numero }} - {{ atelier.nom }}">
           {% for horaire in horaires %}
