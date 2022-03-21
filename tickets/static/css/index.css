@@ -24,17 +24,23 @@
 }
 
 .atelier_head, .horaire_head {
-  width: 8rem;
+  width: 20rem;
 }
 
 .atelier_head {
   margin: 0.1rem 0 0.1rem 0;
   background: var(--c1);
-  color: var(--c2);
   box-shadow: 5px 0px 5px -4px #666;
   z-index: 0;
   border-left: 3px solid;
   border-right: 3px solid var(--c1);
+  min-height: 3em;
+  font-size: 0.9em;
+}
+
+.atelier_head > h3 {
+  width: 100%;
+  margin: 0.2em 0.5em;
 }
 
 .atelier_head:hover {
