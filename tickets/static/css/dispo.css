@@ -10,28 +10,32 @@ box-sizing: border-box;
 *, *:before, *:after {
 box-sizing: inherit;
 }
-div {
-  border: 1px solid black;
-  text-align: center;
-  vertical-align:middle;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 body {
-  display: grid;
-  grid-auto-columns: 1fr;
-}
-.horaire {
-  grid-column: 1;
+  display: table;
   font-size: 2em;
-  background: #ddd;
 }
+
+.horaires {
+  display: table-header-group;
+}
+
 .atelier {
-  grid-row: 1;
-  font-size: 1.5em;
-  background: #ddd;
+  display: table-row;
 }
-.seance {
-  font-size: 2em;
+
+.horaires > div, .atelier > div {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.atelier > .atelier_head {
+  text-align: left;
+  width: 25em;
+  padding-left: 0.5em;
+}
+
+.atelier:nth-child(odd) {
+  background-color: #ccc;
 }

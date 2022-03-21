@@ -170,32 +170,22 @@ def historique():
     )
 
 
-HORAIRES = [
-    '10:30',
-    '11:30',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-    '18:00'
-]
-
 @bp.route("/dispo/<string:date>")
 def dispo(date):
-    c = db.get_cursor()
-    seances = db.Proc.listerPlacesDispo(date, c)
+    natural_date = request.cookies.get("date")
+    date = utils.get_date(natural_date)
+    poles, ateliers, seances = db.Proc.listerSeancesEtAteliers(date)
 
-    seancesTriees = []
-    for k, g in groupby(seances, lambda x: x["nom"]):
-        l = [x["placesRestantes"] for x in g]
-        seancesTriees.append((k, l))
+    nbAteliersPage = 10
+    try:
+        page = int(request.args.get('page'))
+    except TypeError:
+        page = 0
 
-    if request.headers["Accept"] == "application/json":
-        return jsonify(seancesTriees)
-    else:
-        n = request.values.get("n")
-        if n:
-            seancesTriees = seancesTriees[: int(n)]
-        return render_template(
-            "dispo.html", seances=seancesTriees, horaires=HORAIRES
-        )
+    return render_template("dispo.html",
+        horaires=utils.get_horaires(),
+        ateliers=ateliers[page * nbAteliersPage:(page + 1) * nbAteliersPage],
+        poles=poles,
+        natural_date=natural_date,
+        date=date,
+    )

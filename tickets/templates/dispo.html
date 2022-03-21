@@ -8,24 +8,32 @@
         <script src="/static/js/dispo.js" defer></script>
     </head>
     <body>
+      <div class=horaires>
+        <div></div>
         {% for horaire in horaires %}
-        <div class="horaire" style="grid-row: {{ loop.index + 1 }}">
-            {{ horaire }}
-        </div>
+          <div>{{ horaire }}</div>
         {% endfor %}
-        {% for atelier in seances %}
-            {% set column = loop.index + 1 %}
-            <div class="atelier" style="grid-column: {{ column }}">
-              {{ atelier.0 }}
+      </div>
+      {% for atelier in ateliers %}
+        <div class=atelier>
+          <div class=atelier_head>
+            {{ atelier.numero }} - {{ atelier.nom }}
+          </div>
+          {% for horaire in horaires %}
+            {% set seance = atelier.seances[date + ' ' + horaire] %}
+            <div class=seance>
+              {% if seance %}
+                {{ seance.placesRestantes }}
+              {% endif %}
             </div>
-            {% for seance in atelier.1 %}
-                <div class="seance"
-                    style="grid-column: {{ column }};grid-row: {{ loop.index + 1 }};
-                    background: {% if column % 2 == 0 %}#bbb{% else %}#999{% endif %}"
-                >
-                  {{ seance }}
-                </div>
-            {% endfor %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <div class=horaires>
+        <div></div>
+        {% for horaire in horaires %}
+          <div>{{ horaire }}</div>
         {% endfor %}
+      </div>
     </body>
 </html>
