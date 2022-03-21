@@ -13,7 +13,7 @@
 
 .atelier .description {
   padding: 1em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
   border: 1px solid #cccccc;
   border-top: 0;
   display: none;
@@ -24,7 +24,8 @@
 }
 
 .atelier_head, .horaire_head {
-  width: 8rem;
+  width: 25rem;
+  text-align: center;
 }
 
 .atelier_head {

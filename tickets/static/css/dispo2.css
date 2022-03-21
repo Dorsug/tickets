@@ -1,0 +1,87 @@
+/* main */
+.atelier, .temps {
+  display: flex;
+}
+
+.atelier {
+  flex-wrap: wrap;
+}
+
+.atelier .description {
+  padding: 0em;
+  margin-bottom: 0;
+  border: 1px solid #cccccc;
+  border-top: 0;
+  display: none;
+}
+
+.atelier .description.selected {
+  display: block;
+}
+
+.horaire_head {
+  width: 40rem;
+  height: 3rem;
+  text-align: center;
+}
+
+.atelier_head {
+  width: 40rem;
+  height: 2.5rem;
+  text-align: center;
+}
+
+.atelier_head {
+  margin: 0 0 0 0;
+  background: var(--c1);
+  color: var(--c2);
+  box-shadow: 5px 0px 5px -4px #666;
+  z-index: 0;
+  border-left: 3px solid;
+  border-right: 3px solid var(--c1);
+}
+
+
+.seances {
+  display: flex;
+  flex-grow: 1;
+  font-size: 1.5em;
+}
+
+.horaires {
+  display: flex;
+  height: 3rem;
+  flex-grow: 1;
+  font-size: 1.5em;
+}
+
+.seance, .horaire {
+  width: calc(100% / 7);
+  border-right: 1px solid;
+}
+
+.seance {
+  background: var(--c3);
+  border-right-color: var(--c1);
+}
+
+.horaire {
+  border-right-color: var(--c3);
+  color: #777;
+}
+
+.horaire_head {
+  height: 0.4em;
+}
+
+.seance, .horaire, .atelier_head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seance {
+  margin: 0% 0 0 0;
+}
+
+

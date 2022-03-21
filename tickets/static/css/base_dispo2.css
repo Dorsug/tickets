@@ -1,0 +1,38 @@
+/* Colors */
+:root {
+  --c1: #eee;
+  --c2: #666;
+  --c3: #ccc;
+}
+
+/* general */
+
+html {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html, body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+  width: 100%;
+}
+
+
+#main {
+  padding: 0 1em;
+  box-shadow: -5px 0 5px #cfcfcf;
+  z-index: 0;
+  overflow: scroll;
+}
+
+

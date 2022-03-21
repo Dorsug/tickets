@@ -1,0 +1,46 @@
+{% extends "base_dispo2.html" %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dispo2.css') }}">{% endblock %}
+{% block main_dispo2 %}
+    {% for atelier in ateliers %}
+      <div class="temps">
+        {% set row = loop.index + 1 %}
+        <div class="horaire_head"></div>
+        {% if loop.first %}
+          <div class="horaires">
+            {% for horaire in horaires %}
+              <div class="horaire">
+                <span>{{ horaire | ptime }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="atelier">
+      
+       <div class="atelier_head" data-pole="{{ atelier.pole }}" >
+          <h3>{{ atelier.numero }} - {{ atelier.nom }}</h3>
+        </div>
+        <div class="seances" data-atelier="{{ atelier.nom }}">
+          {% for horaire in horaires %}
+          {% set seance = atelier.seances[date + ' ' + horaire] %}
+          {% if seance %}
+          <div
+            class="seance"
+            data-id="{{ seance.id }}"
+            data-horaire="{{ utils.get_naturalDatetime(seance['datetime']) }}"
+            style="background: {% if row % 2 == 0 %}#bbb{% else %}#999{% endif %}"
+          >
+              {{ seance.placesRestantes }}
+            </div>
+          {% else %}
+            <div class="seance"></div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        <div class="description">
+          {{ atelier.description }}
+        </div>
+      </div>
+    {% endfor %}
+{% endblock %}
+
