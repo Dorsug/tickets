@@ -175,6 +175,7 @@ class Proc(object):
             SELECT
                 panier,
                 atelier.nom,
+                atelier.numero as ateliernumero,
                 seance.datetime
             FROM itempanier
             JOIN seance ON itempanier.seance = seance.id

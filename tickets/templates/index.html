@@ -16,9 +16,9 @@
       </div>
       <div class="atelier">
         <div class="atelier_head" data-pole="{{ atelier.pole }}" onclick="selectDescription(this)">
-          <h3>{{ atelier.nom }}</h3>
+          <h3>{{ atelier.numero }} - {{ atelier.nom }}</h3>
         </div>
-        <div class="seances" data-atelier="{{ atelier.nom }}">
+        <div class="seances" data-atelier="{{ atelier.numero }} - {{ atelier.nom }}">
           {% for horaire in horaires %}
           {% set seance = atelier.seances[date + ' ' + horaire] %}
           {% if seance %}
