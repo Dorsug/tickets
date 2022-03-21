@@ -34,6 +34,7 @@ CREATE TABLE Structure (
 CREATE TABLE Panier (
   id INTEGER PRIMARY KEY,
   paye tinyint(1) NOT NULL DEFAULT 0,
+  printed tinyint(1) NOT NULL DEFAULT 0,
   moyenPaiement INTEGER,
   codePostal char(5),
   -- Si le panier est associé à une réservation / client

@@ -169,7 +169,7 @@ class Proc(object):
     @staticmethod
     def listerReservations(cur=None):
         cur = get_cursor(cur)
-        clients = select('''SELECT id, nom, prenom, email FROM panier WHERE nom IS NOT NULL ORDER BY id''', cur=cur)
+        clients = select('''SELECT id, nom, prenom, email, printed FROM panier WHERE nom IS NOT NULL ORDER BY id''', cur=cur)
         seances = {x['id']: list() for x in clients}
         items = select(f'''
             SELECT
@@ -187,6 +187,11 @@ class Proc(object):
         for item in items:
             seances[item['panier']].append(item)
         return clients, seances
+
+    @staticmethod
+    def markPrinted(panier):
+        cur = get_cursor(None)
+        cur.execute('''UPDATE panier SET printed = 1 WHERE id = ?''', (panier,))
 
 
 def callproc(cursor, procname, *args):

@@ -177,6 +177,17 @@ function impression() {
     document.querySelector('.loader').style.display = 'block';
 }
 
+function printPanier(panierId, el) {
+    fetch('/impression/' + encodeURIComponent(panierId), {method: 'POST'})
+    .then((res) => _getData(res))
+    .then(function(data) {
+        el.closest('.client').classList.add('printed');
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+}
+
 function selectDescription(el) {
     className = 'selected';
     el_descr = el.closest('.atelier').querySelector('.description');

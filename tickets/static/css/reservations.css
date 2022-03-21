@@ -19,8 +19,23 @@ h4 {
 .seances {
   margin: 0;
 }
-.panier, .email {
+
+.client {
+  border-left: 3px solid blue;
+  padding-left: 1em;
+}
+
+.client.printed {
   color: #888;
+  border-left: 3px solid #888;
+}
+
+.client button {
+  float: right;
+}
+
+.client button img {
+  vertical-align: middle;
 }
 
 .menu_reservation {

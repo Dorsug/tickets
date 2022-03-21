@@ -106,6 +106,7 @@ def impression(request, panierId):
         imprimante = "1"  # Défaut de l'interface
 
     utils.impressionEtiquettes(panierId, imprimante)
+    db.Proc.markPrinted(panierId)
 
 
 @bp.route("/paiement", methods=["POST"])
@@ -151,13 +152,15 @@ def reserver():
 
 
 @bp.route("/impression", methods=["POST"])
-def route_impression():
-    try:
-        panierId = request.values.get("panierId")
-    except KeyError:
-        abort(400)
+@bp.route("/impression/<int:panierId>", methods=["POST"])
+def route_impression(panierId=None):
+    if panierId is None:
+        try:
+            panierId = request.values.get("panierId")
+        except KeyError:
+            abort(400)
     impression(request, panierId)
-    return flask.redirect(flask.url_for("index"))
+    return 'Done'
 
 @bp.route("/reservations", methods=["GET"])
 def reservations():
