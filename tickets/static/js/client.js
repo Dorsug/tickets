@@ -84,6 +84,11 @@ function enleverDuPanier(obj){
     });
 }
 
+function chargerPanier(panierId) {
+    Cookies.set('panierId', panierId);
+    window.location = '/?admin';
+}
+
 function viderPanier() {
     fetch('/panier', {method: "DELETE"})
     .then((res) => _getData(res))

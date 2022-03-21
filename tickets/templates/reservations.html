@@ -7,6 +7,11 @@
       <span class=panier>Panier: {{ client.id }}</span>
       <span class=nom>{{ client.nom }}</span>
       <span class=prenom>{{ client.prenom }}</span>
+      {% if admin %}
+      <button onclick="chargerPanier({{ client.id }})">
+        <img src="{{ url_for('static', filename='img/edit.svg') }}" /><span> Editer</span>
+      </button>
+      {% endif %}
       <button onclick="printPanier({{ client.id }}, this)">
         <img src="{{ url_for('static', filename='img/printer.svg') }}" /><span> Imprimer</span>
       </button>

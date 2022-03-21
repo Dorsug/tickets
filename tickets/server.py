@@ -173,6 +173,7 @@ def reservations():
         natural_date=request.cookies.get("date"),
         imprimante=request.cookies.get('imprimante'),
         panierId=request.cookies.get('panierId'),
+        admin=(True if "admin" in request.args else False),
     )
 
 
