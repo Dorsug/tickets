@@ -77,7 +77,7 @@ def sha1_cache(func):
 
 
 @sha1_cache
-def _generationEtiquettes(numero, nom, datetime, structure, filename):
+def _generationEtiquettes(numero, nom, datetime, structure, panierId, filename):
     # Création de de l'image
     img = Image.new(mode="L", size=(696, 291), color=255)
     font_normal = ImageFont.truetype("fonts/OpenSans-Regular.ttf", 48)
@@ -90,7 +90,7 @@ def _generationEtiquettes(numero, nom, datetime, structure, filename):
     # Ajout du texte
     draw.multiline_text((10, 10), f"N°{numero}. {nom}", fill=0, font=font_normal)
     draw.text((10, 170), f"{structure}", fill=0, font=font_small)
-    draw.text((10, 230), get_naturalDatetime(datetime), fill=0, font=font_small)
+    draw.text((10, 230), f"{get_naturalDatetime(datetime)}    Panier:{panierId}", fill=0, font=font_small)
 
     try:
         img.save(filename)
@@ -123,6 +123,7 @@ def impressionEtiquettes(panierId, imprimante):
                 nom=seance["atelierNom"],
                 datetime=seance["datetime"],
                 structure=seance["structureNom"],
+                panierId=panierId,
             )
         )
     imprimante_id = f'file:///dev/usb/lp{int(imprimante) - 1}'
