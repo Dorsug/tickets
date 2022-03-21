@@ -136,10 +136,10 @@ function setPrinter(printer) {
     Cookies.set('imprimante', printer);
 }
 
-function setNouveauPanier() {
+function nouveauPanier() {
     Cookies.remove('panierId');
     document.querySelector('#panierId').innerText = '';
-    document.querySelector('#panier .content').innerHTML = '';
+    document.querySelector('#panier').innerHTML = '';
 }
 
 function getPanierPrecedent() {

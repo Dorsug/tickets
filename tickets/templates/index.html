@@ -53,6 +53,7 @@
     <div class="control_item" onclick="showPaiement()"><img src="{{ url_for('static', filename='img/check-circle.svg') }}" /><span class="title">Valider</span></div>
     {% if admin %}
     <div class="control_item" onclick="showReserver()"><img src="{{ url_for('static', filename='img/user-check.svg') }}" /><span class="title">Réserver</span></div>
+    <div class="control_item" onclick="nouveauPanier()"><img src="{{ url_for('static', filename='img/x-circle.svg') }}" /><span class="title">Fermer panier</span></div>
     {% endif %}
   </div>
 {% endblock %}
