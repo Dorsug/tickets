@@ -1,0 +1,34 @@
+#main {
+  padding-top: 1em;
+}
+.panier {
+  margin: 1em;
+}
+h4 {
+  margin: 0.5em 0;
+}
+.panierid::before {
+  content: "(";
+}
+.panierid:after {
+  content: ")";
+}
+.seances {
+  margin: 0;
+}
+
+.panier {
+  padding-left: 1em;
+}
+
+.panier button {
+  float: right;
+}
+
+.panier button img {
+  vertical-align: middle;
+}
+
+.menu_reservation {
+  background-color: white;
+}

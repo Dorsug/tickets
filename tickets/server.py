@@ -176,6 +176,20 @@ def reservations():
         admin=(True if "admin" in request.args else False),
     )
 
+@bp.route("/historique", methods=["GET"])
+def historique():
+    c = db.get_cursor()
+    paniers, seances = db.Proc.historique(cur=c)
+    return render_template(
+        "historique.html",
+        paniers=paniers,
+        seances=seances,
+        natural_date=request.cookies.get("date"),
+        imprimante=request.cookies.get('imprimante'),
+        panierId=request.cookies.get('panierId'),
+        admin=(True if "admin" in request.args else False),
+    )
+
 
 HORAIRES = [
     '10:30',

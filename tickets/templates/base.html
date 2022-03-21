@@ -43,6 +43,16 @@
               ></div>
             </div>
           </a>
+          {% if admin %}
+          <a href="/historique">
+            <div class="menu_historique menu_item">
+              <div class="menu_item_head"
+                ><span class="title">Historique</span
+                ><img src="{{ url_for('static', filename='img/chevron-right.svg') }}" class="arrow"
+              ></div>
+            </div>
+          </a>
+          {% endif %}
         </div>
 
         <div class="menu_group">

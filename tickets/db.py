@@ -193,6 +193,31 @@ class Proc(object):
         cur = get_cursor(None)
         cur.execute('''UPDATE panier SET printed = 1 WHERE id = ?''', (panier,))
 
+    @staticmethod
+    def historique(cur=None):
+        cur = get_cursor(None)
+        paniers = select('''
+            SELECT id
+            FROM panier WHERE nom IS NULL ORDER BY id''',
+        cur=cur)
+        seances = {x['id']: list() for x in paniers}
+        items = select(f'''
+            SELECT
+                panier,
+                atelier.nom,
+                atelier.numero as ateliernumero,
+                seance.datetime
+            FROM itempanier
+            JOIN seance ON itempanier.seance = seance.id
+            JOIN atelier ON seance.atelier = atelier.id
+            WHERE panier in ({','.join('?' for _ in seances.keys())})
+            ORDER BY panier''',
+            (*seances.keys(),), cur=cur
+        )
+        for item in items:
+            seances[item['panier']].append(item)
+        return paniers, seances
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/historique.css') }}">{% endblock %}
+{% block main %}
+  {% for panier in paniers %}
+  <div class=panier>
+    <h4>
+      <span class=panierid>Panier: {{ panier.id }}</span>
+      {% if admin %}
+      <button onclick="chargerPanier({{ panier.id }})">
+        <img src="{{ url_for('static', filename='img/edit.svg') }}" /><span> Editer</span>
+      </button>
+      <button onclick="printPanier({{ panier.id }}, this)">
+        <img src="{{ url_for('static', filename='img/printer.svg') }}" /><span> Imprimer</span>
+      </button>
+      {% endif %}
+    </h4>
+    <ul class=seances>
+      {% for seance in seances[panier['id']] %}
+      <li>{{ utils.get_naturalDatetime(seance.datetime) }}, {{ seance.ateliernumero }} - {{ seance.nom }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+{% endblock %}
