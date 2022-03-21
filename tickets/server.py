@@ -15,44 +15,9 @@ bp = Blueprint("client", __name__)
 
 @bp.route("/", methods=["GET"])
 def index():
-    cur = db.get_cursor()
-    imprimante = request.cookies.get('imprimante')
-    panierId = request.cookies.get('panierId')
     natural_date = request.cookies.get("date")
     date = utils.get_date(natural_date)
-    ateliers = db.select('''
-        SELECT
-            atelier.id,
-            atelier.nom,
-            atelier.numero,
-            atelier.pole,
-            atelier.nombreplace,
-            atelier.description,
-            atelier.age_mini,
-            atelier.age_maxi,
-            structure.nom AS structure
-        FROM atelier
-        JOIN structure ON atelier.structure = structure.id''',
-        cur=cur
-    )
-    poles = db.select('SELECT id, nom, couleur FROM pole', cur=cur)
-    for atelier in ateliers:
-        seances = db.select('''
-            SELECT
-                Seance.id,
-                Seance.datetime,
-                (SELECT COUNT(ItemPanier.id)
-                    FROM ItemPanier
-                    WHERE ItemPanier.seance = Seance.id
-                ) AS placesPrises
-            FROM seance
-            WHERE seance.atelier = ?
-            AND DATE(seance.datetime) = ?''',
-            (atelier['id'], date), cur=cur)
-        for seance in seances:
-            seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
-            del seance['placesPrises']
-        atelier['seances'] = {x['datetime']:dict(x) for x in seances}
+    poles, ateliers, seances = db.Proc.listerSeancesEtAteliers(date)
     return render_template(
         "index.html",
         horaires=utils.get_horaires(),
@@ -61,8 +26,8 @@ def index():
         admin=(True if "admin" in request.args else False),
         natural_date=natural_date,
         date=date,
-        imprimante=imprimante,
-        panierId=panierId,
+        imprimante=request.cookies.get('imprimante'),
+        panierId=request.cookies.get('panierId'),
     )
 
 

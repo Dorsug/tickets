@@ -218,6 +218,44 @@ class Proc(object):
             seances[item['panier']].append(item)
         return paniers, seances
 
+    @staticmethod
+    def listerSeancesEtAteliers(date, cur=None):
+        cur = get_cursor(None)
+        ateliers = select('''
+            SELECT
+                atelier.id,
+                atelier.nom,
+                atelier.numero,
+                atelier.pole,
+                atelier.nombreplace,
+                atelier.description,
+                atelier.age_mini,
+                atelier.age_maxi,
+                structure.nom AS structure
+            FROM atelier
+            JOIN structure ON atelier.structure = structure.id''',
+            cur=cur
+        )
+        poles = select('SELECT id, nom, couleur FROM pole', cur=cur)
+        for atelier in ateliers:
+            seances = select('''
+                SELECT
+                    Seance.id,
+                    Seance.datetime,
+                    (SELECT COUNT(ItemPanier.id)
+                        FROM ItemPanier
+                        WHERE ItemPanier.seance = Seance.id
+                    ) AS placesPrises
+                FROM seance
+                WHERE seance.atelier = ?
+                AND DATE(seance.datetime) = ?''',
+                (atelier['id'], date), cur=cur)
+            for seance in seances:
+                seance['placesRestantes'] = atelier['nombreplace'] - seance['placesPrises']
+                del seance['placesPrises']
+            atelier['seances'] = {x['datetime']:dict(x) for x in seances}
+        return poles, ateliers, seances
+
 
 def callproc(cursor, procname, *args):
     cursor.callproc(procname, args=args)
