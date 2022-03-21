@@ -182,8 +182,9 @@ def dispo(date):
     except TypeError:
         page = 0
 
+    horaires = sorted(utils.get_horaires() + ['12:30'])
     return render_template("dispo.html",
-        horaires=utils.get_horaires(),
+        horaires=horaires,
         ateliers=ateliers[page * nbAteliersPage:(page + 1) * nbAteliersPage],
         poles=poles,
         natural_date=natural_date,

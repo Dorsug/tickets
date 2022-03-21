@@ -18,7 +18,8 @@ def get_horaires():
     c = db.get_cursor()
     data = c.execute('''
         SELECT DISTINCT(STRFTIME('%H:%M', datetime)) AS time
-        FROM seance'''
+        FROM seance
+        ORDER BY time'''
     ).fetchall()
     return [x['time'] for x in data]
 
